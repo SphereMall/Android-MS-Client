@@ -1,0 +1,63 @@
+package com.spheremall.core.jsonapi.models;
+
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.spheremall.core.jsonapi.annotations.Id;
+import com.spheremall.core.jsonapi.annotations.Relationship;
+import com.spheremall.core.jsonapi.annotations.Type;
+
+import java.util.Collection;
+
+@Type("people")
+@JsonIdentityInfo(generator = ObjectIdGenerators.StringIdGenerator.class, property = "id")
+public class Author {
+	@Id
+	private String id;
+	private String firstName;
+	private String lastName;
+	private String twitter;
+
+	@Relationship("articles")
+	private Collection<Article> articles;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getTwitter() {
+		return twitter;
+	}
+
+	public void setTwitter(String twitter) {
+		this.twitter = twitter;
+	}
+
+	public Collection<Article> getArticles() {
+		return articles;
+	}
+
+	public void setArticles(Collection<Article> articles) {
+		this.articles = articles;
+	}
+}

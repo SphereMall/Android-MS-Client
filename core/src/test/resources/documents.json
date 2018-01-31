@@ -1,0 +1,14 @@
+{
+  "data": [
+    {
+      "type": "documents",
+      "id": "1",
+      "attributes": {
+        "title": "title",
+        "name": "simple test name",
+        "visible": 1,
+        "someObject": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "data": [
+    {
+      "type": "products",
+      "id": "6329",
+      "attributes": {
+        "id": "6329",
+        "urlCode": "limoen-komkommer-fruitwater",
+        "articleNumber": "",
+        "title": "Limoen komkommer fruitwater",
+        "useTitleMask": "1",
+        "titleMask": "a:2:{s:8:\"settings\";a:3:{s:6:\"change\";s:1:\"0\";s:4:\"date\";s:19:\"2017-05-11 12:40:38\";s:7:\"useMask\";s:1:\"1\";}s:5:\"items\";a:2:{i:0;a:8:{s:2:\"id\";s:3:\"178\";s:5:\"order\";s:1:\"1\";s:5:\"value\";s:11:\"{-VARIANT-}\";s:13:\"showDeleteBtn\";s:1:\"0\";s:4:\"type\";s:1:\"2\";s:7:\"fieldId\";s:4:\"4122\";s:11:\"attributeId\";s:3:\"178\";s:9:\"$$hashKey\";s:12:\"object:10507\";}i:1;a:7:{s:2:\"id\";s:12:\"100000000002\";s:5:\"order\";s:1:\"2\";s:5:\"value\";s:19:\"{-FUNCTIONAL_NAME-}\";s:13:\"showDeleteBtn\";s:1:\"0\";s:4:\"type\";s:1:\"1\";s:7:\"fieldId\";s:4:\"4110\";s:9:\"$$hashKey\";s:12:\"object:10508\";}}}",
+        "functionalNameId": "3",
+        "shortDescription": "",
+        "fullDescription": "Lekker fris water met een limoenschijfje en een plakje komkommer",
+        "seoTitle": "",
+        "seoDescription": "",
+        "seoKeywords": "",
+        "visible": "1",
+        "brandId": "1",
+        "purchasePrice": "0",
+        "price": "175",
+        "oldPrice": "0",
+        "deliveryProviderId": null,
+        "importedId": "182739",
+        "websiteId": "1",
+        "lastUpdate": "2017-08-02 14:01:14",
+        "disable": "0",
+        "isMain": "1",
+        "sellingLine": null,
+        "rating": "0.00",
+        "reviewAmount": "0",
+        "vatId": "1",
+        "authorizationGroupId": "0",
+        "priceExclVat": null
+      }
+    }
+  ],
+  "limit": 1,
+  "offset": 0,
+  "success": true
+}

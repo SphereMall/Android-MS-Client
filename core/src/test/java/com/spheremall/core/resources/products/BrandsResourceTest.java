@@ -1,0 +1,29 @@
+package com.spheremall.core.resources.products;
+
+import com.spheremall.core.entities.products.Brand;
+import com.spheremall.core.exceptions.EntityNotFoundException;
+import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.resources.SetUpResourceTest;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.util.List;
+
+public class BrandsResourceTest extends SetUpResourceTest {
+
+    @Test
+    public void testGetList() throws EntityNotFoundException, IOException, ServiceException {
+        List<Brand> brands = client.brands()
+                .limit(3)
+                .all().data();
+
+        Assert.assertNotNull(brands);
+        Assert.assertEquals(3, brands.size());
+
+        for (Brand item : brands) {
+            junit.framework.Assert.assertEquals(Brand.class.getSimpleName(), item.getClass().getSimpleName());
+        }
+    }
+}
