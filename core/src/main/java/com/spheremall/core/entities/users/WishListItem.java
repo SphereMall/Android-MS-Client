@@ -1,5 +1,6 @@
 package com.spheremall.core.entities.users;
 
+import com.spheremall.core.entities.products.Media;
 import com.spheremall.core.entities.products.Product;
 import com.spheremall.core.jsonapi.annotations.Type;
 import com.spheremall.core.entities.Entity;
@@ -13,5 +14,6 @@ public class WishListItem extends Entity {
     public String createDate;
     public String updateDate;
 
-    public List<Product> product;
+    public List<Product> products;
+    public List<Media> images;
 }

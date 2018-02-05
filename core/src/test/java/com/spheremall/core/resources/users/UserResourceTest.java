@@ -64,7 +64,7 @@ public class UserResourceTest extends SetUpResourceTest {
 
     @Test
     public void testWishList() throws EntityNotFoundException, ServiceException, IOException {
-        int userId = 230;
+        int userId = 5;
         Product product = client.products().first().data();
         List<WishListItem> wishList = client.users().getWishList(userId);
         for (WishListItem wishListItem : wishList) {
