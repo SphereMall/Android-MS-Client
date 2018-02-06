@@ -55,6 +55,23 @@ public class BasketResourceImpl extends BaseResource<BasketOrder, BasketResource
     }
 
     @Override
+    public Response<BasketOrder> getByUserId(int userId) throws ServiceException, IOException, EntityNotFoundException {
+        HashMap<String, String> params = new HashMap<>();
+
+        if (fields.size() > 0) {
+            params.put("fields", TextUtils.join(",", fields));
+        }
+
+        ResponseMonada responseMonada = request
+                .handle(Method.GET, String.valueOf(userId), params);
+
+        if (responseMonada.hasError()) {
+            throw new EntityNotFoundException(responseMonada.getErrorResponse().error.message);
+        }
+        return maker.makeSingle(responseMonada.getResponse());
+    }
+
+    @Override
     public BasketOrder createNew() throws EntityNotFoundException, IOException, ServiceException {
         ResponseMonada responseMonada = request.handle(Method.POST, "new", new HashMap<>());
         if (responseMonada.hasError()) {

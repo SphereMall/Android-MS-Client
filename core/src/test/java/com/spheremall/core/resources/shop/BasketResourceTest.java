@@ -32,6 +32,13 @@ public class BasketResourceTest extends SetUpResourceTest {
     }
 
     @Test
+    public void testGetByUserId() throws EntityNotFoundException, ServiceException, IOException {
+        Order basket = client.basketResource().getByUserId(5).data();
+        Assert.assertNotNull(basket);
+        Assert.assertEquals(5, basket.userId);
+    }
+
+    @Test
     public void testCreateNew() throws EntityNotFoundException, ServiceException, IOException {
         Order order = client.basketResource().createNew();
         Assert.assertNotNull(order);
