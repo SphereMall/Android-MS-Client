@@ -1,8 +1,8 @@
 package com.spheremall.core.resources.users;
 
+import com.spheremall.core.entities.Entity;
 import com.spheremall.core.entities.products.Product;
 import com.spheremall.core.entities.users.User;
-import com.spheremall.core.entities.users.WishListItem;
 import com.spheremall.core.exceptions.EntityNotFoundException;
 import com.spheremall.core.exceptions.ServiceException;
 import com.spheremall.core.filters.FilterOperators;
@@ -66,21 +66,23 @@ public class UserResourceTest extends SetUpResourceTest {
     public void testWishList() throws EntityNotFoundException, ServiceException, IOException {
         int userId = 5;
         Product product = client.products().first().data();
-        List<WishListItem> wishList = client.users().getWishList(userId);
-        for (WishListItem wishListItem : wishList) {
-            if (wishListItem.productId == product.getId()) {
-                Assert.assertTrue(client.users().removeFromWishList(userId, product.getId()));
+        List<Entity> wishList = client.users().getWishList(userId);
+        for (Entity wishListItem : wishList) {
+            if (wishListItem instanceof Product) {
+                Product productWishListItem = (Product) wishList;
+                if (productWishListItem.getId().equals(product.getId())) {
+                    Assert.assertTrue(client.users()
+                            .removeFromWishList(userId, product.getId(), "products"));
+                }
             }
         }
 
-        WishListItem wishListItem = client.users().addToWishList(userId, product.getId());
+        Entity wishListItem = client.users().addToWishList(userId, product.getId(), "products");
 
-        List<WishListItem> all = client.users().getWishList(userId);
+        List<Entity> all = client.users().getWishList(userId);
         Assert.assertTrue(all.size() > 0);
+        Assert.assertEquals(product.getId(), wishListItem.getId());
 
-        Assert.assertEquals(userId, wishListItem.userId);
-        Assert.assertEquals(product.getId().intValue(), wishListItem.productId);
-
-        Assert.assertTrue(client.users().removeFromWishList(userId, product.getId()));
+        Assert.assertTrue(client.users().removeFromWishList(userId, product.getId(), "products"));
     }
 }

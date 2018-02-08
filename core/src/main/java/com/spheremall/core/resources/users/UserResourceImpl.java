@@ -3,12 +3,14 @@ package com.spheremall.core.resources.users;
 import com.spheremall.core.SMClient;
 import com.spheremall.core.api.configuration.Method;
 import com.spheremall.core.api.response.ResponseMonada;
+import com.spheremall.core.entities.Entity;
 import com.spheremall.core.entities.users.User;
 import com.spheremall.core.entities.users.WishListItem;
 import com.spheremall.core.exceptions.EntityNotFoundException;
 import com.spheremall.core.exceptions.ServiceException;
 import com.spheremall.core.filters.FilterOperators;
 import com.spheremall.core.filters.Predicate;
+import com.spheremall.core.makers.GridMaker;
 import com.spheremall.core.makers.Maker;
 import com.spheremall.core.makers.ObjectMaker;
 import com.spheremall.core.resources.BaseResource;
@@ -16,11 +18,8 @@ import com.spheremall.core.specifications.users.IsUserEmail;
 import com.spheremall.core.specifications.users.IsUserSubscriber;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 
 public class UserResourceImpl extends BaseResource<User, UserResource> implements UserResource {
@@ -89,34 +88,32 @@ public class UserResourceImpl extends BaseResource<User, UserResource> implement
     }
 
     @Override
-    public List<WishListItem> getWishList(int userId) throws EntityNotFoundException, IOException, ServiceException {
+    public List<Entity> getWishList(int userId) throws EntityNotFoundException, IOException, ServiceException {
         ResponseMonada responseMonada = request.handle(Method.GET, "wishlist/" + userId, new HashMap<>());
         if (responseMonada.hasError()) {
             throw new EntityNotFoundException(responseMonada.getErrorResponse().error.message);
         }
-        Maker<WishListItem> maker = new ObjectMaker<>(WishListItem.class);
+        Maker<Entity> maker = new GridMaker(Entity.class);
         return maker.makeAsList(responseMonada.getResponse()).data();
     }
 
     @Override
-    public WishListItem addToWishList(int userId, int productId) throws EntityNotFoundException, ServiceException, IOException {
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-
+    public Entity addToWishList(int userId, int objectId, String entity) throws EntityNotFoundException, ServiceException, IOException {
         HashMap<String, String> params = new HashMap<>();
         params.put("userId", String.valueOf(userId));
-        params.put("productId", String.valueOf(productId));
-        params.put("createDate", dateFormat.format(new Date()));
+        params.put("objectId", String.valueOf(objectId));
+        params.put("entity", entity);
         return smClient.wishListItems().create(params).data();
     }
 
     @Override
-    public boolean removeFromWishList(int userId, int productId) {
+    public boolean removeFromWishList(int userId, int objectId, String entity) {
         try {
             WishListItem wishListItem = smClient.wishListItems()
                     .filters(
                             new Predicate("userId", FilterOperators.EQUAL, String.valueOf(userId)),
-                            new Predicate("productId", FilterOperators.EQUAL, String.valueOf(productId)))
+                            new Predicate("objectId", FilterOperators.EQUAL, String.valueOf(objectId)),
+                            new Predicate("entity", FilterOperators.EQUAL, entity))
                     .first().data();
             return smClient.wishListItems().delete(wishListItem.getId());
         } catch (Throwable error) {

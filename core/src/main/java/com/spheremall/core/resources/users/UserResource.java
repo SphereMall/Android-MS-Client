@@ -1,7 +1,7 @@
 package com.spheremall.core.resources.users;
 
+import com.spheremall.core.entities.Entity;
 import com.spheremall.core.entities.users.User;
-import com.spheremall.core.entities.users.WishListItem;
 import com.spheremall.core.exceptions.EntityNotFoundException;
 import com.spheremall.core.exceptions.ServiceException;
 import com.spheremall.core.resources.Resource;
@@ -14,9 +14,9 @@ public interface UserResource extends Resource<UserResource, User> {
 
     User unSubscribe(String guId) throws EntityNotFoundException, IOException, ServiceException;
 
-    List<WishListItem> getWishList(int userId) throws EntityNotFoundException, IOException, ServiceException;
+    List<Entity> getWishList(int userId) throws EntityNotFoundException, IOException, ServiceException;
 
-    WishListItem addToWishList(int userId, int productId) throws EntityNotFoundException, ServiceException, IOException;
+    Entity addToWishList(int userId, int objectId, String entity) throws EntityNotFoundException, ServiceException, IOException;
 
-    boolean removeFromWishList(int userId, int productId) throws EntityNotFoundException, IOException, ServiceException;
+    boolean removeFromWishList(int userId, int objectId, String entity) throws EntityNotFoundException, IOException, ServiceException;
 }
