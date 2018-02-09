@@ -360,7 +360,11 @@ public class ResourceConverter {
                     if (!fieldsSet.contains(field.getKey())) {
                         try {
                             Method method = type.getMethod("setProperty", String.class, String.class);
-                            method.invoke(result, field.getKey(), field.getValue().asText());
+                            String value = field.getValue().asText();
+                            if (value.equals("null")) {
+                                value = "";
+                            }
+                            method.invoke(result, field.getKey(), value);
                         } catch (NoSuchMethodException e) {
                             Log.e(getClass().getSimpleName(), e.getLocalizedMessage());
                         } catch (InvocationTargetException e) {

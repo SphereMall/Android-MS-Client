@@ -30,10 +30,10 @@ public class GridMaker extends ObjectMaker<Entity> {
         Gson gson = new Gson();
         ReceivedTypes receivedTypes = gson.fromJson(response, ReceivedTypes.class);
         Set<Class> classes = new HashSet<>();
-        for (int i = 0; i < receivedTypes.data.size() - 1; i++) {
+        for (int i = 0; i < receivedTypes.data.size(); i++) {
             classes.add(EntitiesProvider.availableEntities.get(receivedTypes.data.get(i).type));
         }
-        for (int i = 0; i < receivedTypes.included.size() - 1; i++) {
+        for (int i = 0; i < receivedTypes.included.size(); i++) {
             classes.add(EntitiesProvider.availableEntities.get(receivedTypes.included.get(i).type));
         }
         return classes.toArray(new Class[classes.size()]);
