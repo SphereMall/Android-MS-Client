@@ -69,10 +69,10 @@ public class UserResourceTest extends SetUpResourceTest {
         List<Entity> wishList = client.users().getWishList(userId);
         for (Entity wishListItem : wishList) {
             if (wishListItem instanceof Product) {
-                Product productWishListItem = (Product) wishList;
+                Product productWishListItem = (Product) wishListItem;
                 if (productWishListItem.getId().equals(product.getId())) {
-                    Assert.assertTrue(client.users()
-                            .removeFromWishList(userId, product.getId(), "products"));
+                    client.users()
+                            .removeFromWishList(userId, productWishListItem.getId(), "products");
                 }
             }
         }

@@ -5,7 +5,6 @@ import com.spheremall.core.api.configuration.Method;
 import com.spheremall.core.api.response.ResponseMonada;
 import com.spheremall.core.entities.Entity;
 import com.spheremall.core.entities.users.User;
-import com.spheremall.core.entities.users.WishListItem;
 import com.spheremall.core.exceptions.EntityNotFoundException;
 import com.spheremall.core.exceptions.ServiceException;
 import com.spheremall.core.filters.FilterOperators;
@@ -103,19 +102,33 @@ public class UserResourceImpl extends BaseResource<User, UserResource> implement
         params.put("userId", String.valueOf(userId));
         params.put("objectId", String.valueOf(objectId));
         params.put("entity", entity);
-        return smClient.wishListItems().create(params).data();
+
+        ResponseMonada responseMonada = request.handle(Method.POST, "wishlist/" + userId, params);
+        if (responseMonada.hasError()) {
+            throw new EntityNotFoundException(responseMonada.getErrorResponse().error.message);
+        }
+        Maker<Entity> maker = new GridMaker(Entity.class);
+        List<Entity> entities = maker.makeAsList(responseMonada.getResponse()).data();
+        if (entities.size() > 0) {
+            return entities.get(0);
+        } else {
+            throw new EntityNotFoundException();
+        }
     }
 
     @Override
     public boolean removeFromWishList(int userId, int objectId, String entity) {
         try {
-            WishListItem wishListItem = smClient.wishListItems()
-                    .filters(
-                            new Predicate("userId", FilterOperators.EQUAL, String.valueOf(userId)),
-                            new Predicate("objectId", FilterOperators.EQUAL, String.valueOf(objectId)),
-                            new Predicate("entity", FilterOperators.EQUAL, entity))
-                    .first().data();
-            return smClient.wishListItems().delete(wishListItem.getId());
+            HashMap<String, String> params = new HashMap<>();
+            params.put("userId", String.valueOf(userId));
+            params.put("objectId", String.valueOf(objectId));
+            params.put("entity", entity);
+
+            ResponseMonada responseMonada = request.handle(Method.DELETE, "wishlist/" + userId, params);
+            if (responseMonada.hasError()) {
+                throw new EntityNotFoundException(responseMonada.getErrorResponse().error.message);
+            }
+            return true;
         } catch (Throwable error) {
             return false;
         }
