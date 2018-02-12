@@ -1,7 +1,9 @@
 package com.spheremall.core.resources.users;
 
 import com.spheremall.core.entities.Entity;
+import com.spheremall.core.entities.Response;
 import com.spheremall.core.entities.products.Product;
+import com.spheremall.core.entities.users.Address;
 import com.spheremall.core.entities.users.User;
 import com.spheremall.core.exceptions.EntityNotFoundException;
 import com.spheremall.core.exceptions.ServiceException;
@@ -84,5 +86,14 @@ public class UserResourceTest extends SetUpResourceTest {
         Assert.assertEquals(product.getId(), wishListItem.getId());
 
         Assert.assertTrue(client.users().removeFromWishList(userId, product.getId(), "products"));
+    }
+
+    @Test
+    public void testSetAddresses() throws EntityNotFoundException, ServiceException, IOException {
+        User user = client.users().get(5).data();
+        HashMap<String, String> params = new HashMap<>();
+        params.put("countryName", "TestCountry2");
+        Response<Address> response = client.users().setAddress(user.defaultAddressId, user.getId(), params);
+        Assert.assertNotNull(response);
     }
 }

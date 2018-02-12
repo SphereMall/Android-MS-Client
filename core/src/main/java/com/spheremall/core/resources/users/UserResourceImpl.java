@@ -4,6 +4,8 @@ import com.spheremall.core.SMClient;
 import com.spheremall.core.api.configuration.Method;
 import com.spheremall.core.api.response.ResponseMonada;
 import com.spheremall.core.entities.Entity;
+import com.spheremall.core.entities.Response;
+import com.spheremall.core.entities.users.Address;
 import com.spheremall.core.entities.users.User;
 import com.spheremall.core.exceptions.EntityNotFoundException;
 import com.spheremall.core.exceptions.ServiceException;
@@ -132,5 +134,20 @@ public class UserResourceImpl extends BaseResource<User, UserResource> implement
         } catch (Throwable error) {
             return false;
         }
+    }
+
+    @Override
+    public Response<Address> setAddress(int addressId, int userId, HashMap<String, String> params) throws EntityNotFoundException, IOException, ServiceException {
+        Response<Address> response;
+        if (addressId == 0) {
+            params.put("userId", String.valueOf(userId));
+            response = smClient.addresses().create(params);
+            HashMap<String, String> userParams = new HashMap<>();
+            userParams.put("defaultAddressId", String.valueOf(response.data().getId()));
+            smClient.users().update(userId, userParams);
+        } else {
+            response = smClient.addresses().update(addressId, params);
+        }
+        return response;
     }
 }
