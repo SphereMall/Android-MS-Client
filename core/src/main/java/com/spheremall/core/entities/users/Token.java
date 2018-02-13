@@ -13,6 +13,10 @@ public class Token extends Entity {
         public String expiries;
         public boolean isGuest;
         public String typeguest;
-        public String model;
+        public Model model;
+    }
+
+    public class Model{
+        public String id;
     }
 }
