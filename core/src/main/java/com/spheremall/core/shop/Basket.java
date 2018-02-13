@@ -1,9 +1,8 @@
 package com.spheremall.core.shop;
 
 import com.spheremall.core.SMClient;
-import com.spheremall.core.entities.users.Address;
 import com.spheremall.core.entities.shop.Order;
-import com.spheremall.core.entities.users.User;
+import com.spheremall.core.entities.users.Address;
 import com.spheremall.core.exceptions.EntityNotFoundException;
 import com.spheremall.core.exceptions.ServiceException;
 
@@ -20,31 +19,42 @@ public class Basket extends OrderFinalized {
 
     protected HashMap<String, String> updateParams = new HashMap<>();
 
-    public Basket(SMClient client) {
+    public Basket(SMClient client) throws EntityNotFoundException, IOException, ServiceException {
         super(client);
+        basketCreate();
     }
 
-    public Basket(SMClient client, int id) throws EntityNotFoundException, ServiceException, IOException {
+    public Basket(SMClient client, int basketId) throws EntityNotFoundException, ServiceException, IOException {
         super(client);
-        this.id = id;
+        this.id = basketId;
         this.get(this.id);
+    }
+
+    public Basket(SMClient client, int basketId, int userId) throws EntityNotFoundException, ServiceException, IOException {
+        super(client);
+        if (basketId == DEFAULT_ORDER_ID) {
+            this.getByUserId(userId);
+        } else {
+            this.get(basketId);
+        }
     }
 
     public SMClient getClient() {
         return client;
     }
 
-    public void add(BasketPredicate... predicates) throws EntityNotFoundException, IOException, ServiceException {
+    public Order add(BasketPredicate... predicates) throws EntityNotFoundException, IOException, ServiceException {
         if (id == DEFAULT_ORDER_ID) {
             basketCreate();
         }
 
         HashMap<String, String> params = queryParams(Arrays.asList(predicates));
         Order order = client.basketResource().create(params).data();
-        setProperties(order);
+        setOrderData(order);
+        return order;
     }
 
-    public void remove(BasketPredicate... predicates) throws EntityNotFoundException, ServiceException, IOException {
+    public Order remove(BasketPredicate... predicates) throws EntityNotFoundException, ServiceException, IOException {
         if (id == DEFAULT_ORDER_ID) {
             throw new IllegalArgumentException("Can not delete items. Shop is not created.");
         }
@@ -52,18 +62,20 @@ public class Basket extends OrderFinalized {
         HashMap<String, String> params = queryParams(Arrays.asList(predicates));
 
         Order order = client.basketResource().removeItems(params);
-        setProperties(order);
+        setOrderData(order);
+        return order;
     }
 
-    public void update(BasketPredicate... predicates) throws EntityNotFoundException, IOException, ServiceException {
+    public Order update(BasketPredicate... predicates) throws EntityNotFoundException, IOException, ServiceException {
         if (id == DEFAULT_ORDER_ID) {
             basketCreate();
         }
         HashMap<String, String> params = queryParams(Arrays.asList(predicates));
         params.putAll(updateParams);
         Order order = client.basketResource().update(id, params).data();
-        setProperties(order);
+        setOrderData(order);
         updateParams.clear();
+        return order;
     }
 
     public Basket setDelivery(Delivery delivery) {
@@ -76,8 +88,8 @@ public class Basket extends OrderFinalized {
         return this;
     }
 
-    public Basket setPaymentMethod(String paymentMethod) {
-        updateParams.put("paymentMethodId", paymentMethod);
+    public Basket setPaymentMethod(int paymentMethodId) {
+        updateParams.put("paymentMethodId", String.valueOf(paymentMethodId));
         return this;
     }
 
@@ -91,18 +103,18 @@ public class Basket extends OrderFinalized {
         return this;
     }
 
-    public Basket setUser(User user) {
-        if (user.getId() == 0) {
+    public Basket setUser(int userId) {
+        if (userId <= 0) {
             throw new IllegalArgumentException("Can't set user. User id is empty.");
         }
 
-        updateParams.put("userId", String.valueOf(user.getId()));
+        updateParams.put("userId", String.valueOf(userId));
         return this;
     }
 
     protected void basketCreate() throws EntityNotFoundException, ServiceException, IOException {
         Order order = client.basketResource().createNew();
-        this.id = order.getId();
+        setOrderData(order);
     }
 
     protected void get(int id) throws EntityNotFoundException, IOException, ServiceException {
@@ -114,17 +126,26 @@ public class Basket extends OrderFinalized {
                 throw new EntityNotFoundException();
             }
 
-            this.setProperties(order);
+            this.setOrderData(order);
+        }
+    }
+
+    protected void getByUserId(int userId) throws EntityNotFoundException, IOException, ServiceException {
+        if (userId != 0) {
+            Order order = client.basketResource().getByUserId(userId).data();
+            if (order == null) {
+                throw new EntityNotFoundException();
+            }
+            this.setOrderData(order);
         }
     }
 
     protected void setAddress(Address address, String addressKey) throws EntityNotFoundException, ServiceException, IOException {
         if (address.getId() == 0) {
-            Address newAddress = client.addresses()
+            address = client.addresses()
                     .create(address.asParams()).data();
-
-            updateParams.put(addressKey + "Id", newAddress.getId().toString());
         }
+        updateParams.put(addressKey + "Id", address.getId().toString());
     }
 
     protected HashMap<String, String> queryParams(List<BasketPredicate> predicates) {
@@ -149,7 +170,9 @@ public class Basket extends OrderFinalized {
                 e.printStackTrace();
             }
         }
-        params.put("products", jsonArray.toString());
+        if (jsonArray.length() > 0) {
+            params.put("products", jsonArray.toString());
+        }
         return params;
     }
 }

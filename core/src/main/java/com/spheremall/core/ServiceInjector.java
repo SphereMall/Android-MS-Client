@@ -86,7 +86,7 @@ public interface ServiceInjector {
         private static Basket basket = null;
     }
 
-    //region Products
+    //region [Products]
     default AttributeDisplayTypesResource attributeDisplayTypes() {
         return new AttributeDisplayTypesResourceImpl((SMClient) this);
     }
@@ -152,7 +152,7 @@ public interface ServiceInjector {
     }
     //endregion
 
-    //region Users
+    //region [Users]
 
     default UserResource users() {
         return new UserResourceImpl((SMClient) this);
@@ -174,27 +174,40 @@ public interface ServiceInjector {
         return new WishListItemsResourceImpl((SMClient) this);
     }
 
-    default AuthResource auth(){return new AuthResourceImpl((SMClient)this);}
+    default AuthResource auth() {
+        return new AuthResourceImpl((SMClient) this);
+    }
 
     //endregion
 
-    //region Shop
+    //region [Shop]
     default BasketResource basketResource() {
         return new BasketResourceImpl((SMClient) this, "v2");
     }
 
-    default Basket basket() {
+    default Basket basket() throws EntityNotFoundException, ServiceException, IOException {
         if (Store.basket == null) {
             Store.basket = new Basket((SMClient) this);
         }
         return Store.basket;
     }
 
-    default Basket basket(int id) throws EntityNotFoundException, IOException, ServiceException {
-        if (Store.basket == null || Store.basket.getId() != id) {
-            Store.basket = new Basket((SMClient) this, id);
+    default Basket basket(int basketId) throws EntityNotFoundException, IOException, ServiceException {
+        if (Store.basket == null || Store.basket.getId() != basketId) {
+            Store.basket = new Basket((SMClient) this, basketId);
         }
         return Store.basket;
+    }
+
+    default Basket basket(int basketId, int userId) throws EntityNotFoundException, IOException, ServiceException {
+        if (Store.basket == null || Store.basket.getId() != basketId || Store.basket.getUserId() != userId) {
+            Store.basket = new Basket((SMClient) this, basketId, userId);
+        }
+        return Store.basket;
+    }
+
+    default void clearBasket() {
+        Store.basket = null;
     }
 
     default CurrenciesRateResource currenciesRate() {
