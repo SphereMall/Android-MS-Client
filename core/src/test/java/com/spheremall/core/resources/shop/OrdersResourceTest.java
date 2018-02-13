@@ -48,7 +48,7 @@ public class OrdersResourceTest extends SetUpResourceTest {
         HashMap<String, String> params = new HashMap<>();
         params.put("paymentStatusId", String.valueOf(2));
         orderNew.update(params);
-        Assert.assertEquals(2, orderNew.getPaymentStatusId());
+        Assert.assertEquals(2, orderNew.getOrder().paymentStatusId);
     }
 
     @Test

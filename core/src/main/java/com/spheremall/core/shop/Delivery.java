@@ -9,6 +9,7 @@ public class Delivery {
 
     public Delivery(DeliveryProvider deliveryProvider) {
         this.deliveryProvider = deliveryProvider;
+        this.id = deliveryProvider.getId();
     }
 
     public int getCost() {
