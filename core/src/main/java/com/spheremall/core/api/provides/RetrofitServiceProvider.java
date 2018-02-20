@@ -8,7 +8,7 @@ import retrofit2.Retrofit;
 
 public class RetrofitServiceProvider implements ApiServiceProvider {
 
-    private final Retrofit retrofit;
+    protected final Retrofit retrofit;
 
     public RetrofitServiceProvider(ApiConfigurationFactory<Retrofit> apiConfigurationFactory) {
         this.retrofit = apiConfigurationFactory.createConfiguration();
