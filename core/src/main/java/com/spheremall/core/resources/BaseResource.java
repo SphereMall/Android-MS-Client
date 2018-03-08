@@ -90,6 +90,12 @@ public abstract class BaseResource<E extends Entity, R extends Resource> impleme
     }
 
     @Override
+    public R ids(List<Integer> ids) {
+        this.ids = ids;
+        return currentContext();
+    }
+
+    @Override
     public List<Integer> getIds() {
         return ids;
     }
