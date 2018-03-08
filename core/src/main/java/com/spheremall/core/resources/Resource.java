@@ -25,6 +25,8 @@ public interface Resource<R extends Resource, E extends Entity> {
 
     R ids(Integer... ids);
 
+    R ids(List<Integer> ids);
+
     List<Integer> getIds();
 
     R fields(String... fields);
