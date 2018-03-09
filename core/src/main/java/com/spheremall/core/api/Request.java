@@ -74,7 +74,7 @@ public class Request implements BaseRequest {
         try {
             String errorBody = response.errorBody().string();
             if (errorBody == null) {
-                throw new ServiceException();
+                throw new ServiceException("Error body is null");
             }
             JSONObject mainObject = new JSONObject(errorBody);
             JSONObject error = mainObject.getJSONObject("error");
@@ -83,10 +83,10 @@ public class Request implements BaseRequest {
                 authToken.refreshToken();
                 return executeCall(true);
             } else {
-                throw new ServiceException();
+                throw new ServiceException("Access denied");
             }
         } catch (JSONException e) {
-            throw new ServiceException();
+            throw new ServiceException(e.getLocalizedMessage());
         }
     }
 

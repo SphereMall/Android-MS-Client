@@ -36,7 +36,7 @@ public class AuthToken {
 
     public String getAuthToken() {
         String token = preferencesManager.getToken();
-        if(!token.isEmpty()){
+        if (!token.isEmpty()) {
             token = "Bearer " + token;
         }
         return token;
@@ -54,14 +54,14 @@ public class AuthToken {
     }
 
     private void mapTokenResponse(Response<ResponseBody> response) throws ServiceException, JSONException, IOException {
-        if(!response.isSuccessful()){
+        if (!response.isSuccessful()) {
             throw new ServiceException();
         }
         JSONObject mainObject = new JSONObject(response.body().string());
         JSONArray data = mainObject.getJSONArray("data");
         JSONObject tokenObj = data.getJSONObject(0);
         String token = tokenObj.getString("token");
-        if(token.isEmpty()){
+        if (token.isEmpty()) {
             throw new ServiceException();
         }
         preferencesManager.setToken(token);

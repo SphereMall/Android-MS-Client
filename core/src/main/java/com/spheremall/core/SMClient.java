@@ -3,6 +3,7 @@ package com.spheremall.core;
 import android.content.Context;
 
 import com.spheremall.core.utils.PreferencesManager;
+import com.spheremall.core.utils.PreferencesManagerImpl;
 
 public class SMClient implements ServiceInjector {
     protected String gatewayUrl;
@@ -27,12 +28,16 @@ public class SMClient implements ServiceInjector {
         return client;
     }
 
+    public void setPreferencesManager(PreferencesManager preferencesManager) {
+        this.preferencesManager = preferencesManager;
+    }
+
     private SMClient(String gatewayUrl, String clientId, String secretKey, String version, Context context) {
         this.gatewayUrl = gatewayUrl;
         this.clientId = clientId;
         this.secretKey = secretKey;
         this.version = version;
-        this.preferencesManager = new PreferencesManager(context);
+        this.preferencesManager = new PreferencesManagerImpl(context);
     }
 
     public String getClientId() {

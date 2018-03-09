@@ -9,7 +9,5 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public interface BaseRequest {
-
     ResponseMonada handle(Method method, String uriAppend, HashMap<String, String> queryParams) throws ServiceException, IOException, EntityNotFoundException;
-
 }
