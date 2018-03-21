@@ -96,4 +96,20 @@ public class UserResourceTest extends SetUpResourceTest {
         Response<Address> response = client.users().setAddress(user.defaultAddressId, user.getId(), params);
         Assert.assertNotNull(response);
     }
+
+    @Test
+    public void testGetUserByDevice() throws EntityNotFoundException, ServiceException, IOException {
+        String deviceId = "Android";
+        User user = client.users().get(deviceId);
+        Assert.assertNotNull(user);
+        
+        User user2 = client.users().get(deviceId);
+        Assert.assertNotNull(user2);
+        Assert.assertEquals(user.getId(), user2.getId());
+
+        User user3 = client.users().get(deviceId + "123");
+        Assert.assertNotNull(user3);
+
+        Assert.assertNotEquals(user.getId(), user3.getId());
+    }
 }

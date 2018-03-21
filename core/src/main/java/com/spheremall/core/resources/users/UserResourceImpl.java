@@ -5,6 +5,7 @@ import com.spheremall.core.api.configuration.Method;
 import com.spheremall.core.api.response.ResponseMonada;
 import com.spheremall.core.entities.Entity;
 import com.spheremall.core.entities.Response;
+import com.spheremall.core.entities.UserId;
 import com.spheremall.core.entities.users.Address;
 import com.spheremall.core.entities.users.User;
 import com.spheremall.core.exceptions.EntityNotFoundException;
@@ -14,6 +15,7 @@ import com.spheremall.core.filters.Predicate;
 import com.spheremall.core.makers.GridMaker;
 import com.spheremall.core.makers.Maker;
 import com.spheremall.core.makers.ObjectMaker;
+import com.spheremall.core.makers.UserIdMaker;
 import com.spheremall.core.resources.BaseResource;
 import com.spheremall.core.specifications.users.IsUserEmail;
 import com.spheremall.core.specifications.users.IsUserSubscriber;
@@ -149,5 +151,22 @@ public class UserResourceImpl extends BaseResource<User, UserResource> implement
             response = smClient.addresses().update(addressId, params);
         }
         return response;
+    }
+
+    @Override
+    public User get(String deviceId) throws EntityNotFoundException, IOException, ServiceException {
+        ResponseMonada responseMonada = request
+                .handle(Method.GET, "/devices/" + deviceId, new HashMap<>());
+
+        if (responseMonada.hasError()) {
+            throw new EntityNotFoundException(responseMonada.getErrorResponse().error.message);
+        }
+        UserIdMaker userIdmaker = new UserIdMaker(UserId.class);
+        Response<UserId> response = userIdmaker.makeSingle(responseMonada.getResponse());
+
+        if (!response.data().success) {
+            throw new EntityNotFoundException(responseMonada.getErrorResponse().error.message);
+        }
+        return get(response.data().data.userId).data();
     }
 }
