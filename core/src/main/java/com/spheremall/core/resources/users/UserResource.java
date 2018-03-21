@@ -24,4 +24,6 @@ public interface UserResource extends Resource<UserResource, User> {
     boolean removeFromWishList(int userId, int objectId, String entity) throws EntityNotFoundException, IOException, ServiceException;
 
     Response<Address> setAddress(int addressId, int userId, HashMap<String, String> params) throws EntityNotFoundException, IOException, ServiceException;
+
+    User get(String deviceId) throws EntityNotFoundException, IOException, ServiceException;
 }
