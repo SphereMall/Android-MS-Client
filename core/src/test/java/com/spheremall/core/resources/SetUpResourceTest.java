@@ -7,6 +7,7 @@ import com.spheremall.core.SMClient;
 import com.spheremall.core.api.configuration.ApiConstants;
 import com.spheremall.core.exceptions.EntityNotFoundException;
 import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.utils.StaticPreferencesManager;
 
 import org.junit.After;
 import org.junit.Before;
@@ -39,6 +40,7 @@ public class SetUpResourceTest {
                 ApiConstants.API_CLIENT_ID,
                 ApiConstants.API_SECRET_KEY,
                 ApiConstants.API_VERSION);
+        client.setPreferencesManager(new StaticPreferencesManager());
     }
 
     @After
