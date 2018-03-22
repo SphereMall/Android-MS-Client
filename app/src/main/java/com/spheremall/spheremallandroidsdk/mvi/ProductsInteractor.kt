@@ -9,6 +9,6 @@ class ProductsInteractor {
     private val sphereMallClient: SMClient = SMClient.get()
 
     fun loadProducts(): Observable<List<Product>> {
-        return Observable.fromCallable { sphereMallClient.products().full() }
+        return Observable.fromCallable { sphereMallClient.products().full().data() }
     }
 }

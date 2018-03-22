@@ -10,16 +10,17 @@ import com.spheremall.core.exceptions.MethodNotFoundException;
 import com.spheremall.core.exceptions.ServiceException;
 import com.spheremall.core.filters.Filter;
 import com.spheremall.core.filters.Predicate;
+import com.spheremall.core.filters.grid.GridFilter;
 import com.spheremall.core.makers.GridMaker;
 import com.spheremall.core.makers.ObjectMaker;
-import com.spheremall.core.resources.BaseResource;
 import com.spheremall.core.specifications.base.FilterSpecification;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class GridResourceImpl extends BaseResource<Entity, GridResource> implements GridResource {
+public class GridResourceImpl extends GrapherResource<GridResource> implements GridResource {
 
     public GridResourceImpl(SMClient smClient) {
         super(smClient);
@@ -41,17 +42,22 @@ public class GridResourceImpl extends BaseResource<Entity, GridResource> impleme
 
     @Override
     public GridResource filters(Filter filter) {
-        throw new MethodNotFoundException("Method filters(Filter filter) can not be use with GRID");
+        this.filter = filter;
+        return this;
     }
 
     @Override
     public GridResource filters(Predicate... filters) {
-        throw new MethodNotFoundException("Method filters(Predicate... filters) can not be use with GRID");
+        this.filter = new Filter(Arrays.asList(filters));
+        return this;
     }
 
     @Override
     public GridResource filters(FilterSpecification filter) {
-        throw new MethodNotFoundException("Method filters(FilterSpecification filter) can not be use with GRID");
+        GridFilter gridFilter = new GridFilter();
+        gridFilter.setFilters(filter.asFilter().getFilters());
+        this.filter = gridFilter;
+        return this;
     }
 
     @Override
