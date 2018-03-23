@@ -23,6 +23,21 @@ public class AuthResourceImpl extends BaseResource<Token, AuthResource> implemen
     }
 
     @Override
+    public String getURI() {
+        return "oauth";
+    }
+
+    @Override
+    public ObjectMaker<Token> initializeMaker() {
+        return new AuthMaker(Token.class);
+    }
+
+    @Override
+    protected AuthResource currentContext() {
+        return this;
+    }
+
+    @Override
     public User login(String email, String password) throws EntityNotFoundException, IOException, ServiceException {
         String uriAppend = "token";
 
@@ -44,20 +59,5 @@ public class AuthResourceImpl extends BaseResource<Token, AuthResource> implemen
         }
         smClient.getPreferencesManager().setToken(token.data.get(0).token);
         return smClient.users().get(Integer.valueOf(token.data.get(0).model.id)).data();
-    }
-
-    @Override
-    public String getURI() {
-        return "oauth";
-    }
-
-    @Override
-    public ObjectMaker<Token> initializeMaker() {
-        return new AuthMaker(Token.class);
-    }
-
-    @Override
-    protected AuthResource currentContext() {
-        return this;
     }
 }

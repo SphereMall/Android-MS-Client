@@ -9,31 +9,35 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class GridFilter extends Filter {
 
-    protected HashMap<String, List<Class>> elements;
+    protected List<GridFilterElement> elements = new ArrayList<>();
 
     public GridFilter elements(GridFilterElement... elements) {
-        this.elements = new HashMap<>();
-
-        for (GridFilterElement element : elements) {
-            this.elements.put(element.getName(), element.getValues());
-        }
+        this.elements.addAll(Arrays.asList(elements));
         return this;
     }
 
     public GridFilter reset() {
-        elements = null;
+        elements.clear();
         return this;
     }
 
     public GridFilter setFilters(List<Predicate> predicates) {
+        for (Predicate item : predicates) {
+            this.filters.add(new Predicate(item.field, null, item.value));
+        }
+        return this;
+    }
+
+    public GridFilter setFilters(Predicate... predicates) {
         for (Predicate item : predicates) {
             this.filters.add(new Predicate(item.field, null, item.value));
         }
@@ -45,44 +49,54 @@ public class GridFilter extends Filter {
         return this;
     }
 
-    public HashMap<String, List<Class>> getElements() {
+    public List<GridFilterElement> getElements() {
         return elements;
     }
 
-//    params=[{"entity":["product"]}]
-
     @Override
     public String toString() {
+        return mapParamsToString(toParams());
+    }
+
+    public HashMap<String, String> toParams() {
         HashMap<String, String> set = getStandardFilter();
         if (elements != null && elements.size() > 0) {
-            Set entrySet = elements.entrySet();
-            Iterator iterator = entrySet.iterator();
             JSONArray jsonParams = new JSONArray();
-
-            while (iterator.hasNext()) {
-                Map.Entry entry = (Map.Entry) iterator.next();
-                String key = (String) entry.getKey();
+            for (GridFilterElement element : elements) {
+                String key = element.name;
                 try {
                     JSONObject conditionObject = new JSONObject();
-                    JSONArray conditionValues = new JSONArray();
-                    conditionValues.put(elements.get(key));
-                    conditionObject.put(key, conditionValues);
+                    conditionObject.put(key, element.asArray());
+                    jsonParams.put(conditionObject);
                 } catch (JSONException e) {
                     Log.e("GridFilter", e.getLocalizedMessage());
                 }
             }
             set.put("params", jsonParams.toString());
         }
-        return "";
+        return set;
     }
 
     private HashMap<String, String> getStandardFilter() {
         HashMap<String, String> set = new HashMap<>();
-
         for (Predicate predicate : filters) {
             set.put(predicate.field, predicate.value);
         }
-
         return set;
+    }
+
+    private String mapParamsToString(HashMap<String, String> params) {
+        Set entrySet = params.entrySet();
+        Iterator iterator = entrySet.iterator();
+        StringBuilder builder = new StringBuilder();
+
+        while (iterator.hasNext()) {
+            builder.append(iterator.next().toString());
+            if (iterator.hasNext()) {
+                builder.append("&");
+            }
+        }
+
+        return builder.toString();
     }
 }

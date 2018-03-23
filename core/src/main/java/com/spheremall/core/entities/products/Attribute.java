@@ -16,6 +16,8 @@ public class Attribute extends Entity {
     public String description;
     public int attributeGroupId;
     public String cssClass;
+    public int orderNumber;
+    public int useInFilter;
 
     @Relationship(value = "attributeValues", resolve = true, relType = RelType.RELATED)
     public List<AttributeValue> values;

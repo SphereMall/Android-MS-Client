@@ -102,7 +102,7 @@ public class UserResourceTest extends SetUpResourceTest {
         String deviceId = "Android";
         User user = client.users().get(deviceId);
         Assert.assertNotNull(user);
-        
+
         User user2 = client.users().get(deviceId);
         Assert.assertNotNull(user2);
         Assert.assertEquals(user.getId(), user2.getId());
@@ -111,5 +111,15 @@ public class UserResourceTest extends SetUpResourceTest {
         Assert.assertNotNull(user3);
 
         Assert.assertNotEquals(user.getId(), user3.getId());
+    }
+
+    @Test
+    public void testUpdateUser() throws EntityNotFoundException, ServiceException, IOException {
+        int id = 1188;
+        HashMap<String, String> params = new HashMap<>();
+        params.put("loginName", "v.chernetsky");
+        params.put("email", "v.chernetsky@spheremall.com");
+        params.put("password", "202cb962ac59075b964b07152d234b70");
+        Response<User> userResponse = client.users().update(id, params);
     }
 }

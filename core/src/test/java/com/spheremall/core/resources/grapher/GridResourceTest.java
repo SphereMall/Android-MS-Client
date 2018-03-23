@@ -1,8 +1,13 @@
 package com.spheremall.core.resources.grapher;
 
 import com.spheremall.core.entities.Entity;
+import com.spheremall.core.entities.Facets;
+import com.spheremall.core.entities.Response;
+import com.spheremall.core.entities.products.Product;
 import com.spheremall.core.exceptions.EntityNotFoundException;
 import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.filters.grid.EntityFilter;
+import com.spheremall.core.filters.grid.GridFilter;
 import com.spheremall.core.resources.SetUpResourceTest;
 
 import org.junit.Assert;
@@ -20,8 +25,34 @@ public class GridResourceTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testCount() throws EntityNotFoundException, ServiceException, IOException {
-        int count = client.grid().count();
-        Assert.assertEquals(94, count);
+    public void testGridFilter() throws EntityNotFoundException, IOException, ServiceException {
+        GridFilter gridFilter = new GridFilter();
+        gridFilter.elements(new EntityFilter("products"));
+
+        List<Entity> entities = client.grid()
+                .filters(gridFilter)
+                .all().data();
+
+        Assert.assertNotNull(entities);
+        Assert.assertTrue(entities.size() > 0);
+
+        for (Entity entity : entities) {
+            Assert.assertEquals(Product.class.getSimpleName().toLowerCase(), entity.getType());
+        }
+    }
+
+    @Test
+    public void testGridCount() throws EntityNotFoundException, ServiceException, IOException {
+        int numberOfGridItems = client.grid().count();
+        Assert.assertEquals(453, numberOfGridItems);
+    }
+
+    @Test
+    public void testGridFacets() throws EntityNotFoundException, ServiceException, IOException {
+        Response<Facets> facets = client.grid().facets();
+        Facets facetsEntity = facets.data();
+        Assert.assertNotNull(facetsEntity);
+        Assert.assertNotNull(facetsEntity.attributes);
+        Assert.assertNotNull(facetsEntity.priceRanges);
     }
 }

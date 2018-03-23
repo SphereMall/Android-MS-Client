@@ -46,7 +46,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadProducts(): Observable<List<Product>> {
-        return Observable.fromCallable { sphereMallClient.products().full() }
+        return Observable.fromCallable {
+            return@fromCallable sphereMallClient.products().full().data()
+        }
     }
 
     private fun mapToViewModels(products: List<Product>): ArrayList<ViewModel> {

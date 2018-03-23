@@ -1,20 +1,13 @@
 package com.spheremall.core.filters.grid;
 
-import java.util.List;
+import org.json.JSONArray;
 
-public class GridFilterElement {
+public abstract class GridFilterElement {
     protected String name;
-    protected List<Class> values;
-
-    public GridFilterElement(List<Class> values) {
-        this.values = values;
-    }
 
     public String getName() {
         return name;
     }
 
-    public List<Class> getValues() {
-        return values;
-    }
+    public abstract JSONArray asArray();
 }
