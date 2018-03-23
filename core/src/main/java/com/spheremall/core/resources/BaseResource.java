@@ -4,7 +4,7 @@ import com.spheremall.core.SMClient;
 import com.spheremall.core.api.Request;
 import com.spheremall.core.api.configuration.Method;
 import com.spheremall.core.api.response.ResponseMonada;
-import com.spheremall.core.entities.Count;
+import com.spheremall.core.entities.pojo.Count;
 import com.spheremall.core.entities.Entity;
 import com.spheremall.core.entities.Response;
 import com.spheremall.core.exceptions.EntityNotFoundException;

@@ -1,7 +1,7 @@
 package com.spheremall.core.makers;
 
 import com.google.gson.Gson;
-import com.spheremall.core.entities.Count;
+import com.spheremall.core.entities.pojo.Count;
 import com.spheremall.core.entities.Response;
 
 import java.util.HashMap;

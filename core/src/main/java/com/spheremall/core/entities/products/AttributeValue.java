@@ -12,4 +12,5 @@ public class AttributeValue extends Entity {
     public String title;
     public String image;
     public int orderNumber;
+    public int amount;
 }

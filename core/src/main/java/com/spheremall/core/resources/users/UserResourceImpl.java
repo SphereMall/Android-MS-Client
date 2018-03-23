@@ -5,7 +5,7 @@ import com.spheremall.core.api.configuration.Method;
 import com.spheremall.core.api.response.ResponseMonada;
 import com.spheremall.core.entities.Entity;
 import com.spheremall.core.entities.Response;
-import com.spheremall.core.entities.UserId;
+import com.spheremall.core.entities.pojo.UserId;
 import com.spheremall.core.entities.users.Address;
 import com.spheremall.core.entities.users.User;
 import com.spheremall.core.exceptions.EntityNotFoundException;

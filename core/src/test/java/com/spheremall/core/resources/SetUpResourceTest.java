@@ -41,6 +41,8 @@ public class SetUpResourceTest {
                 ApiConstants.API_SECRET_KEY,
                 ApiConstants.API_VERSION);
         client.setPreferencesManager(new StaticPreferencesManager());
+
+//        User user = client.auth().login("o.hrybuk@spheremall.com", "123");
     }
 
     @After

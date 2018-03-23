@@ -4,13 +4,17 @@ import com.spheremall.core.SMClient;
 import com.spheremall.core.api.configuration.Method;
 import com.spheremall.core.api.response.ResponseMonada;
 import com.spheremall.core.entities.Entity;
+import com.spheremall.core.entities.Facets;
 import com.spheremall.core.entities.Response;
+import com.spheremall.core.entities.pojo.Count;
 import com.spheremall.core.exceptions.EntityNotFoundException;
 import com.spheremall.core.exceptions.MethodNotFoundException;
 import com.spheremall.core.exceptions.ServiceException;
 import com.spheremall.core.filters.Filter;
 import com.spheremall.core.filters.Predicate;
 import com.spheremall.core.filters.grid.GridFilter;
+import com.spheremall.core.makers.CountMaker;
+import com.spheremall.core.makers.FacetsMaker;
 import com.spheremall.core.makers.GridMaker;
 import com.spheremall.core.makers.ObjectMaker;
 import com.spheremall.core.specifications.base.FilterSpecification;
@@ -83,6 +87,39 @@ public class GridResourceImpl extends GrapherResource<GridResource> implements G
     @Override
     public Response<Entity> get(int id) throws ServiceException, IOException, EntityNotFoundException {
         throw new MethodNotFoundException("Method data() can not be use with GRID");
+    }
+
+    @Override
+    public Response<Facets> facets() throws EntityNotFoundException, IOException, ServiceException {
+        HashMap<String, String> params = getQueryParams();
+        ResponseMonada responseMonada = request.handle(Method.GET, "/filter", params);
+
+        if (responseMonada.hasError()) {
+            throw new EntityNotFoundException();
+        }
+
+        FacetsMaker facetsMaker = new FacetsMaker(Facets.class);
+        return facetsMaker.makeSingle(responseMonada.getResponse());
+    }
+
+    @Override
+    public int count() throws EntityNotFoundException, IOException, ServiceException {
+
+        HashMap<String, String> params = getQueryParams();
+        ResponseMonada responseMonada = request.handle(Method.GET, "count", params);
+
+        if (responseMonada.hasError()) {
+            throw new EntityNotFoundException();
+        }
+
+        CountMaker countMaker = new CountMaker(Count.class);
+        Count count = countMaker.makeSingle(responseMonada.getResponse()).data();
+
+        if (count.data == null || count.data.size() == 0) {
+            throw new EntityNotFoundException(responseMonada.getErrorResponse().error.message);
+        }
+        return count.data.get(0).attributes.count;
+
     }
 
     @Override

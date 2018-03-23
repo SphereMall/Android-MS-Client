@@ -1,6 +1,8 @@
 package com.spheremall.core.resources.grapher;
 
 import com.spheremall.core.entities.Entity;
+import com.spheremall.core.entities.Facets;
+import com.spheremall.core.entities.Response;
 import com.spheremall.core.entities.products.Product;
 import com.spheremall.core.exceptions.EntityNotFoundException;
 import com.spheremall.core.exceptions.ServiceException;
@@ -30,13 +32,27 @@ public class GridResourceTest extends SetUpResourceTest {
         List<Entity> entities = client.grid()
                 .filters(gridFilter)
                 .all().data();
+
+        Assert.assertNotNull(entities);
+        Assert.assertTrue(entities.size() > 0);
+
         for (Entity entity : entities) {
             Assert.assertEquals(Product.class.getSimpleName().toLowerCase(), entity.getType());
         }
     }
 
     @Test
-    public void testGridFacets() {
+    public void testGridCount() throws EntityNotFoundException, ServiceException, IOException {
+        int numberOfGridItems = client.grid().count();
+        Assert.assertEquals(453, numberOfGridItems);
+    }
 
+    @Test
+    public void testGridFacets() throws EntityNotFoundException, ServiceException, IOException {
+        Response<Facets> facets = client.grid().facets();
+        Facets facetsEntity = facets.data();
+        Assert.assertNotNull(facetsEntity);
+        Assert.assertNotNull(facetsEntity.attributes);
+        Assert.assertNotNull(facetsEntity.priceRanges);
     }
 }

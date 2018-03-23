@@ -1,4 +1,6 @@
-package com.spheremall.core.entities;
+package com.spheremall.core.entities.pojo;
+
+import com.spheremall.core.entities.Entity;
 
 public class UserId extends Entity {
 
