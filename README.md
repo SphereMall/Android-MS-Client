@@ -1,6 +1,6 @@
 # SphereMall Gateway Android SDK
 Official Android SDK for integrating with SphereMall Product
-### Version 1.0.7
+### Version 1.0.10
 ### Installation
 1. Add the JitPack repository to your build file
 ```
