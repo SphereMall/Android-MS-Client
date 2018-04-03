@@ -68,7 +68,7 @@ public class AuthToken {
     }
 
     protected AuthService getAuthService() {
-        ApiConfigurationFactory<Retrofit> apiConfigurationFactory = new RetrofitApiConfigurationFactory(client.getGatewayUrl());
+        ApiConfigurationFactory<Retrofit> apiConfigurationFactory = new RetrofitApiConfigurationFactory(client.getGatewayUrl(), client.isDebug());
         ApiServiceProvider apiServiceProvider = new RetrofitServiceProvider(apiConfigurationFactory);
         return apiServiceProvider.authService();
     }

@@ -13,7 +13,7 @@ public class RetrofitApiConfigurationFactoryTest {
 
     @Test
     public void testCreateRetrofitApiConfigurationFactory() {
-        ApiConfigurationFactory<Retrofit> apiConfigurationFactory = new RetrofitApiConfigurationFactory(ApiConstants.API_GATEWAY_URL);
+        ApiConfigurationFactory<Retrofit> apiConfigurationFactory = new RetrofitApiConfigurationFactory(ApiConstants.API_GATEWAY_URL, true);
         Retrofit retrofit = apiConfigurationFactory.createConfiguration();
 
         Assert.assertEquals(apiConfigurationFactory.getClass().getCanonicalName(), RetrofitApiConfigurationFactory.class.getCanonicalName());

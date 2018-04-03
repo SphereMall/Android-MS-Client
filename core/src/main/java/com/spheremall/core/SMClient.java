@@ -11,7 +11,7 @@ public class SMClient implements ServiceInjector {
     protected String secretKey;
     protected String version = "v1";
     protected PreferencesManager preferencesManager;
-
+    protected Boolean debug = false;
     private static SMClient client = null;
 
     public static final String userAgent = "SM_SDK_ANDROID_CLIENT";
@@ -58,5 +58,13 @@ public class SMClient implements ServiceInjector {
 
     public PreferencesManager getPreferencesManager() {
         return preferencesManager;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+    }
+
+    public Boolean isDebug() {
+        return debug;
     }
 }

@@ -15,9 +15,11 @@ import static com.spheremall.core.api.configuration.ApiConstants.WRITE_TIMEOUT;
 public class RetrofitApiConfigurationFactory implements ApiConfigurationFactory<Retrofit> {
 
     public final String endpoint;
+    public final boolean debug;
 
-    public RetrofitApiConfigurationFactory(String endpoint) {
+    public RetrofitApiConfigurationFactory(String endpoint, Boolean debug) {
         this.endpoint = endpoint;
+        this.debug = debug;
     }
 
     @Override
@@ -34,12 +36,14 @@ public class RetrofitApiConfigurationFactory implements ApiConfigurationFactory<
     }
 
     private OkHttpClient createApiClient() {
-        final HttpLoggingInterceptor httpLoggingInterceptor =
-                new HttpLoggingInterceptor()
-                        .setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        return new OkHttpClient.Builder()
-                .addInterceptor(httpLoggingInterceptor)
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        if (debug) {
+            final HttpLoggingInterceptor httpLoggingInterceptor =
+                    new HttpLoggingInterceptor()
+                            .setLevel(HttpLoggingInterceptor.Level.BODY);
+            builder.addInterceptor(httpLoggingInterceptor);
+        }
+        return builder
                 .addNetworkInterceptor(new RequestInterceptor())
                 .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
                 .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
