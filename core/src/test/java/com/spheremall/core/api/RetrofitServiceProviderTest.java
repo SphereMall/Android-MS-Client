@@ -16,7 +16,7 @@ public class RetrofitServiceProviderTest {
 
     @Test
     public void testCreateSMService() {
-        ApiConfigurationFactory<Retrofit> apiConfigurationFactory = new RetrofitApiConfigurationFactory(ApiConstants.API_GATEWAY_URL);
+        ApiConfigurationFactory<Retrofit> apiConfigurationFactory = new RetrofitApiConfigurationFactory(ApiConstants.API_GATEWAY_URL, true);
         ApiServiceProvider apiServiceProvider = new RetrofitServiceProvider(apiConfigurationFactory);
         SMService sphereMallService = apiServiceProvider.sphereMallService();
 

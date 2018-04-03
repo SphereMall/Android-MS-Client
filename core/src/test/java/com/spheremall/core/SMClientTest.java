@@ -86,7 +86,7 @@ public class SMClientTest {
     public class CustomRetrofitConfigurationFactory extends RetrofitApiConfigurationFactory {
 
         public CustomRetrofitConfigurationFactory(String endpoint) {
-            super(endpoint);
+            super(endpoint, true);
         }
     }
 
