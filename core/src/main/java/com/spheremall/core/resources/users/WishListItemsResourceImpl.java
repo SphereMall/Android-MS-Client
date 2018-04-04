@@ -69,7 +69,9 @@ public class WishListItemsResourceImpl extends BaseResource<WishListItem, WishLi
         }
         List<WishListItem> entities = maker.makeAsList(responseMonada.getResponse()).data();
         if (entities.size() > 0) {
-            return entities.get(0);
+            WishListItem wishListItem = entities.get(0);
+            wishListItem.entity = smClient.products().full(wishListItem.objectId).data();
+            return wishListItem;
         } else {
             throw new EntityNotFoundException();
         }

@@ -1,6 +1,7 @@
 package com.spheremall.core.resources.users;
 
 import com.spheremall.core.entities.products.Product;
+import com.spheremall.core.entities.users.User;
 import com.spheremall.core.entities.users.WishListItem;
 import com.spheremall.core.exceptions.EntityNotFoundException;
 import com.spheremall.core.exceptions.ServiceException;
@@ -25,7 +26,7 @@ public class WishListItemsResourceTest extends SetUpResourceTest {
 
     @Test
     public void testAddToWishList() throws EntityNotFoundException, ServiceException, IOException {
-        int userId = 5;
+        User user = client.users().first().data();
         Product product = client.products().first().data();
         List<WishListItem> wishList = client.wishListItems().all().data();
         for (WishListItem wishListItem : wishList) {
@@ -34,7 +35,7 @@ public class WishListItemsResourceTest extends SetUpResourceTest {
             }
         }
 
-        WishListItem wishListItem = client.wishListItems().addToWishList(userId, product.getId(), 1);
+        WishListItem wishListItem = client.wishListItems().addToWishList(user.getId(), product.getId(), 1);
 
         List<WishListItem> all = client.wishListItems().all().data();
         Assert.assertTrue(all.size() > 0);

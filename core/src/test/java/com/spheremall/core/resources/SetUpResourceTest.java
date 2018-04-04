@@ -22,7 +22,7 @@ public class SetUpResourceTest {
     protected SMClient client;
     protected SharedPreferences preferences;
     protected SharedPreferences.Editor editor;
-    private String mockToken = "ozBzTRQvrudyGpHJ34LbcT/zm2a4jbuoHpgDLMNCAKkEeAJyqipBRNOhBLcc/cnnUQpcms+Io11s0vXfU6uBtIEl5AejiAAIw6mlJcE2pB/tRnraP9LesmILvuq0+atLcryjVjEcSOvygTO5n1Q4ik/DRQgX3brnlT8ZxZuU2E9mGzt8AgqZZw4UfHnhkDN1MN+cSki7PFJrm1JyS/Id24NCs8UZNOrZ16l+vgJXtn96+XqRudx1GaxfEXj8g0EqEIBCJw==.8Bk12U3J4SRIhY859ORcJ+zrWwgY3gzFWX4c5D+MeX6av+UWg/BCeGTAikyzOGleqHxCasEKSNvC08DLIMpAMhjVun2bsR/NoykrIuw2oFfNYO2/DT92SuRtHz0pBEIZpYZ4oy5IYwoibh6dx0YBhs8qz+Qq5w==.3d0eec579e9f5d8cf34b248b23817d37";
+    private String mockToken = "Ozf/rj21pjNeQyRCJTmegJyFEYfLkcdyz7HlLDqzoUAz+I5EZEbhF09RcE+NlnmXq2xRJaSarY/UjshvV4Iv+w94fFXjijw9ZFj7sRDj4L3GamXxFEgJe9CLRJPvOc8kAYTRwe2QmwKVNHs9B7VNJ74+WFQ+goSaOufCxBIedM/Psut/W3Bnhm33aXvbNKxFVSmXJd+A61IbJH5WmXnKSwHh20Uc0LnEYvm/xe+KVOjKcw09rItmKW8bY/t//Msbl1zYa7buh6E=.6pLvPAzeXzPwlNaetSXEiSnopNslgd7fU5DM0fQjT5db7/YH4Bw/R+MiidXcBBDQw2X5Z8onQYJtRxXtw/utK1+kuvVOxDhhPYm87k91IBqR9BL1387HIxfhholoGmHmW8CZbOzVTC+CL+yB8ViF9G9dkiAWAoiTFz0G2hWyRFg=.3523ed73b7025b5a7fd247389aaef048";
 
     @Before
     public void setUp() throws EntityNotFoundException, ServiceException, IOException {
