@@ -18,10 +18,11 @@ import java.util.Set;
 
 public class GridFilter extends Filter {
 
-    protected List<GridFilterElement> elements = new ArrayList<>();
+    protected List<List<GridFilterElement>> elements = new ArrayList<>();
 
     public GridFilter elements(GridFilterElement... elements) {
-        this.elements.addAll(Arrays.asList(elements));
+        List<GridFilterElement> levelElements = new ArrayList<>(Arrays.asList(elements));
+        this.elements.add(levelElements);
         return this;
     }
 
@@ -49,7 +50,7 @@ public class GridFilter extends Filter {
         return this;
     }
 
-    public List<GridFilterElement> getElements() {
+    public List<List<GridFilterElement>> getElements() {
         return elements;
     }
 
@@ -62,15 +63,17 @@ public class GridFilter extends Filter {
         HashMap<String, String> set = getStandardFilter();
         if (elements != null && elements.size() > 0) {
             JSONArray jsonParams = new JSONArray();
-            for (GridFilterElement element : elements) {
-                String key = element.name;
-                try {
-                    JSONObject conditionObject = new JSONObject();
-                    conditionObject.put(key, element.asArray());
-                    jsonParams.put(conditionObject);
-                } catch (JSONException e) {
-                    Log.e("GridFilter", e.getLocalizedMessage());
+            for (List<GridFilterElement> levelElements : elements) {
+                JSONObject conditionObject = new JSONObject();
+                for (GridFilterElement element : levelElements) {
+                    String key = element.name;
+                    try {
+                        conditionObject.put(key, element.asArray());
+                    } catch (JSONException e) {
+                        Log.e("GridFilter", e.getLocalizedMessage());
+                    }
                 }
+                jsonParams.put(conditionObject);
             }
             set.put("params", jsonParams.toString());
         }

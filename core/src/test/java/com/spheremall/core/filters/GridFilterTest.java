@@ -78,17 +78,11 @@ public class GridFilterTest extends SetUpResourceTest {
     public void testGridFilterParams() {
 
         Integer[] attr1Values = new Integer[]{1, 2, 3};
-        Integer[] attr2Values = new Integer[]{3, 2, 4};
-
         AttributeFilter attr1 = new AttributeFilter(1, 2, 3);
-        AttributeFilter attr2 = new AttributeFilter(3, 2, 4);
         Assert.assertEquals("attributes", attr1.getName());
-        Assert.assertEquals("attributes", attr2.getName());
+
         for (int i = 0; i < attr1Values.length; i++) {
             Assert.assertEquals(attr1Values[i], attr1.getValues().get(i));
-        }
-        for (int i = 0; i < attr2Values.length; i++) {
-            Assert.assertEquals(attr2Values[i], attr2.getValues().get(i));
         }
 
         Integer[] functionalNameFilterValues = new Integer[]{1, 2};
@@ -102,11 +96,12 @@ public class GridFilterTest extends SetUpResourceTest {
         AttributeFilter attr3 = new AttributeFilter(1, 5);
 
         GridFilter filter = new GridFilter();
-        String stringParams = filter.elements(attr1, attr2)
+
+        String stringParams = filter.elements(attr1)
                 .elements(functionalNameFilter, attr3)
                 .toString();
 
-        Assert.assertEquals("params=[{\"attributes\":[1,2,3]},{\"attributes\":[3,2,4]},{\"functionalNames\":[1,2]},{\"attributes\":[1,5]}]", stringParams);
+        Assert.assertEquals("params=[{\"attributes\":[1,2,3]},{\"functionalNames\":[1,2],\"attributes\":[1,5]}]", stringParams);
     }
 
     @Test
@@ -118,7 +113,6 @@ public class GridFilterTest extends SetUpResourceTest {
         for (int i = 0; i < attr1Values.length; i++) {
             Assert.assertEquals(attr1Values[i], attr1.getValues().get(i));
         }
-
 
         Integer[] functionalNameFilterValues = new Integer[]{5};
 
@@ -143,7 +137,11 @@ public class GridFilterTest extends SetUpResourceTest {
         }
 
         GridFilter filter = new GridFilter();
-        String stringParams = filter.elements(attr1, functionalNameFilter, brandFilter, priceRangeFilter).toString();
+        filter.elements(attr1);
+        filter.elements(functionalNameFilter);
+        filter.elements(brandFilter);
+        filter.elements(priceRangeFilter);
+        String stringParams = filter.toString();
 
         Assert.assertEquals("params=[{\"attributes\":[1,2,3]},{\"functionalNames\":[5]},{\"brands\":[4]},{\"priceRange\":[1000,5000]}]", stringParams);
     }
@@ -166,7 +164,9 @@ public class GridFilterTest extends SetUpResourceTest {
         }
 
         GridFilter filter = new GridFilter();
-        String stringParams = filter.elements(attr1, factorFilter).toString();
+        filter.elements(attr1);
+        filter.elements(factorFilter);
+        String stringParams = filter.toString();
 
         Assert.assertEquals("params=[{\"attributes\":[1,2,3]},{\"factors\":[4]}]", stringParams);
     }
@@ -191,12 +191,12 @@ public class GridFilterTest extends SetUpResourceTest {
 
         GridFilter filter = new GridFilter();
         filter.elements(attr1, functionalNameFilter);
-        Assert.assertEquals("attributes", filter.getElements().get(0).getName());
-        Assert.assertEquals("functionalNames", filter.getElements().get(1).getName());
+        Assert.assertEquals("attributes", filter.getElements().get(0).get(0).getName());
+        Assert.assertEquals("functionalNames", filter.getElements().get(0).get(1).getName());
 
         try {
-            Assert.assertEquals(1, filter.getElements().get(0).asArray().get(0));
-            Assert.assertEquals(5, filter.getElements().get(1).asArray().get(0));
+            Assert.assertEquals(1, filter.getElements().get(0).get(0).asArray().get(0));
+            Assert.assertEquals(5, filter.getElements().get(0).get(1).asArray().get(0));
         } catch (JSONException e) {
             e.printStackTrace();
         }
