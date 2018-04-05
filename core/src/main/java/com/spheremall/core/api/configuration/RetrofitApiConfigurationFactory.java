@@ -1,6 +1,8 @@
 package com.spheremall.core.api.configuration;
 
 
+import com.spheremall.core.SMClient;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -16,10 +18,18 @@ public class RetrofitApiConfigurationFactory implements ApiConfigurationFactory<
 
     public final String endpoint;
     public final boolean debug;
+    public final HttpLoggingInterceptor.Level level;
 
-    public RetrofitApiConfigurationFactory(String endpoint, Boolean debug) {
+    public RetrofitApiConfigurationFactory(SMClient client) {
+        this.endpoint = client.getGatewayUrl();
+        this.debug = client.isDebug();
+        this.level = client.getLoggingLevel();
+    }
+
+    public RetrofitApiConfigurationFactory(String endpoint, boolean debug) {
         this.endpoint = endpoint;
         this.debug = debug;
+        this.level = HttpLoggingInterceptor.Level.BASIC;
     }
 
     @Override
@@ -40,7 +50,7 @@ public class RetrofitApiConfigurationFactory implements ApiConfigurationFactory<
         if (debug) {
             final HttpLoggingInterceptor httpLoggingInterceptor =
                     new HttpLoggingInterceptor()
-                            .setLevel(HttpLoggingInterceptor.Level.BODY);
+                            .setLevel(level);
             builder.addInterceptor(httpLoggingInterceptor);
         }
         return builder

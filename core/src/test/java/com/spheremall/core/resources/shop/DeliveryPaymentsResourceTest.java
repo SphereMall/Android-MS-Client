@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class DeliveryPaymentsResourceTest extends SetUpResourceTest {
 
-    @Test(expected = EntityNotFoundException.class)
+    @Test
     public void testGetFirst() throws EntityNotFoundException, IOException, ServiceException {
         DeliveryPaymentRelation deliveryPaymentRelation = client.deliveryPayments().first().data();
         Assert.assertNotNull(deliveryPaymentRelation);

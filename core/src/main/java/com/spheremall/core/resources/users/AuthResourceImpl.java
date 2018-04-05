@@ -45,7 +45,7 @@ public class AuthResourceImpl extends BaseResource<Token, AuthResource> implemen
         params.put(ApiConstants.API_CLIENT_ID_TITLE, smClient.getClientId());
         params.put(ApiConstants.API_SECRET_TITLE, smClient.getSecretKey());
         params.put("login_email", email);
-        params.put("login_pass", password);
+        params.put("login_password", password);
         AuthRequest authRequest = new AuthRequest(this.smClient, this);
         ResponseMonada responseMonada = authRequest.handle(Method.POST, uriAppend, params);
         if (responseMonada.hasError()) {
@@ -59,5 +59,22 @@ public class AuthResourceImpl extends BaseResource<Token, AuthResource> implemen
         }
         smClient.getPreferencesManager().setToken(token.data.get(0).token);
         return smClient.users().get(Integer.valueOf(token.data.get(0).model.id)).data();
+    }
+
+    @Override
+    public Token auth(String email, String password) throws EntityNotFoundException, IOException, ServiceException {
+        String uriAppend = "token";
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put(ApiConstants.API_CLIENT_ID_TITLE, smClient.getClientId());
+        params.put(ApiConstants.API_SECRET_TITLE, smClient.getSecretKey());
+        params.put("login_email", email);
+        params.put("login_password", password);
+        AuthRequest authRequest = new AuthRequest(this.smClient, this);
+        ResponseMonada responseMonada = authRequest.handle(Method.POST, uriAppend, params);
+        if (responseMonada.hasError()) {
+            throw new EntityNotFoundException(responseMonada.getErrorResponse().error.message);
+        }
+        return maker.makeSingle(responseMonada.getResponse()).data();
     }
 }

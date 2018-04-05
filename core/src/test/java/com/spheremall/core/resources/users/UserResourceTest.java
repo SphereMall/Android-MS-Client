@@ -66,7 +66,10 @@ public class UserResourceTest extends SetUpResourceTest {
 
     @Test
     public void testWishList() throws EntityNotFoundException, ServiceException, IOException {
-        int userId = 5;
+        int userId = client.users()
+                .filters(new Predicate("email", FilterOperators.EQUAL, "v.chernetsky@spheremall.com"))
+                .first().data().getId();
+
         Product product = client.products().first().data();
         List<Entity> wishList = client.users().getWishList(userId);
         for (Entity wishListItem : wishList) {
@@ -90,7 +93,8 @@ public class UserResourceTest extends SetUpResourceTest {
 
     @Test
     public void testSetAddresses() throws EntityNotFoundException, ServiceException, IOException {
-        User user = client.users().get(5).data();
+        User user = client.users().first().data();
+
         HashMap<String, String> params = new HashMap<>();
         params.put("countryName", "TestCountry2");
         Response<Address> response = client.users().setAddress(user.defaultAddressId, user.getId(), params);
@@ -115,11 +119,14 @@ public class UserResourceTest extends SetUpResourceTest {
 
     @Test
     public void testUpdateUser() throws EntityNotFoundException, ServiceException, IOException {
-        int id = 1188;
+        User user = client.users()
+                .filters(new Predicate("email", FilterOperators.EQUAL, "v.chernetsky@spheremall.com"))
+                .first().data();
+
         HashMap<String, String> params = new HashMap<>();
         params.put("loginName", "v.chernetsky");
         params.put("email", "v.chernetsky@spheremall.com");
         params.put("password", "202cb962ac59075b964b07152d234b70");
-        Response<User> userResponse = client.users().update(id, params);
+        Response<User> userResponse = client.users().update(user.getId(), params);
     }
 }

@@ -36,13 +36,15 @@ public class BasketTest extends SetUpResourceTest {
 
     @Test
     public void testGetByUserId() throws EntityNotFoundException, ServiceException, IOException {
-        Basket basket = client.basket(Basket.DEFAULT_ORDER_ID, userId);
+        User user = client.users().first().data();
+        Basket basket = client.basket(Basket.DEFAULT_ORDER_ID, user.getId());
         junit.framework.Assert.assertNotNull(basket);
-        junit.framework.Assert.assertEquals(userId, basket.getUserId());
+        junit.framework.Assert.assertEquals(user.getId().intValue(), basket.getUserId());
     }
 
     @Test
     public void testGetByBasketId() throws EntityNotFoundException, ServiceException, IOException {
+        int basketId = client.basket().getId();
         Basket basket = client.basket(basketId);
         junit.framework.Assert.assertNotNull(basket);
         junit.framework.Assert.assertEquals(basketId, basket.getId());

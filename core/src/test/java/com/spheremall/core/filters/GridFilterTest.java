@@ -181,7 +181,6 @@ public class GridFilterTest extends SetUpResourceTest {
             Assert.assertEquals(attr1Values[i], attr1.getValues().get(i));
         }
 
-
         Integer[] functionalNameFilterValues = new Integer[]{5};
 
         FunctionalNameFilter functionalNameFilter = new FunctionalNameFilter(5);

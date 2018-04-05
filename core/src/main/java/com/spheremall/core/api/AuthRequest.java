@@ -91,7 +91,7 @@ public class AuthRequest implements BaseRequest {
     }
 
     private AuthService getService() {
-        ApiConfigurationFactory<Retrofit> apiConfigurationFactory = new RetrofitApiConfigurationFactory(client.getGatewayUrl(), client.isDebug());
+        ApiConfigurationFactory<Retrofit> apiConfigurationFactory = new RetrofitApiConfigurationFactory(client);
         ApiServiceProvider apiServiceProvider = new RetrofitServiceProvider(apiConfigurationFactory);
         return apiServiceProvider.authService();
     }

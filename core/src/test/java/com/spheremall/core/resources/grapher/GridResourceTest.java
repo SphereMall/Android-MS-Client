@@ -6,7 +6,9 @@ import com.spheremall.core.entities.Response;
 import com.spheremall.core.entities.products.Product;
 import com.spheremall.core.exceptions.EntityNotFoundException;
 import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.filters.FilterOperators;
 import com.spheremall.core.filters.grid.EntityFilter;
+import com.spheremall.core.filters.grid.FunctionalNameFilter;
 import com.spheremall.core.filters.grid.GridFilter;
 import com.spheremall.core.resources.SetUpResourceTest;
 
@@ -49,6 +51,11 @@ public class GridResourceTest extends SetUpResourceTest {
 
     @Test
     public void testGridFacets() throws EntityNotFoundException, ServiceException, IOException {
+        GridFilter gridFilter = new GridFilter();
+        FunctionalNameFilter functionalNameFilter = new FunctionalNameFilter(1);
+        gridFilter.elements(functionalNameFilter);
+        gridFilter.addFilter("showInSpecList", FilterOperators.EQUAL, "1");
+
         Response<Facets> facets = client.grid().facets();
         Facets facetsEntity = facets.data();
         Assert.assertNotNull(facetsEntity);

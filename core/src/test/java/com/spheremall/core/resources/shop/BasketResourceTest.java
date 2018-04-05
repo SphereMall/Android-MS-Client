@@ -3,6 +3,7 @@ package com.spheremall.core.resources.shop;
 import com.spheremall.core.entities.products.Product;
 import com.spheremall.core.entities.shop.BasketOrder;
 import com.spheremall.core.entities.shop.Order;
+import com.spheremall.core.entities.users.User;
 import com.spheremall.core.exceptions.EntityNotFoundException;
 import com.spheremall.core.exceptions.ServiceException;
 import com.spheremall.core.resources.SetUpResourceTest;
@@ -15,27 +16,25 @@ import java.util.HashMap;
 
 public class BasketResourceTest extends SetUpResourceTest {
 
-    private Product product;
-    private static final int BASKET_ID = 1862;
-
     @Override
     public void setUp() throws EntityNotFoundException, ServiceException, IOException {
         super.setUp();
-        product = client.products().first().data();
     }
 
     @Test
     public void testGetById() throws EntityNotFoundException, ServiceException, IOException {
-        Order basket = client.basketResource().get(BASKET_ID).data();
+        int basketId = client.basket().getId();
+        Order basket = client.basketResource().get(basketId).data();
         Assert.assertNotNull(basket);
-        Assert.assertEquals(Integer.valueOf(BASKET_ID), basket.getId());
+        Assert.assertEquals(Integer.valueOf(basketId), basket.getId());
     }
 
     @Test
     public void testGetByUserId() throws EntityNotFoundException, ServiceException, IOException {
-        Order basket = client.basketResource().getByUserId(5).data();
+        User user = client.users().first().data();
+        Order basket = client.basketResource().getByUserId(user.getId()).data();
         Assert.assertNotNull(basket);
-        Assert.assertEquals(5, basket.userId);
+        Assert.assertEquals(user.getId().intValue(), basket.userId);
     }
 
     @Test
@@ -47,17 +46,20 @@ public class BasketResourceTest extends SetUpResourceTest {
     @Test
     public void testRemoveItems() throws EntityNotFoundException, ServiceException, IOException {
 
+        int basketId = client.basket().getId();
+
+        Product product = client.products().first().data();
         HashMap<String, String> params = new HashMap<>();
-        params.put("products", "[{\"id\":6354, \"amount\":1}]");
-        params.put("basketId", String.valueOf(BASKET_ID));
+        params.put("products", "[{\"id\":" + product.getId() + ", \"amount\":1}]");
+        params.put("basketId", String.valueOf(basketId));
         BasketOrder basketOrder = client.basketResource().create(params).data();
         Assert.assertNotNull(basketOrder);
         Assert.assertTrue(basketOrder.items.size() > 0);
-        Assert.assertEquals(6354, basketOrder.items.get(0).productId);
+        Assert.assertEquals(product.getId().intValue(), basketOrder.items.get(0).productId);
 
         params = new HashMap<>();
-        params.put("basketId", String.valueOf(BASKET_ID));
-        params.put("products", "[{\"id\":\"6354\"}]");
+        params.put("basketId", String.valueOf(basketId));
+        params.put("products", "[{\"id\":\"" + product.getId() + "\"}]");
         Order order = client.basketResource().removeItems(params);
         Assert.assertNotNull(order);
     }

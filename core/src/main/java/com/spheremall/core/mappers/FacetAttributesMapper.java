@@ -6,7 +6,6 @@ import com.spheremall.core.entities.products.AttributeValue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -21,20 +20,18 @@ public class FacetAttributesMapper implements Mapper<FacetsObject, Attribute> {
             Attribute attribute = attributeHashMap.get(String.valueOf(attr.attributeId));
             if (attribute == null) {
                 attribute = createAttribute(attr);
-            }
-
-            for (FacetsObject.Attribute value : obj.data.attributes) {
-                if (attr.attributeId == value.attributeId) {
-                    attribute.values.add(createAttributeValue(value));
+                for (FacetsObject.Attribute value : obj.data.attributes) {
+                    if (attr.attributeId == value.attributeId) {
+                        attribute.values.add(createAttributeValue(value));
+                    }
                 }
+                attributeHashMap.put(attribute.getId().toString(), attribute);
             }
-            attributeHashMap.put(attribute.getId().toString(), attribute);
         }
 
         List<Attribute> attributes = new ArrayList<>();
-        Iterator iterator = attributeHashMap.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry pair = (Map.Entry) iterator.next();
+        for (Object object : attributeHashMap.entrySet()) {
+            Map.Entry pair = (Map.Entry) object;
             Attribute attribute = (Attribute) pair.getValue();
             attributes.add(attribute);
         }
@@ -63,6 +60,7 @@ public class FacetAttributesMapper implements Mapper<FacetsObject, Attribute> {
         attributeValue.value = item.value;
         attributeValue.title = item.valueTitle;
         attributeValue.amount = item.amount;
+        attributeValue.showInSpecList = item.showInSpecList;
         return attributeValue;
     }
 }

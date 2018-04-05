@@ -11,5 +11,7 @@ import java.io.IOException;
 public interface AuthResource extends Resource<AuthResource, Token> {
 
     User login(String email, String password) throws EntityNotFoundException, IOException, ServiceException;
+
+    Token auth(String email, String password) throws EntityNotFoundException, IOException, ServiceException;
 }
 

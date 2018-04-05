@@ -5,6 +5,8 @@ import android.content.Context;
 import com.spheremall.core.utils.PreferencesManager;
 import com.spheremall.core.utils.PreferencesManagerImpl;
 
+import okhttp3.logging.HttpLoggingInterceptor;
+
 public class SMClient implements ServiceInjector {
     protected String gatewayUrl;
     protected String clientId;
@@ -13,6 +15,7 @@ public class SMClient implements ServiceInjector {
     protected PreferencesManager preferencesManager;
     protected Boolean debug = false;
     private static SMClient client = null;
+    protected HttpLoggingInterceptor.Level loggingLevel = HttpLoggingInterceptor.Level.NONE;
 
     public static final String userAgent = "SM_SDK_ANDROID_CLIENT";
 
@@ -66,5 +69,13 @@ public class SMClient implements ServiceInjector {
 
     public Boolean isDebug() {
         return debug;
+    }
+
+    public void setLoggingLevel(HttpLoggingInterceptor.Level loggingLevel) {
+        this.loggingLevel = loggingLevel;
+    }
+
+    public HttpLoggingInterceptor.Level getLoggingLevel() {
+        return loggingLevel;
     }
 }

@@ -3,6 +3,8 @@ package com.spheremall.core.resources.products;
 import com.spheremall.core.entities.products.Product;
 import com.spheremall.core.exceptions.EntityNotFoundException;
 import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.filters.FilterOperators;
+import com.spheremall.core.filters.Predicate;
 import com.spheremall.core.resources.SetUpResourceTest;
 
 import org.junit.Assert;
@@ -22,14 +24,17 @@ public class ProductResourceTest extends SetUpResourceTest {
 
         products = client.products()
                 .limit(1)
-                .ids(6351)
+                .ids(627)
                 .full().data();
+
         Assert.assertEquals(1, products.size());
-        Assert.assertEquals(6351, products.get(0).getId().intValue());
+        Assert.assertEquals(627, products.get(0).getId().intValue());
 
         Product product = client.products()
-                .full(6351).data();
-        Assert.assertEquals(6351, product.getId().intValue());
+                .filters(new Predicate("showInSpecList", FilterOperators.EQUAL, "1"))
+                .full(627).data();
+
+        Assert.assertEquals(627, product.getId().intValue());
 
         product = client.products()
                 .full("verswitte-ciabatta-beenham").data();
