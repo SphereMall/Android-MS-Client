@@ -5,8 +5,7 @@ import com.spheremall.core.entities.Response;
 import com.spheremall.core.entities.products.Product;
 import com.spheremall.core.entities.users.Address;
 import com.spheremall.core.entities.users.User;
-import com.spheremall.core.exceptions.EntityNotFoundException;
-import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.FilterOperators;
 import com.spheremall.core.filters.Predicate;
 import com.spheremall.core.resources.SetUpResourceTest;
@@ -21,14 +20,14 @@ import java.util.List;
 public class UserResourceTest extends SetUpResourceTest {
 
     @Test
-    public void testGetUsersList() throws EntityNotFoundException, IOException, ServiceException {
+    public void testGetUsersList() throws SphereMallException, IOException {
         List<User> users = client.users().all().data();
         Assert.assertNotNull(users);
         Assert.assertEquals(10, users.size());
     }
 
     @Test
-    public void testIsUserSubscriber() throws EntityNotFoundException, IOException, ServiceException {
+    public void testIsUserSubscriber() throws SphereMallException, IOException {
 
         try {
             User user = client.users()
@@ -65,21 +64,24 @@ public class UserResourceTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testWishList() throws EntityNotFoundException, ServiceException, IOException {
+    public void testWishList() throws SphereMallException, IOException {
         int userId = client.users()
-                .filters(new Predicate("email", FilterOperators.EQUAL, "v.chernetsky@spheremall.com"))
                 .first().data().getId();
 
         Product product = client.products().first().data();
-        List<Entity> wishList = client.users().getWishList(userId);
-        for (Entity wishListItem : wishList) {
-            if (wishListItem instanceof Product) {
-                Product productWishListItem = (Product) wishListItem;
-                if (productWishListItem.getId().equals(product.getId())) {
-                    client.users()
-                            .removeFromWishList(userId, productWishListItem.getId(), "products");
+        try {
+            List<Entity> wishList = client.users().getWishList(userId);
+            for (Entity wishListItem : wishList) {
+                if (wishListItem instanceof Product) {
+                    Product productWishListItem = (Product) wishListItem;
+                    if (productWishListItem.getId().equals(product.getId())) {
+                        client.users()
+                                .removeFromWishList(userId, productWishListItem.getId(), "products");
+                    }
                 }
             }
+        } catch (Throwable e) {
+            System.out.println(e.getLocalizedMessage());
         }
 
         Entity wishListItem = client.users().addToWishList(userId, product.getId(), "products");
@@ -92,7 +94,7 @@ public class UserResourceTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testSetAddresses() throws EntityNotFoundException, ServiceException, IOException {
+    public void testSetAddresses() throws SphereMallException, IOException {
         User user = client.users().first().data();
 
         HashMap<String, String> params = new HashMap<>();
@@ -102,7 +104,7 @@ public class UserResourceTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testGetUserByDevice() throws EntityNotFoundException, ServiceException, IOException {
+    public void testGetUserByDevice() throws SphereMallException, IOException {
         String deviceId = "Android";
         User user = client.users().get(deviceId);
         Assert.assertNotNull(user);
@@ -117,8 +119,8 @@ public class UserResourceTest extends SetUpResourceTest {
         Assert.assertNotEquals(user.getId(), user3.getId());
     }
 
-    @Test
-    public void testUpdateUser() throws EntityNotFoundException, ServiceException, IOException {
+    //    @Test
+    public void testUpdateUser() throws SphereMallException, IOException {
         User user = client.users()
                 .filters(new Predicate("email", FilterOperators.EQUAL, "v.chernetsky@spheremall.com"))
                 .first().data();

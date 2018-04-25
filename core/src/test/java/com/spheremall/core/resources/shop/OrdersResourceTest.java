@@ -1,11 +1,14 @@
 package com.spheremall.core.resources.shop;
 
+import com.spheremall.core.entities.products.Product;
 import com.spheremall.core.entities.shop.Order;
-import com.spheremall.core.exceptions.EntityNotFoundException;
-import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.entities.users.User;
+import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.FilterOperators;
 import com.spheremall.core.filters.Predicate;
 import com.spheremall.core.resources.SetUpResourceTest;
+import com.spheremall.core.shop.Basket;
+import com.spheremall.core.shop.BasketPredicate;
 import com.spheremall.core.shop.OrderFinalized;
 
 import junit.framework.Assert;
@@ -19,7 +22,7 @@ import java.util.List;
 public class OrdersResourceTest extends SetUpResourceTest {
 
     @Test
-    public void testGetList() throws EntityNotFoundException, IOException, ServiceException {
+    public void testGetList() throws SphereMallException, IOException {
         List<Order> orderList = client.orders().all().data();
         Assert.assertNotNull(orderList);
         for (Order order : orderList) {
@@ -28,7 +31,7 @@ public class OrdersResourceTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testGetOrderById() throws EntityNotFoundException, IOException, ServiceException {
+    public void testGetOrderById() throws SphereMallException, IOException {
         Order order = client.orders()
                 .filters(new Predicate("statusId", FilterOperators.EQUAL, String.valueOf(2)))
                 .first().data();
@@ -38,7 +41,7 @@ public class OrdersResourceTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testUpdateOrder() throws EntityNotFoundException, IOException, ServiceException {
+    public void testUpdateOrder() throws SphereMallException, IOException {
         Order order = client.orders()
                 .filters(new Predicate("statusId", FilterOperators.NOT_EQUAL, String.valueOf(2)))
                 .first().data();
@@ -52,12 +55,22 @@ public class OrdersResourceTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testOrderHistory() throws EntityNotFoundException, ServiceException, IOException {
-        List<Order> orders = client.orders().getHistory(227, "");
+    public void testOrderHistory() throws SphereMallException, IOException {
+        User user = client.users().first().data();
+        Basket basket = client.basket(-1, user.getId());
+
+        Product product = client.products().first().data();
+        basket.add(new BasketPredicate(product.getId(), 2));
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put("statusId", "2");
+        basket.update(params);
+
+        List<Order> orders = client.orders().getHistory(user.getId(), "");
         Assert.assertNotNull(orders);
         Assert.assertTrue(orders.size() > 0);
         for (Order order : orders) {
-            Assert.assertEquals(227, order.userId);
+            Assert.assertEquals(user.getId().intValue(), order.userId);
         }
     }
 }

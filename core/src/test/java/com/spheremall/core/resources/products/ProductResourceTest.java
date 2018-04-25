@@ -1,8 +1,7 @@
 package com.spheremall.core.resources.products;
 
 import com.spheremall.core.entities.products.Product;
-import com.spheremall.core.exceptions.EntityNotFoundException;
-import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.FilterOperators;
 import com.spheremall.core.filters.Predicate;
 import com.spheremall.core.resources.SetUpResourceTest;
@@ -15,7 +14,10 @@ import java.util.List;
 
 public class ProductResourceTest extends SetUpResourceTest {
     @Test
-    public void testProductFull() throws EntityNotFoundException, IOException, ServiceException {
+    public void testProductFull() throws SphereMallException, IOException {
+
+        Product testProduct = client.products().first().data();
+
         List<Product> products = client.products()
                 .limit(2)
                 .full().data();
@@ -24,25 +26,21 @@ public class ProductResourceTest extends SetUpResourceTest {
 
         products = client.products()
                 .limit(1)
-                .ids(627)
+                .ids(testProduct.getId())
                 .full().data();
 
         Assert.assertEquals(1, products.size());
-        Assert.assertEquals(627, products.get(0).getId().intValue());
+        Assert.assertEquals(testProduct.getId(), products.get(0).getId());
 
         Product product = client.products()
                 .filters(new Predicate("showInSpecList", FilterOperators.EQUAL, "1"))
-                .full(627).data();
+                .full(testProduct.getId()).data();
 
-        Assert.assertEquals(627, product.getId().intValue());
+        Assert.assertEquals(testProduct.getId().intValue(), product.getId().intValue());
 
         product = client.products()
-                .full("verswitte-ciabatta-beenham").data();
+                .full(testProduct.urlCode).data();
 
-        Assert.assertEquals("verswitte-ciabatta-beenham", product.urlCode);
-
-        Assert.assertNotNull(products.get(0).productAttributeValues);
-        Assert.assertNotNull(products.get(0).brands);
-        Assert.assertNotNull(products.get(0).functionalNames);
+        Assert.assertEquals(testProduct.urlCode, product.urlCode);
     }
 }

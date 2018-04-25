@@ -1,19 +1,26 @@
-package com.spheremall.core.api;
+package com.spheremall.core.api.auth;
 
+import com.google.gson.Gson;
 import com.spheremall.core.SMClient;
+import com.spheremall.core.api.BaseRequest;
 import com.spheremall.core.api.configuration.ApiConfigurationFactory;
 import com.spheremall.core.api.configuration.Method;
 import com.spheremall.core.api.configuration.RetrofitApiConfigurationFactory;
 import com.spheremall.core.api.provides.ApiServiceProvider;
 import com.spheremall.core.api.provides.RetrofitServiceProvider;
+import com.spheremall.core.api.response.ErrorResponse;
 import com.spheremall.core.api.response.ResponseMonada;
 import com.spheremall.core.api.services.AuthService;
+import com.spheremall.core.exceptions.BadGatewayException;
 import com.spheremall.core.exceptions.EntityNotFoundException;
+import com.spheremall.core.exceptions.ForbiddenException;
+import com.spheremall.core.exceptions.NotFoundException;
 import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.exceptions.SphereMallException;
+import com.spheremall.core.exceptions.UnauthorizedException;
 import com.spheremall.core.resources.BaseResource;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -40,7 +47,7 @@ public class AuthRequest implements BaseRequest {
     }
 
     @Override
-    public ResponseMonada handle(Method method, String uriAppend, HashMap<String, String> queryParams) throws ServiceException, IOException, EntityNotFoundException {
+    public ResponseMonada handle(Method method, String uriAppend, HashMap<String, String> queryParams) throws IOException, SphereMallException {
         this.authToken = new AuthToken(client);
         this.method = method;
         this.uriAppend = uriAppend;
@@ -57,7 +64,7 @@ public class AuthRequest implements BaseRequest {
         return new ResponseMonada(responseBody.string());
     }
 
-    private Response<ResponseBody> executeCall(boolean isRepeated) throws ServiceException, IOException {
+    private Response<ResponseBody> executeCall(boolean isRepeated) throws SphereMallException, IOException {
         setAuthorization();
         Call<ResponseBody> call = getCallMethod();
         if (call == null) {
@@ -70,23 +77,41 @@ public class AuthRequest implements BaseRequest {
         return response;
     }
 
-    private Response<ResponseBody> handleError(Response<ResponseBody> response, boolean isRepeated) throws IOException, ServiceException {
+    private Response<ResponseBody> handleError(Response<ResponseBody> response, boolean isRepeated) throws IOException, SphereMallException {
         try {
-            String errorBody = response.errorBody().string();
-            if (errorBody == null) {
-                throw new ServiceException();
-            }
-            JSONObject mainObject = new JSONObject(errorBody);
-            JSONObject error = mainObject.getJSONObject("error");
-            String errorMessage = error.getString("message");
-            if (errorMessage.contains("Access denied") && !isRepeated) {
+            if ((response.code() == 403 || response.code() == 401) && !isRepeated) {
                 authToken.refreshToken();
                 return executeCall(true);
-            } else {
-                throw new ServiceException();
             }
+
+            String errorBody = response.errorBody().string();
+            Gson gson = new Gson();
+            ErrorResponse error = gson.fromJson(errorBody, ErrorResponse.class);
+
+            if (client.isDebug()) {
+                System.out.println(errorBody);
+            }
+
+            switch (response.code()) {
+                case 502: {
+                    throw new BadGatewayException(error);
+                }
+                case 403: {
+                    throw new ForbiddenException(error);
+                }
+                case 401: {
+                    throw new UnauthorizedException(error);
+                }
+                case 404: {
+                    throw new NotFoundException(error);
+                }
+                default: {
+                    throw new ServiceException(error);
+                }
+            }
+
         } catch (JSONException e) {
-            throw new ServiceException();
+            throw new ServiceException(e.getLocalizedMessage());
         }
     }
 
@@ -102,7 +127,6 @@ public class AuthRequest implements BaseRequest {
             uri += "/" + uriAppend;
         }
         return service.getToken(headerUserAgent, resource.getVersion(), uri, queryParams);
-
     }
 
     private void setAuthorization() {

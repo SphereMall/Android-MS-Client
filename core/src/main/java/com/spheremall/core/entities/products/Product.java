@@ -34,4 +34,8 @@ public class Product extends Entity {
 
     @Relationship(value = "images", resolve = true, relType = RelType.RELATED)
     public List<Media> images;
+
+
+    @Relationship(value = "options", resolve = true, relType = RelType.RELATED)
+    public List<Option> options;
 }

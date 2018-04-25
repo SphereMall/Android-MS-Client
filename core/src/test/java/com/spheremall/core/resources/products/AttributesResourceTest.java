@@ -2,8 +2,7 @@ package com.spheremall.core.resources.products;
 
 import com.spheremall.core.entities.documents.Document;
 import com.spheremall.core.entities.products.Attribute;
-import com.spheremall.core.exceptions.EntityNotFoundException;
-import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.resources.SetUpResourceTest;
 
 import org.junit.Assert;
@@ -15,17 +14,15 @@ import java.util.List;
 public class AttributesResourceTest extends SetUpResourceTest {
 
     @Test
-    public void testGetFirst() throws EntityNotFoundException, IOException, ServiceException {
-        Attribute attribute = client.attributes().get(3).data();
+    public void testGetFirst() throws SphereMallException, IOException {
+        Attribute attribute = client.attributes().first().data();
         Assert.assertNotNull(attribute);
-        Assert.assertEquals(Integer.valueOf(3), attribute.getId());
     }
 
     @Test
-    public void testAttributeBelong() throws EntityNotFoundException, IOException, ServiceException {
+    public void testAttributeBelong() throws SphereMallException, IOException {
         List<Attribute> attributesByEntity = client.attributes().belong(Document.class).data();
         Assert.assertNotNull(attributesByEntity);
-        Assert.assertEquals(Integer.valueOf(1076), attributesByEntity.get(0).getId());
 
         List<Attribute> attributesByEntityAndGroupId = client.attributes().belong(Document.class, 1).data();
         Assert.assertNotNull(attributesByEntityAndGroupId);

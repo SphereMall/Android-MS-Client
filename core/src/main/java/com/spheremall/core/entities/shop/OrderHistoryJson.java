@@ -7,5 +7,4 @@ import java.util.List;
 public class OrderHistoryJson extends Entity {
 
     public List<Order> data;
-    public Boolean success;
 }

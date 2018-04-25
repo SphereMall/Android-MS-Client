@@ -4,7 +4,7 @@ import com.spheremall.core.SMClient;
 import com.spheremall.core.entities.shop.Order;
 import com.spheremall.core.entities.users.Address;
 import com.spheremall.core.exceptions.EntityNotFoundException;
-import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.exceptions.SphereMallException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,18 +19,18 @@ public class Basket extends OrderFinalized {
 
     protected HashMap<String, String> updateParams = new HashMap<>();
 
-    public Basket(SMClient client) throws EntityNotFoundException, IOException, ServiceException {
+    public Basket(SMClient client) throws SphereMallException, IOException {
         super(client);
         basketCreate();
     }
 
-    public Basket(SMClient client, int basketId) throws EntityNotFoundException, ServiceException, IOException {
+    public Basket(SMClient client, int basketId) throws SphereMallException, IOException {
         super(client);
         this.id = basketId;
         this.get(this.id);
     }
 
-    public Basket(SMClient client, int basketId, int userId) throws EntityNotFoundException, ServiceException, IOException {
+    public Basket(SMClient client, int basketId, int userId) throws SphereMallException, IOException {
         super(client);
         if (basketId == DEFAULT_ORDER_ID) {
             this.getByUserId(userId);
@@ -43,7 +43,7 @@ public class Basket extends OrderFinalized {
         return client;
     }
 
-    public Order add(BasketPredicate... predicates) throws EntityNotFoundException, IOException, ServiceException {
+    public Order add(BasketPredicate... predicates) throws SphereMallException, IOException {
         if (id == DEFAULT_ORDER_ID) {
             basketCreate();
         }
@@ -54,7 +54,7 @@ public class Basket extends OrderFinalized {
         return order;
     }
 
-    public Order remove(BasketPredicate... predicates) throws EntityNotFoundException, ServiceException, IOException {
+    public Order remove(BasketPredicate... predicates) throws SphereMallException, IOException {
         if (id == DEFAULT_ORDER_ID) {
             throw new IllegalArgumentException("Can not delete items. Shop is not created.");
         }
@@ -66,7 +66,7 @@ public class Basket extends OrderFinalized {
         return order;
     }
 
-    public Order update(BasketPredicate... predicates) throws EntityNotFoundException, IOException, ServiceException {
+    public Order update(BasketPredicate... predicates) throws SphereMallException, IOException {
         if (id == DEFAULT_ORDER_ID) {
             basketCreate();
         }
@@ -93,12 +93,12 @@ public class Basket extends OrderFinalized {
         return this;
     }
 
-    public Basket setBillingAddress(Address address) throws EntityNotFoundException, IOException, ServiceException {
+    public Basket setBillingAddress(Address address) throws SphereMallException, IOException {
         setAddress(address, "billingAddress");
         return this;
     }
 
-    public Basket setShippingAddress(Address address) throws EntityNotFoundException, IOException, ServiceException {
+    public Basket setShippingAddress(Address address) throws SphereMallException, IOException {
         setAddress(address, "shippingAddress");
         return this;
     }
@@ -112,12 +112,12 @@ public class Basket extends OrderFinalized {
         return this;
     }
 
-    protected void basketCreate() throws EntityNotFoundException, ServiceException, IOException {
+    protected void basketCreate() throws SphereMallException, IOException{
         Order order = client.basketResource().createNew();
         setOrderData(order);
     }
 
-    protected void get(int id) throws EntityNotFoundException, IOException, ServiceException {
+    protected void get(int id) throws SphereMallException, IOException {
         if (id != DEFAULT_ORDER_ID) {
 
             Order order = client.basketResource().get(id).data();
@@ -130,7 +130,7 @@ public class Basket extends OrderFinalized {
         }
     }
 
-    protected void getByUserId(int userId) throws EntityNotFoundException, IOException, ServiceException {
+    protected void getByUserId(int userId) throws SphereMallException, IOException {
         if (userId != 0) {
             Order order = client.basketResource().getByUserId(userId).data();
             if (order == null) {
@@ -140,7 +140,7 @@ public class Basket extends OrderFinalized {
         }
     }
 
-    protected void setAddress(Address address, String addressKey) throws EntityNotFoundException, ServiceException, IOException {
+    protected void setAddress(Address address, String addressKey) throws SphereMallException, IOException {
         if (address.getId() == 0) {
             address = client.addresses()
                     .create(address.asParams()).data();
@@ -165,6 +165,8 @@ public class Basket extends OrderFinalized {
                 if (predicate.compound != null) {
                     jsonObject.put("compound", predicate.compound);
                 }
+
+                jsonObject.put("attributes", new JSONArray());
                 jsonArray.put(jsonObject);
             } catch (JSONException e) {
                 e.printStackTrace();

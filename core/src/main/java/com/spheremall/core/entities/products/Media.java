@@ -3,7 +3,7 @@ package com.spheremall.core.entities.products;
 import com.spheremall.core.jsonapi.annotations.Type;
 import com.spheremall.core.entities.Entity;
 
-@Type("images")
+@Type("media")
 public class Media extends Entity {
 
     public int objectId;

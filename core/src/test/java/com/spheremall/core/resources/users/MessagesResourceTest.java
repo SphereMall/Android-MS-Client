@@ -1,8 +1,7 @@
 package com.spheremall.core.resources.users;
 
 import com.spheremall.core.entities.users.Message;
-import com.spheremall.core.exceptions.EntityNotFoundException;
-import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.resources.SetUpResourceTest;
 
 import junit.framework.Assert;
@@ -15,7 +14,7 @@ import java.util.List;
 public class MessagesResourceTest extends SetUpResourceTest {
 
     @Test
-    public void testGetList() throws EntityNotFoundException, IOException, ServiceException {
+    public void testGetList() throws SphereMallException, IOException {
         List<Message> messageList = client.messages().limit(1).all().data();
         Assert.assertNotNull(messageList);
         Assert.assertEquals(1, messageList.size());

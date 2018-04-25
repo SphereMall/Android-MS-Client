@@ -9,7 +9,7 @@ import com.spheremall.core.entities.Response;
 import com.spheremall.core.entities.pojo.Count;
 import com.spheremall.core.exceptions.EntityNotFoundException;
 import com.spheremall.core.exceptions.MethodNotFoundException;
-import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.Filter;
 import com.spheremall.core.filters.Predicate;
 import com.spheremall.core.filters.grid.GridFilter;
@@ -70,7 +70,7 @@ public class GridResourceImpl extends GrapherResource<GridResource> implements G
     }
 
     @Override
-    public Response<List<Entity>> all() throws ServiceException, IOException, EntityNotFoundException {
+    public Response<List<Entity>> all() throws SphereMallException, IOException {
 
         HashMap<String, String> params = getQueryParams();
 
@@ -78,19 +78,19 @@ public class GridResourceImpl extends GrapherResource<GridResource> implements G
                 .handle(Method.GET, "", params);
 
         if (responseMonada.hasError()) {
-            throw new EntityNotFoundException(responseMonada.getErrorResponse().error.message);
+            throw new EntityNotFoundException(responseMonada.getErrorResponse());
         }
         maker = new GridMaker(Entity.class);
         return maker.makeAsList(responseMonada.getResponse());
     }
 
     @Override
-    public Response<Entity> get(int id) throws ServiceException, IOException, EntityNotFoundException {
+    public Response<Entity> get(int id) {
         throw new MethodNotFoundException("Method data() can not be use with GRID");
     }
 
     @Override
-    public Response<Facets> facets() throws EntityNotFoundException, IOException, ServiceException {
+    public Response<Facets> facets() throws SphereMallException, IOException {
         HashMap<String, String> params = getQueryParams();
         ResponseMonada responseMonada = request.handle(Method.GET, "/filter", params);
 
@@ -103,7 +103,7 @@ public class GridResourceImpl extends GrapherResource<GridResource> implements G
     }
 
     @Override
-    public int count() throws EntityNotFoundException, IOException, ServiceException {
+    public int count() throws SphereMallException, IOException {
 
         HashMap<String, String> params = getQueryParams();
         ResponseMonada responseMonada = request.handle(Method.GET, "count", params);
@@ -116,24 +116,24 @@ public class GridResourceImpl extends GrapherResource<GridResource> implements G
         Count count = countMaker.makeSingle(responseMonada.getResponse()).data();
 
         if (count.data == null || count.data.size() == 0) {
-            throw new EntityNotFoundException(responseMonada.getErrorResponse().error.message);
+            throw new EntityNotFoundException(responseMonada.getErrorResponse());
         }
         return count.data.get(0).attributes.count;
 
     }
 
     @Override
-    public Response<Entity> create(HashMap<String, String> params) throws EntityNotFoundException, IOException, ServiceException {
+    public Response<Entity> create(HashMap<String, String> params) {
         throw new MethodNotFoundException("Method create() can not be use with GRID");
     }
 
     @Override
-    public Response<Entity> update(Integer id, HashMap<String, String> params) throws EntityNotFoundException, IOException, ServiceException {
+    public Response<Entity> update(Integer id, HashMap<String, String> params) {
         throw new MethodNotFoundException("Method update() can not be use with GRID");
     }
 
     @Override
-    public Boolean delete(Integer id) throws EntityNotFoundException, IOException, ServiceException {
+    public Boolean delete(Integer id) {
         throw new MethodNotFoundException("Method delete() can not be use with GRID");
     }
 }

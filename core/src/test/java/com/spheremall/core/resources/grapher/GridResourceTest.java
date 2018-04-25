@@ -4,8 +4,7 @@ import com.spheremall.core.entities.Entity;
 import com.spheremall.core.entities.Facets;
 import com.spheremall.core.entities.Response;
 import com.spheremall.core.entities.products.Product;
-import com.spheremall.core.exceptions.EntityNotFoundException;
-import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.FilterOperators;
 import com.spheremall.core.filters.grid.EntityFilter;
 import com.spheremall.core.filters.grid.FunctionalNameFilter;
@@ -21,13 +20,13 @@ import java.util.List;
 public class GridResourceTest extends SetUpResourceTest {
 
     @Test
-    public void testAll() throws EntityNotFoundException, IOException, ServiceException {
+    public void testAll() throws SphereMallException, IOException {
         List<Entity> gridItems = client.grid().all().data();
         Assert.assertNotNull(gridItems);
     }
 
     @Test
-    public void testGridFilter() throws EntityNotFoundException, IOException, ServiceException {
+    public void testGridFilter() throws SphereMallException, IOException {
         GridFilter gridFilter = new GridFilter();
         gridFilter.elements(new EntityFilter("products"));
 
@@ -44,13 +43,13 @@ public class GridResourceTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testGridCount() throws EntityNotFoundException, ServiceException, IOException {
+    public void testGridCount() throws SphereMallException, IOException {
         int numberOfGridItems = client.grid().count();
         Assert.assertEquals(453, numberOfGridItems);
     }
 
     @Test
-    public void testGridFacets() throws EntityNotFoundException, ServiceException, IOException {
+    public void testGridFacets() throws SphereMallException, IOException {
         GridFilter gridFilter = new GridFilter();
         FunctionalNameFilter functionalNameFilter = new FunctionalNameFilter(1);
         gridFilter.elements(functionalNameFilter);

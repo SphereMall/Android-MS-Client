@@ -9,7 +9,7 @@ import com.spheremall.core.entities.pojo.UserId;
 import com.spheremall.core.entities.users.Address;
 import com.spheremall.core.entities.users.User;
 import com.spheremall.core.exceptions.EntityNotFoundException;
-import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.FilterOperators;
 import com.spheremall.core.filters.Predicate;
 import com.spheremall.core.makers.GridMaker;
@@ -47,7 +47,7 @@ public class UserResourceImpl extends BaseResource<User, UserResource> implement
     }
 
     @Override
-    public User subscribe(String email, String name) throws EntityNotFoundException, IOException, ServiceException {
+    public User subscribe(String email, String name) throws SphereMallException, IOException {
         User user;
         try {
             user = filters(new IsUserEmail(email)).first().data();
@@ -78,7 +78,7 @@ public class UserResourceImpl extends BaseResource<User, UserResource> implement
     }
 
     @Override
-    public User unSubscribe(String guId) throws EntityNotFoundException, IOException, ServiceException {
+    public User unSubscribe(String guId) throws SphereMallException, IOException {
         User user;
         try {
             user = filters(new Predicate("guid", FilterOperators.EQUAL, guId)).first().data();
@@ -91,17 +91,17 @@ public class UserResourceImpl extends BaseResource<User, UserResource> implement
     }
 
     @Override
-    public List<Entity> getWishList(int userId) throws EntityNotFoundException, IOException, ServiceException {
+    public List<Entity> getWishList(int userId) throws SphereMallException, IOException {
         ResponseMonada responseMonada = request.handle(Method.GET, "wishlist/" + userId, new HashMap<>());
         if (responseMonada.hasError()) {
-            throw new EntityNotFoundException(responseMonada.getErrorResponse().error.message);
+            throw new EntityNotFoundException(responseMonada.getErrorResponse());
         }
         Maker<Entity> maker = new GridMaker(Entity.class);
         return maker.makeAsList(responseMonada.getResponse()).data();
     }
 
     @Override
-    public Entity addToWishList(int userId, int objectId, String entity) throws EntityNotFoundException, ServiceException, IOException {
+    public Entity addToWishList(int userId, int objectId, String entity) throws SphereMallException, IOException {
         HashMap<String, String> params = new HashMap<>();
         params.put("userId", String.valueOf(userId));
         params.put("objectId", String.valueOf(objectId));
@@ -109,7 +109,7 @@ public class UserResourceImpl extends BaseResource<User, UserResource> implement
 
         ResponseMonada responseMonada = request.handle(Method.POST, "wishlist/" + userId, params);
         if (responseMonada.hasError()) {
-            throw new EntityNotFoundException(responseMonada.getErrorResponse().error.message);
+            throw new EntityNotFoundException(responseMonada.getErrorResponse());
         }
         Maker<Entity> maker = new GridMaker(Entity.class);
         List<Entity> entities = maker.makeAsList(responseMonada.getResponse()).data();
@@ -130,7 +130,7 @@ public class UserResourceImpl extends BaseResource<User, UserResource> implement
 
             ResponseMonada responseMonada = request.handle(Method.DELETE, "wishlist/" + userId, params);
             if (responseMonada.hasError()) {
-                throw new EntityNotFoundException(responseMonada.getErrorResponse().error.message);
+                throw new EntityNotFoundException(responseMonada.getErrorResponse());
             }
             return true;
         } catch (Throwable error) {
@@ -139,7 +139,7 @@ public class UserResourceImpl extends BaseResource<User, UserResource> implement
     }
 
     @Override
-    public Response<Address> setAddress(int addressId, int userId, HashMap<String, String> params) throws EntityNotFoundException, IOException, ServiceException {
+    public Response<Address> setAddress(int addressId, int userId, HashMap<String, String> params) throws SphereMallException, IOException {
         Response<Address> response;
         if (addressId == 0) {
             params.put("userId", String.valueOf(userId));
@@ -154,18 +154,18 @@ public class UserResourceImpl extends BaseResource<User, UserResource> implement
     }
 
     @Override
-    public User get(String deviceId) throws EntityNotFoundException, IOException, ServiceException {
+    public User get(String deviceId) throws SphereMallException, IOException {
         ResponseMonada responseMonada = request
                 .handle(Method.GET, "/devices/" + deviceId, new HashMap<>());
 
         if (responseMonada.hasError()) {
-            throw new EntityNotFoundException(responseMonada.getErrorResponse().error.message);
+            throw new EntityNotFoundException(responseMonada.getErrorResponse());
         }
         UserIdMaker userIdmaker = new UserIdMaker(UserId.class);
         Response<UserId> response = userIdmaker.makeSingle(responseMonada.getResponse());
 
-        if (!response.data().success) {
-            throw new EntityNotFoundException(responseMonada.getErrorResponse().error.message);
+        if (!response.data().isSuccess()) {
+            throw new EntityNotFoundException(responseMonada.getErrorResponse());
         }
         return get(response.data().data.userId).data();
     }

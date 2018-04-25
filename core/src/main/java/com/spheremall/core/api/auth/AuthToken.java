@@ -1,4 +1,4 @@
-package com.spheremall.core.api;
+package com.spheremall.core.api.auth;
 
 
 import com.spheremall.core.SMClient;

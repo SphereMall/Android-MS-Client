@@ -29,7 +29,7 @@ public class ResponseMonada {
     private ErrorResponse checkError() {
         Gson gson = new Gson();
         ErrorResponse errorResponse = gson.fromJson(response, ErrorResponse.class);
-        if (errorResponse.error.message == null) {
+        if (errorResponse.errors.size() == 0) {
             errorResponse = null;
         }
         return errorResponse;

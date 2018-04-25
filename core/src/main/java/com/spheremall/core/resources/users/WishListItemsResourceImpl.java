@@ -7,7 +7,7 @@ import com.spheremall.core.entities.SMEntity;
 import com.spheremall.core.entities.products.Product;
 import com.spheremall.core.entities.users.WishListItem;
 import com.spheremall.core.exceptions.EntityNotFoundException;
-import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.FilterOperators;
 import com.spheremall.core.filters.Predicate;
 import com.spheremall.core.makers.ObjectMaker;
@@ -48,7 +48,7 @@ public class WishListItemsResourceImpl extends BaseResource<WishListItem, WishLi
     }
 
     @Override
-    public WishListItem addToWishList(int userId, int objectId, String entity) throws EntityNotFoundException, ServiceException, IOException {
+    public WishListItem addToWishList(int userId, int objectId, String entity) throws SphereMallException, IOException {
         EntitiesResource entitiesResource = new EntitiesResourceImpl(smClient);
         SMEntity response = entitiesResource
                 .filters(new Predicate("code", FilterOperators.EQUAL, entity)).first().data();
@@ -56,7 +56,7 @@ public class WishListItemsResourceImpl extends BaseResource<WishListItem, WishLi
     }
 
     @Override
-    public WishListItem addToWishList(int userId, int objectId, int entityId) throws EntityNotFoundException, ServiceException, IOException {
+    public WishListItem addToWishList(int userId, int objectId, int entityId) throws SphereMallException, IOException {
 
         HashMap<String, String> params = new HashMap<>();
         params.put("userId", String.valueOf(userId));
@@ -65,7 +65,7 @@ public class WishListItemsResourceImpl extends BaseResource<WishListItem, WishLi
 
         ResponseMonada responseMonada = request.handle(Method.POST, "", params);
         if (responseMonada.hasError()) {
-            throw new EntityNotFoundException(responseMonada.getErrorResponse().error.message);
+            throw new EntityNotFoundException(responseMonada.getErrorResponse());
         }
         List<WishListItem> entities = maker.makeAsList(responseMonada.getResponse()).data();
         if (entities.size() > 0) {
@@ -78,7 +78,7 @@ public class WishListItemsResourceImpl extends BaseResource<WishListItem, WishLi
     }
 
     @Override
-    public List<WishListItem> getWishList(int userId, int limit, int offset) throws EntityNotFoundException, IOException, ServiceException {
+    public List<WishListItem> getWishList(int userId, int limit, int offset) throws SphereMallException, IOException {
         List<WishListItem> wishListItems = filters(new Predicate("userId", FilterOperators.EQUAL, String.valueOf(userId)))
                 .limit(100)
                 .all().data();

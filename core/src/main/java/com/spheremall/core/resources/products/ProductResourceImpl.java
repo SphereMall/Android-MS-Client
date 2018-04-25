@@ -25,4 +25,6 @@ public class ProductResourceImpl extends FullResourceImpl<Product, ProductResour
     protected ProductResource currentContext() {
         return this;
     }
+
+
 }

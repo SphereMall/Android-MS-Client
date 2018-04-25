@@ -13,7 +13,7 @@ public class MediaTypesResourceImpl extends BaseResource<MediaType, MediaTypesRe
 
     @Override
     public String getURI() {
-        return "imagetypes";
+        return "mediatypes";
     }
 
     @Override

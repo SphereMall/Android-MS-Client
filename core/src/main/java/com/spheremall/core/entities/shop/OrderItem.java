@@ -11,7 +11,6 @@ public class OrderItem extends Entity {
 
     public int orderId;
     public int amount;
-    public int promotionId;
     public int productId;
     public int itemPrice;
     public int itemDiscountPrice;

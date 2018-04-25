@@ -6,7 +6,7 @@ import com.spheremall.core.api.response.ResponseMonada;
 import com.spheremall.core.entities.shop.Order;
 import com.spheremall.core.entities.shop.OrderHistoryJson;
 import com.spheremall.core.exceptions.EntityNotFoundException;
-import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.makers.ObjectMaker;
 import com.spheremall.core.makers.OrderHistoryMaker;
 import com.spheremall.core.resources.BaseResource;
@@ -43,17 +43,17 @@ public class OrdersResourceImpl extends BaseResource<Order, OrdersResource> impl
     }
 
     @Override
-    public OrderFinalized byOrderId(String orderId) throws EntityNotFoundException, ServiceException, IOException {
+    public OrderFinalized byOrderId(String orderId) throws SphereMallException, IOException {
         return getOrderByParam("byorderid/" + orderId);
     }
 
     @Override
-    public OrderFinalized byId(int id) throws EntityNotFoundException, ServiceException, IOException {
+    public OrderFinalized byId(int id) throws SphereMallException, IOException {
         return getOrderByParam("byid/" + String.valueOf(id));
     }
 
     @Override
-    public List<Order> getHistory(int userId, String orderId) throws EntityNotFoundException, IOException, ServiceException {
+    public List<Order> getHistory(int userId, String orderId) throws SphereMallException, IOException {
         HashMap<String, String> params = getQueryParams();
 
         String uriAppend = "history/" + userId;
@@ -63,11 +63,11 @@ public class OrdersResourceImpl extends BaseResource<Order, OrdersResource> impl
 
         ResponseMonada responseMonada = request.handle(Method.GET, uriAppend, params);
         if (responseMonada.hasError()) {
-            throw new EntityNotFoundException(responseMonada.getErrorResponse().error.message);
+            throw new EntityNotFoundException(responseMonada.getErrorResponse());
         }
         OrderHistoryMaker maker = new OrderHistoryMaker(OrderHistoryJson.class);
         OrderHistoryJson orderHistoryJson = maker.makeSingle(responseMonada.getResponse()).data();
-        if (!orderHistoryJson.success) {
+        if (!orderHistoryJson.isSuccess()) {
             throw new EntityNotFoundException();
         }
         List<Order> orders = new ArrayList<>();
@@ -75,11 +75,11 @@ public class OrdersResourceImpl extends BaseResource<Order, OrdersResource> impl
         return orders;
     }
 
-    private OrderFinalized getOrderByParam(String uriAppend) throws EntityNotFoundException, IOException, ServiceException {
+    private OrderFinalized getOrderByParam(String uriAppend) throws SphereMallException, IOException {
         HashMap<String, String> params = getQueryParams();
         ResponseMonada responseMonada = request.handle(Method.GET, uriAppend, params);
         if (responseMonada.hasError()) {
-            throw new EntityNotFoundException(responseMonada.getErrorResponse().error.message);
+            throw new EntityNotFoundException(responseMonada.getErrorResponse());
         }
         List<Order> order = maker.makeAsList(responseMonada.getResponse()).data();
         if (order.size() == 0) {

@@ -4,11 +4,11 @@ import com.spheremall.core.SMClient;
 import com.spheremall.core.api.Request;
 import com.spheremall.core.api.configuration.Method;
 import com.spheremall.core.api.response.ResponseMonada;
-import com.spheremall.core.entities.pojo.Count;
 import com.spheremall.core.entities.Entity;
 import com.spheremall.core.entities.Response;
+import com.spheremall.core.entities.pojo.Count;
 import com.spheremall.core.exceptions.EntityNotFoundException;
-import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.Filter;
 import com.spheremall.core.filters.InPredicate;
 import com.spheremall.core.filters.Predicate;
@@ -152,7 +152,7 @@ public abstract class BaseResource<E extends Entity, R extends Resource> impleme
     }
 
     @Override
-    public int count() throws EntityNotFoundException, IOException, ServiceException {
+    public int count() throws IOException, SphereMallException {
         String uriAppend = "count";
 
         HashMap<String, String> params = getQueryParams();
@@ -166,13 +166,13 @@ public abstract class BaseResource<E extends Entity, R extends Resource> impleme
         Count count = countMaker.makeSingle(responseMonada.getResponse()).data();
 
         if (count.data == null || count.data.size() == 0) {
-            throw new EntityNotFoundException(responseMonada.getErrorResponse().error.message);
+            throw new EntityNotFoundException(responseMonada.getErrorResponse());
         }
         return count.data.get(0).attributes.count;
     }
 
     @Override
-    public Response<E> get(int id) throws ServiceException, IOException, EntityNotFoundException {
+    public Response<E> get(int id) throws IOException, SphereMallException {
 
         HashMap<String, String> params = new HashMap<>();
 
@@ -184,13 +184,13 @@ public abstract class BaseResource<E extends Entity, R extends Resource> impleme
                 .handle(Method.GET, Integer.toString(id), params);
 
         if (responseMonada.hasError()) {
-            throw new EntityNotFoundException(responseMonada.getErrorResponse().error.message);
+            throw new EntityNotFoundException(responseMonada.getErrorResponse());
         }
         return maker.makeSingle(responseMonada.getResponse());
     }
 
     @Override
-    public Response<List<E>> all() throws ServiceException, IOException, EntityNotFoundException {
+    public Response<List<E>> all() throws IOException, SphereMallException {
         String uriAppend = "by";
 
         HashMap<String, String> params = getQueryParams();
@@ -198,14 +198,14 @@ public abstract class BaseResource<E extends Entity, R extends Resource> impleme
                 .handle(Method.GET, uriAppend, params);
 
         if (responseMonada.hasError()) {
-            throw new EntityNotFoundException(responseMonada.getErrorResponse().error.message);
+            throw new EntityNotFoundException(responseMonada.getErrorResponse());
         }
 
         return maker.makeAsList(responseMonada.getResponse());
     }
 
     @Override
-    public Response<E> first() throws ServiceException, IOException, EntityNotFoundException {
+    public Response<E> first() throws IOException, SphereMallException {
         String uriAppend = "by";
 
         HashMap<String, String> params = getQueryParams();
@@ -226,28 +226,28 @@ public abstract class BaseResource<E extends Entity, R extends Resource> impleme
     }
 
     @Override
-    public Response<E> create(HashMap<String, String> params) throws EntityNotFoundException, IOException, ServiceException {
+    public Response<E> create(HashMap<String, String> params) throws IOException, SphereMallException {
         ResponseMonada responseMonada = request.handle(Method.POST, "", params);
         if (responseMonada.hasError()) {
-            throw new EntityNotFoundException(responseMonada.getErrorResponse().error.message);
+            throw new EntityNotFoundException(responseMonada.getErrorResponse());
         }
         return maker.makeSingle(responseMonada.getResponse());
     }
 
     @Override
-    public Response<E> update(Integer id, HashMap<String, String> params) throws EntityNotFoundException, IOException, ServiceException {
+    public Response<E> update(Integer id, HashMap<String, String> params) throws IOException, SphereMallException {
         ResponseMonada responseMonada = request.handle(Method.PUT, String.valueOf(id), params);
         if (responseMonada.hasError()) {
-            throw new EntityNotFoundException(responseMonada.getErrorResponse().error.message);
+            throw new EntityNotFoundException(responseMonada.getErrorResponse());
         }
         return maker.makeSingle(responseMonada.getResponse());
     }
 
     @Override
-    public Boolean delete(Integer id) throws EntityNotFoundException, IOException, ServiceException {
+    public Boolean delete(Integer id) throws IOException, SphereMallException {
         ResponseMonada responseMonada = request.handle(Method.DELETE, String.valueOf(id), new HashMap<>());
         if (responseMonada.hasError()) {
-            throw new EntityNotFoundException(responseMonada.getErrorResponse().error.message);
+            throw new EntityNotFoundException(responseMonada.getErrorResponse());
         }
         return true;
     }

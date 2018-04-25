@@ -1,8 +1,7 @@
 package com.spheremall.core.resources.products;
 
 import com.spheremall.core.entities.products.Brand;
-import com.spheremall.core.exceptions.EntityNotFoundException;
-import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.resources.SetUpResourceTest;
 
 import org.junit.Assert;
@@ -14,7 +13,7 @@ import java.util.List;
 public class BrandsResourceTest extends SetUpResourceTest {
 
     @Test
-    public void testGetList() throws EntityNotFoundException, IOException, ServiceException {
+    public void testGetList() throws SphereMallException, IOException {
         List<Brand> brands = client.brands()
                 .limit(3)
                 .all().data();

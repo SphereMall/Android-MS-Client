@@ -7,7 +7,7 @@ import com.spheremall.core.entities.Entity;
 import com.spheremall.core.entities.Response;
 import com.spheremall.core.exceptions.EntityNotFoundException;
 import com.spheremall.core.exceptions.MethodNotFoundException;
-import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.makers.GridMaker;
 import com.spheremall.core.makers.ObjectMaker;
 import com.spheremall.core.resources.BaseResource;
@@ -28,13 +28,13 @@ public class CorrelationsResourceImpl extends BaseResource<Entity, CorrelationsR
     }
 
     @Override
-    public Response<List<Entity>> getById(int id, Class forClassName) throws EntityNotFoundException, IOException, ServiceException {
+    public Response<List<Entity>> getById(int id, Class forClassName) throws SphereMallException, IOException {
         HashMap<String, String> params = getQueryParams();
         String type = CorrelationTypeHelper.getGraphTypeByClass(forClassName);
         String uriAppend = type + "/" + id;
         ResponseMonada responseMonada = request.handle(Method.GET, uriAppend, params);
         if (responseMonada.hasError()) {
-            throw new EntityNotFoundException(responseMonada.getErrorResponse().error.message);
+            throw new EntityNotFoundException(responseMonada.getErrorResponse());
         }
         maker = new GridMaker(Entity.class);
         return maker.makeAsList(responseMonada.getResponse());
@@ -56,22 +56,22 @@ public class CorrelationsResourceImpl extends BaseResource<Entity, CorrelationsR
     }
 
     @Override
-    public Response<Entity> get(int id) throws ServiceException, IOException, EntityNotFoundException {
+    public Response<Entity> get(int id) {
         throw new MethodNotFoundException("Method data() can not be use with correlations");
     }
 
     @Override
-    public Response<Entity> update(Integer id, HashMap<String, String> params) throws EntityNotFoundException, IOException, ServiceException {
+    public Response<Entity> update(Integer id, HashMap<String, String> params) {
         throw new MethodNotFoundException("Method update() can not be use with correlations");
     }
 
     @Override
-    public Response<Entity> create(HashMap<String, String> params) throws EntityNotFoundException, IOException, ServiceException {
+    public Response<Entity> create(HashMap<String, String> params) {
         throw new MethodNotFoundException("Method create() can not be use with correlations");
     }
 
     @Override
-    public Boolean delete(Integer id) throws EntityNotFoundException, IOException, ServiceException {
+    public Boolean delete(Integer id) {
         throw new MethodNotFoundException("Method delete() can not be use with correlations");
     }
 }

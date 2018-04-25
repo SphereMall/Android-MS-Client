@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.spheremall.core.entities.Entity;
 import com.spheremall.core.jsonapi.annotations.Type;
 
-@Type("imageTypes")
+@Type("mediaTypes")
 public class MediaType extends Entity {
 
     public int orderNumber;

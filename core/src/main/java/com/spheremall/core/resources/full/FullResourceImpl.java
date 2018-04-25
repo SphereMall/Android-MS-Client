@@ -6,7 +6,7 @@ import com.spheremall.core.api.response.ResponseMonada;
 import com.spheremall.core.entities.Entity;
 import com.spheremall.core.entities.Response;
 import com.spheremall.core.exceptions.EntityNotFoundException;
-import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.resources.BaseResource;
 import com.spheremall.core.resources.Resource;
 
@@ -20,12 +20,12 @@ public abstract class FullResourceImpl<T extends Entity, R extends Resource> ext
         super(smClient);
     }
 
-    public Response<List<T>> full() throws EntityNotFoundException, ServiceException, IOException {
+    public Response<List<T>> full() throws SphereMallException, IOException {
         String uriAppend = "full";
         return getListOfFullEntities(uriAppend);
     }
 
-    public Response<T> full(int id) throws EntityNotFoundException, ServiceException, IOException {
+    public Response<T> full(int id) throws SphereMallException, IOException {
         String uriAppend = "full";
         if (id > 0) {
             uriAppend = uriAppend + "/" + id;
@@ -38,7 +38,7 @@ public abstract class FullResourceImpl<T extends Entity, R extends Resource> ext
         return new Response<>(entities.data().get(0), entities.meta());
     }
 
-    public Response<T> full(String urlCode) throws EntityNotFoundException, ServiceException, IOException {
+    public Response<T> full(String urlCode) throws SphereMallException, IOException {
         String uriAppend = "full";
         if (urlCode != null && !urlCode.isEmpty()) {
             uriAppend = "url/" + urlCode;
@@ -51,7 +51,7 @@ public abstract class FullResourceImpl<T extends Entity, R extends Resource> ext
         return new Response<>(entities.data().get(0), entities.meta());
     }
 
-    private Response<List<T>> getListOfFullEntities(String uriAppend) throws EntityNotFoundException, IOException, ServiceException {
+    private Response<List<T>> getListOfFullEntities(String uriAppend) throws SphereMallException, IOException {
         HashMap<String, String> params = getQueryParams();
         ResponseMonada responseMonada = request.handle(Method.GET, uriAppend, params);
         if (responseMonada.hasError()) {

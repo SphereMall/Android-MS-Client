@@ -13,7 +13,7 @@ public class MediaResourceImpl extends BaseResource<Media, MediaResource> implem
 
     @Override
     public String getURI() {
-        return "images";
+        return "media";
     }
 
     @Override

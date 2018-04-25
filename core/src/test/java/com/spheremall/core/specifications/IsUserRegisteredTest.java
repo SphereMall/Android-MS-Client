@@ -1,8 +1,7 @@
 package com.spheremall.core.specifications;
 
 import com.spheremall.core.entities.users.User;
-import com.spheremall.core.exceptions.EntityNotFoundException;
-import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.FilterOperators;
 import com.spheremall.core.filters.Predicate;
 import com.spheremall.core.resources.SetUpResourceTest;
@@ -21,7 +20,7 @@ public class IsUserRegisteredTest extends SetUpResourceTest {
     private String password = "to-md5";
 
     @Test
-    public void testIsUserRegisteredSpecificationSingle() throws EntityNotFoundException, IOException, ServiceException {
+    public void testIsUserRegisteredSpecificationSingle() throws SphereMallException, IOException {
         String hash = BCrypt.hashpw(password, BCrypt.gensalt());
         User user;
         try {
@@ -30,7 +29,7 @@ public class IsUserRegisteredTest extends SetUpResourceTest {
                     .first().data();
             client.users().delete(user.getId());
             user = createNewUser(hash);
-        } catch (EntityNotFoundException e) {
+        } catch (Throwable e) {
             user = createNewUser(hash);
         }
 
@@ -44,7 +43,7 @@ public class IsUserRegisteredTest extends SetUpResourceTest {
         Assert.assertTrue(client.users().delete(user.getId()));
     }
 
-    private User createNewUser(String hash) throws EntityNotFoundException, IOException, ServiceException {
+    private User createNewUser(String hash) throws SphereMallException, IOException {
         User user;
         HashMap<String, String> params = new HashMap<>();
         params.put("email", email);

@@ -4,8 +4,7 @@ import com.spheremall.core.entities.products.Product;
 import com.spheremall.core.entities.shop.BasketOrder;
 import com.spheremall.core.entities.shop.Order;
 import com.spheremall.core.entities.users.User;
-import com.spheremall.core.exceptions.EntityNotFoundException;
-import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.resources.SetUpResourceTest;
 
 import org.junit.Assert;
@@ -17,12 +16,12 @@ import java.util.HashMap;
 public class BasketResourceTest extends SetUpResourceTest {
 
     @Override
-    public void setUp() throws EntityNotFoundException, ServiceException, IOException {
+    public void setUp() throws SphereMallException, IOException {
         super.setUp();
     }
 
     @Test
-    public void testGetById() throws EntityNotFoundException, ServiceException, IOException {
+    public void testGetById() throws SphereMallException, IOException {
         int basketId = client.basket().getId();
         Order basket = client.basketResource().get(basketId).data();
         Assert.assertNotNull(basket);
@@ -30,7 +29,7 @@ public class BasketResourceTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testGetByUserId() throws EntityNotFoundException, ServiceException, IOException {
+    public void testGetByUserId() throws SphereMallException, IOException {
         User user = client.users().first().data();
         Order basket = client.basketResource().getByUserId(user.getId()).data();
         Assert.assertNotNull(basket);
@@ -38,19 +37,19 @@ public class BasketResourceTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testCreateNew() throws EntityNotFoundException, ServiceException, IOException {
+    public void testCreateNew() throws SphereMallException, IOException {
         Order order = client.basketResource().createNew();
         Assert.assertNotNull(order);
     }
 
     @Test
-    public void testRemoveItems() throws EntityNotFoundException, ServiceException, IOException {
+    public void testRemoveItems() throws SphereMallException, IOException {
 
         int basketId = client.basket().getId();
 
         Product product = client.products().first().data();
         HashMap<String, String> params = new HashMap<>();
-        params.put("products", "[{\"id\":" + product.getId() + ", \"amount\":1}]");
+        params.put("products", "[{\"id\":" + product.getId() + ", \"amount\":1, \"attributes\":[]}]");
         params.put("basketId", String.valueOf(basketId));
         BasketOrder basketOrder = client.basketResource().create(params).data();
         Assert.assertNotNull(basketOrder);

@@ -1,14 +1,14 @@
 package com.spheremall.core.resources.users;
 
 import com.spheremall.core.SMClient;
-import com.spheremall.core.api.AuthRequest;
+import com.spheremall.core.api.auth.AuthRequest;
 import com.spheremall.core.api.configuration.ApiConstants;
 import com.spheremall.core.api.configuration.Method;
 import com.spheremall.core.api.response.ResponseMonada;
 import com.spheremall.core.entities.users.Token;
 import com.spheremall.core.entities.users.User;
 import com.spheremall.core.exceptions.EntityNotFoundException;
-import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.makers.AuthMaker;
 import com.spheremall.core.makers.ObjectMaker;
 import com.spheremall.core.resources.BaseResource;
@@ -38,7 +38,7 @@ public class AuthResourceImpl extends BaseResource<Token, AuthResource> implemen
     }
 
     @Override
-    public User login(String email, String password) throws EntityNotFoundException, IOException, ServiceException {
+    public User login(String email, String password) throws SphereMallException, IOException {
         String uriAppend = "token";
 
         HashMap<String, String> params = new HashMap<>();
@@ -49,7 +49,7 @@ public class AuthResourceImpl extends BaseResource<Token, AuthResource> implemen
         AuthRequest authRequest = new AuthRequest(this.smClient, this);
         ResponseMonada responseMonada = authRequest.handle(Method.POST, uriAppend, params);
         if (responseMonada.hasError()) {
-            throw new EntityNotFoundException(responseMonada.getErrorResponse().error.message);
+            throw new EntityNotFoundException(responseMonada.getErrorResponse());
         }
         Token token = maker.makeSingle(responseMonada.getResponse()).data();
         if (token == null || token.data.size() == 0 || token.data.get(0).token.isEmpty()
@@ -62,7 +62,7 @@ public class AuthResourceImpl extends BaseResource<Token, AuthResource> implemen
     }
 
     @Override
-    public Token auth(String email, String password) throws EntityNotFoundException, IOException, ServiceException {
+    public Token auth(String email, String password) throws SphereMallException, IOException {
         String uriAppend = "token";
 
         HashMap<String, String> params = new HashMap<>();
@@ -73,7 +73,7 @@ public class AuthResourceImpl extends BaseResource<Token, AuthResource> implemen
         AuthRequest authRequest = new AuthRequest(this.smClient, this);
         ResponseMonada responseMonada = authRequest.handle(Method.POST, uriAppend, params);
         if (responseMonada.hasError()) {
-            throw new EntityNotFoundException(responseMonada.getErrorResponse().error.message);
+            throw new EntityNotFoundException(responseMonada.getErrorResponse());
         }
         return maker.makeSingle(responseMonada.getResponse()).data();
     }

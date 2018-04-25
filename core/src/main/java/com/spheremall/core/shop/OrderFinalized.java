@@ -3,8 +3,7 @@ package com.spheremall.core.shop;
 import com.spheremall.core.SMClient;
 import com.spheremall.core.entities.shop.Order;
 import com.spheremall.core.entities.shop.OrderItem;
-import com.spheremall.core.exceptions.EntityNotFoundException;
-import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.exceptions.SphereMallException;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -31,7 +30,7 @@ public class OrderFinalized {
         this.order = order;
     }
 
-    public void update(HashMap<String, String> params) throws EntityNotFoundException, ServiceException, IOException {
+    public void update(HashMap<String, String> params) throws SphereMallException, IOException {
         Order order = client.orders().update(id, params).data();
         setOrderData(order);
     }

@@ -1,7 +1,6 @@
 package com.spheremall.core;
 
-import com.spheremall.core.exceptions.EntityNotFoundException;
-import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.resources.documets.DocumentsResource;
 import com.spheremall.core.resources.documets.DocumentsResourceImpl;
 import com.spheremall.core.resources.grapher.CorrelationsResource;
@@ -185,21 +184,21 @@ public interface ServiceInjector {
         return new BasketResourceImpl((SMClient) this, "v2");
     }
 
-    default Basket basket() throws EntityNotFoundException, ServiceException, IOException {
+    default Basket basket() throws SphereMallException, IOException {
         if (Store.basket == null) {
             Store.basket = new Basket((SMClient) this);
         }
         return Store.basket;
     }
 
-    default Basket basket(int basketId) throws EntityNotFoundException, IOException, ServiceException {
+    default Basket basket(int basketId) throws SphereMallException, IOException {
         if (Store.basket == null || Store.basket.getId() != basketId) {
             Store.basket = new Basket((SMClient) this, basketId);
         }
         return Store.basket;
     }
 
-    default Basket basket(int basketId, int userId) throws EntityNotFoundException, IOException, ServiceException {
+    default Basket basket(int basketId, int userId) throws SphereMallException, IOException {
         if (Store.basket == null || Store.basket.getId() != basketId || Store.basket.getUserId() != userId) {
             Store.basket = new Basket((SMClient) this, basketId, userId);
         }

@@ -18,6 +18,10 @@ public class Entity {
     @Id(IntegerIdHandler.class)
     private Integer id;
 
+    public String status;
+    public String service;
+    public String ver;
+
     public Integer getId() {
         return id;
     }
@@ -54,5 +58,9 @@ public class Entity {
 
     public String getValueByProperty(String propertyName) {
         return properties.get(propertyName);
+    }
+
+    public Boolean isSuccess() {
+        return status.equals("OK");
     }
 }

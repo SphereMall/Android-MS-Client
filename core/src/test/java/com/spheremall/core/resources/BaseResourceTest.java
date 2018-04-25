@@ -1,8 +1,7 @@
 package com.spheremall.core.resources;
 
 import com.spheremall.core.entities.products.Product;
-import com.spheremall.core.exceptions.EntityNotFoundException;
-import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.Filter;
 import com.spheremall.core.filters.FilterOperators;
 import com.spheremall.core.filters.InPredicate;
@@ -12,7 +11,6 @@ import com.spheremall.core.specifications.base.IsVisible;
 
 import junit.framework.Assert;
 
-import org.json.JSONException;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -23,27 +21,27 @@ import java.util.List;
 public class BaseResourceTest extends SetUpResourceTest {
 
     @Test
-    public void testGetSingle() throws EntityNotFoundException, IOException, ServiceException {
-        Integer productId = 6329;
+    public void testGetSingle() throws SphereMallException, IOException {
+        Product item = client.products().first().data();
+
+        Integer productId = item.getId();
         Product product = client.products().get(productId).data();
         Assert.assertNotNull(product);
         Assert.assertEquals(product.getId(), productId);
     }
 
     @Test
-    public void testGetSingleWithFieldsParams() throws EntityNotFoundException, IOException, ServiceException {
-        Integer productId = 6329;
+    public void testGetSingleWithFieldsParams() throws SphereMallException, IOException {
         Product product = client.products()
                 .fields("price", "title")
-                .get(productId).data();
+                .first().data();
         Assert.assertNotNull(product);
-        Assert.assertEquals(product.getId(), productId);
         Assert.assertNotNull(product.title);
         Assert.assertNotSame(product.price, 0);
     }
 
     @Test
-    public void testGetList() throws ServiceException, IOException, EntityNotFoundException {
+    public void testGetList() throws SphereMallException, IOException {
         List<Product> productList = client.products().all().data();
         Assert.assertNotNull(productList);
         Assert.assertEquals(10, productList.size());
@@ -60,33 +58,48 @@ public class BaseResourceTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testGetListWithIn() throws ServiceException, IOException, EntityNotFoundException {
+    public void testGetListWithIn() throws SphereMallException, IOException {
+        List<Product> items = client.products()
+                .sort("-id")
+                .limit(2)
+                .all().data();
+
         ProductResource productResource = client.products();
-        productResource.in("id", "6329", "6351");
+        productResource.in("id", items.get(0).getId().toString(), items.get(1).getId().toString());
+        productResource.sort("-id");
         List<Product> products = productResource.all().data();
         Assert.assertEquals(products.size(), 2);
-        Assert.assertTrue(products.get(0).getId() == 6329);
-        Assert.assertTrue(products.get(1).getId() == 6351);
+        Assert.assertTrue(products.get(0).getId().equals(items.get(0).getId()));
+        Assert.assertTrue(products.get(1).getId().equals(items.get(1).getId()));
     }
 
     @Test
-    public void testSort() throws ServiceException, IOException, EntityNotFoundException {
+    public void testSort() throws SphereMallException, IOException {
+
+        List<Product> list = client.products()
+                .sort("-id")
+                .limit(2).all().data();
+        org.junit.Assert.assertNotNull(list);
+        org.junit.Assert.assertTrue(list.size() > 1);
+
         ProductResource productResource = client.products();
         productResource.sort("-id");
-        productResource.in("id", "6329", "6351");
+        productResource.in("id", list.get(0).getId().toString(), list.get(1).getId().toString());
         List<Product> products = productResource.all().data();
         Assert.assertEquals(products.size(), 2);
-        Assert.assertTrue(products.get(0).getId() == 6351);
-        Assert.assertTrue(products.get(1).getId() == 6329);
+        Assert.assertTrue(products.get(0).getId().equals(list.get(0).getId()));
+        Assert.assertTrue(products.get(1).getId().equals(list.get(1).getId()));
     }
 
     @Test
-    public void testGetListWithFilter() throws ServiceException, IOException, EntityNotFoundException {
+    public void testGetListWithFilter() throws SphereMallException, IOException {
+        Product product = client.products().first().data();
+
         ProductResource productResource = client.products();
-        productResource.filters(new Predicate("id", FilterOperators.EQUAL, "6329"));
+        productResource.filters(new Predicate("id", FilterOperators.EQUAL, product.getId().toString()));
         List<Product> products = productResource.all().data();
         Assert.assertEquals(products.size(), 1);
-        Assert.assertTrue(products.get(0).getId() == 6329);
+        Assert.assertTrue(products.get(0).getId().equals(product.getId()));
     }
 
     @Test
@@ -104,14 +117,13 @@ public class BaseResourceTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testGetProductIsVisible() throws ServiceException, IOException, EntityNotFoundException {
+    public void testGetProductIsVisible() throws SphereMallException, IOException {
         ProductResource productResource = client.products();
         IsVisible isVisible = new IsVisible();
         productResource.filters(isVisible.asFilter());
-        productResource.in("id", "6329", "6351");
         List<Product> products = productResource.all().data();
-        Assert.assertNotNull(products.size());
-        Assert.assertEquals(2, products.size());
+        Assert.assertNotNull(products);
+        Assert.assertTrue(products.size() > 0);
     }
 
     @Test
@@ -145,14 +157,14 @@ public class BaseResourceTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testCount() throws EntityNotFoundException, ServiceException, IOException, JSONException {
+    public void testCount() throws SphereMallException, IOException {
         ProductResource productResource = client.products();
         int count = productResource.count();
         Assert.assertTrue(count > 30);
     }
 
     @Test
-    public void testCreateAndUpdateAndDeleteEntity() throws EntityNotFoundException, ServiceException, IOException {
+    public void testCreateAndUpdateAndDeleteEntity() throws SphereMallException, IOException {
 
         HashMap<String, String> params = new HashMap<>();
         params.put("title", "NewProduct");
@@ -171,7 +183,7 @@ public class BaseResourceTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testDeleteEntity() throws EntityNotFoundException, ServiceException, IOException {
+    public void testDeleteEntity() throws SphereMallException, IOException {
         HashMap<String, String> params = new HashMap<>();
         params.put("title", "NewProduct");
 
@@ -184,7 +196,7 @@ public class BaseResourceTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testFullSearch() throws EntityNotFoundException, IOException, ServiceException {
+    public void testFullSearch() throws SphereMallException, IOException {
         List<Product> products = client.products()
                 .filters(new Predicate("fullSearch", null, "test"))
                 .all().data();

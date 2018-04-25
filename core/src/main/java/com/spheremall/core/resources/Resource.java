@@ -2,8 +2,7 @@ package com.spheremall.core.resources;
 
 import com.spheremall.core.entities.Entity;
 import com.spheremall.core.entities.Response;
-import com.spheremall.core.exceptions.EntityNotFoundException;
-import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.Filter;
 import com.spheremall.core.filters.InPredicate;
 import com.spheremall.core.filters.Predicate;
@@ -47,17 +46,17 @@ public interface Resource<R extends Resource, E extends Entity> {
 
     InPredicate getIn();
 
-    int count() throws EntityNotFoundException, IOException, ServiceException;
+    int count() throws IOException, SphereMallException;
 
-    Response<E> get(int id) throws ServiceException, IOException, EntityNotFoundException;
+    Response<E> get(int id) throws IOException, SphereMallException;
 
-    Response<List<E>> all() throws ServiceException, IOException, EntityNotFoundException;
+    Response<List<E>> all() throws IOException, SphereMallException;
 
-    Response<E> first() throws ServiceException, IOException, EntityNotFoundException;
+    Response<E> first() throws IOException, SphereMallException;
 
-    Response<E> create(HashMap<String, String> params) throws EntityNotFoundException, IOException, ServiceException;
+    Response<E> create(HashMap<String, String> params) throws IOException, SphereMallException;
 
-    Response<E> update(Integer id, HashMap<String, String> params) throws EntityNotFoundException, IOException, ServiceException;
+    Response<E> update(Integer id, HashMap<String, String> params) throws IOException, SphereMallException;
 
-    Boolean delete(Integer id) throws EntityNotFoundException, IOException, ServiceException;
+    Boolean delete(Integer id) throws IOException, SphereMallException;
 }

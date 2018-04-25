@@ -1,9 +1,15 @@
 package com.spheremall.core.exceptions;
 
-public class EntityNotFoundException extends Throwable {
+import com.spheremall.core.api.response.ErrorResponse;
+
+public class EntityNotFoundException extends SphereMallException {
 
     public EntityNotFoundException() {
         super();
+    }
+
+    public EntityNotFoundException(ErrorResponse error) {
+        super(error);
     }
 
     public EntityNotFoundException(String message) {

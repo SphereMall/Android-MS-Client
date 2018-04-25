@@ -5,7 +5,6 @@ import com.spheremall.core.entities.Entity;
 public class UserId extends Entity {
 
     public Data data;
-    public Boolean success;
 
     public class Data {
         public String type;

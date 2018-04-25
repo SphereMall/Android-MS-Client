@@ -1,8 +1,14 @@
 package com.spheremall.core.exceptions;
 
-public class ServiceException extends Throwable {
+import com.spheremall.core.api.response.ErrorResponse;
+
+public class ServiceException extends SphereMallException {
 
     public ServiceException() {
+    }
+
+    public ServiceException(ErrorResponse error) {
+        super(error);
     }
 
     public ServiceException(String message) {

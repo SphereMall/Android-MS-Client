@@ -16,8 +16,8 @@ public class PaymentProvider extends Entity {
     public String apiKey;
     public String shaIn;
     public String shaOut;
-    public MSUrl autoReturnUrl;
-    public String returnUrl;
+    public String autoReturnUrl;
+    public MSUrl returnUrl;
 
     public static class MSUrl {
         public String url;

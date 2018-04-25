@@ -1,8 +1,7 @@
 package com.spheremall.core.resources.products;
 
 import com.spheremall.core.entities.products.AttributeGroup;
-import com.spheremall.core.exceptions.EntityNotFoundException;
-import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.resources.SetUpResourceTest;
 
 import junit.framework.Assert;
@@ -15,7 +14,7 @@ import java.util.List;
 public class AttributeGroupsResourceTest extends SetUpResourceTest {
 
     @Test
-    public void testGetList() throws EntityNotFoundException, IOException, ServiceException {
+    public void testGetList() throws SphereMallException, IOException {
         List<AttributeGroup> attributeGroups = client.attributeGroups()
                 .in("id", "1", "2")
                 .limit(2)

@@ -6,8 +6,7 @@ import com.spheremall.core.entities.shop.Order;
 import com.spheremall.core.entities.shop.PaymentMethod;
 import com.spheremall.core.entities.users.Address;
 import com.spheremall.core.entities.users.User;
-import com.spheremall.core.exceptions.EntityNotFoundException;
-import com.spheremall.core.exceptions.ServiceException;
+import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.FilterOperators;
 import com.spheremall.core.filters.Predicate;
 import com.spheremall.core.resources.SetUpResourceTest;
@@ -15,6 +14,7 @@ import com.spheremall.core.resources.SetUpResourceTest;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.List;
 
 public class BasketTest extends SetUpResourceTest {
 
@@ -22,20 +22,20 @@ public class BasketTest extends SetUpResourceTest {
     private static final int basketId = 1862;
 
     @Override
-    public void setUp() throws EntityNotFoundException, ServiceException, IOException {
+    public void setUp() throws SphereMallException, IOException {
         super.setUp();
         client.clearBasket();
     }
 
     @Test
-    public void testCreateBasket() throws EntityNotFoundException, ServiceException, IOException {
+    public void testCreateBasket() throws SphereMallException, IOException {
         Basket basket = client.basket();
         junit.framework.Assert.assertNotNull(basket);
         junit.framework.Assert.assertEquals(0, basket.getUserId());
     }
 
     @Test
-    public void testGetByUserId() throws EntityNotFoundException, ServiceException, IOException {
+    public void testGetByUserId() throws SphereMallException, IOException {
         User user = client.users().first().data();
         Basket basket = client.basket(Basket.DEFAULT_ORDER_ID, user.getId());
         junit.framework.Assert.assertNotNull(basket);
@@ -43,7 +43,7 @@ public class BasketTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testGetByBasketId() throws EntityNotFoundException, ServiceException, IOException {
+    public void testGetByBasketId() throws SphereMallException, IOException {
         int basketId = client.basket().getId();
         Basket basket = client.basket(basketId);
         junit.framework.Assert.assertNotNull(basket);
@@ -51,7 +51,7 @@ public class BasketTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testAddItemToBasket() throws EntityNotFoundException, IOException, ServiceException {
+    public void testAddItemToBasket() throws SphereMallException, IOException {
         Product product = client.products().first().data();
         junit.framework.Assert.assertNotNull(product);
 
@@ -68,7 +68,7 @@ public class BasketTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testRemoveItemFromBasket() throws EntityNotFoundException, IOException, ServiceException {
+    public void testRemoveItemFromBasket() throws SphereMallException, IOException {
         Product product = client.products().first().data();
         junit.framework.Assert.assertNotNull(product);
 
@@ -89,7 +89,7 @@ public class BasketTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testUpdateItemAmountInBasket() throws EntityNotFoundException, IOException, ServiceException {
+    public void testUpdateItemAmountInBasket() throws SphereMallException, IOException {
         Product product = client.products().first().data();
         junit.framework.Assert.assertNotNull(product);
 
@@ -116,7 +116,7 @@ public class BasketTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testSetUser() throws EntityNotFoundException, IOException, ServiceException {
+    public void testSetUser() throws SphereMallException, IOException {
         User user = client.users()
                 .filters(new Predicate("id", FilterOperators.NOT_EQUAL, String.valueOf(userId)))
                 .first().data();
@@ -131,7 +131,7 @@ public class BasketTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testDelivery() throws EntityNotFoundException, IOException, ServiceException {
+    public void testDelivery() throws SphereMallException, IOException {
         Product product = client.products().first().data();
         junit.framework.Assert.assertNotNull(product);
 
@@ -157,7 +157,7 @@ public class BasketTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testShipping() throws EntityNotFoundException, IOException, ServiceException {
+    public void testShipping() throws SphereMallException, IOException {
         Product product = client.products().first().data();
         junit.framework.Assert.assertNotNull(product);
 
@@ -181,12 +181,14 @@ public class BasketTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testBilling() throws EntityNotFoundException, IOException, ServiceException {
-        Product product = client.products().first().data();
-        junit.framework.Assert.assertNotNull(product);
+    public void testBilling() throws SphereMallException, IOException {
+        List<Product> products = client.products().all().data();
+        junit.framework.Assert.assertNotNull(products);
 
         Basket basket = client.basket();
         junit.framework.Assert.assertNotNull(basket);
+
+        Product product = products.get(0);
 
         Order order = basket.add(new BasketPredicate(product.getId(), 2));
 
@@ -207,7 +209,7 @@ public class BasketTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testPayment() throws EntityNotFoundException, IOException, ServiceException {
+    public void testPayment() throws SphereMallException, IOException {
         Product product = client.products().first().data();
         junit.framework.Assert.assertNotNull(product);
 
