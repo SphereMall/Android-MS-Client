@@ -61,6 +61,8 @@ import com.spheremall.core.resources.shop.PaymentMethodsResource;
 import com.spheremall.core.resources.shop.PaymentMethodsResourceImpl;
 import com.spheremall.core.resources.shop.PaymentProvidersResource;
 import com.spheremall.core.resources.shop.PaymentProvidersResourceImpl;
+import com.spheremall.core.resources.shop.PromotionsResource;
+import com.spheremall.core.resources.shop.PromotionsResourceImpl;
 import com.spheremall.core.resources.shop.VatsResource;
 import com.spheremall.core.resources.shop.VatsResourceImpl;
 import com.spheremall.core.resources.users.AddressResource;
@@ -251,6 +253,10 @@ public interface ServiceInjector {
 
     default VatsResource vats() {
         return new VatsResourceImpl((SMClient) this);
+    }
+
+    default PromotionsResource promotions() {
+        return new PromotionsResourceImpl((SMClient) this);
     }
 
     //endregion

@@ -19,10 +19,9 @@ public class ProductResourceTest extends SetUpResourceTest {
         Product testProduct = client.products().first().data();
 
         List<Product> products = client.products()
-                .limit(2)
                 .full().data();
+
         Assert.assertNotNull(products);
-        Assert.assertEquals(2, products.size());
 
         products = client.products()
                 .limit(1)
