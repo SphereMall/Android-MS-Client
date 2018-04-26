@@ -1,5 +1,6 @@
 package com.spheremall.core.entities.products;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.spheremall.core.entities.Entity;
 import com.spheremall.core.entities.shop.Promotion;
 import com.spheremall.core.jsonapi.RelType;
@@ -33,13 +34,13 @@ public class Product extends Entity {
     @Relationship(value = "productAttributeValues", resolve = true, relType = RelType.RELATED)
     public List<ProductAttributeValue> productAttributeValues;
 
-    @Relationship(value = "media", resolve = true, relType = RelType.RELATED)
-    public List<Media> media;
+    @Relationship(value = "media")
+    @JsonProperty("media")
+    public List<Media> images;
 
     @Relationship(value = "options", resolve = true, relType = RelType.RELATED)
     public List<Option> options;
 
     @Relationship(value = "promotions", resolve = true, relType = RelType.RELATED)
     public List<Promotion> promotions;
-
 }
