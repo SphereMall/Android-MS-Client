@@ -1,12 +1,14 @@
 package com.spheremall.core.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.spheremall.core.api.response.ErrorResponse;
 import com.spheremall.core.jsonapi.IntegerIdHandler;
 import com.spheremall.core.jsonapi.annotations.Id;
 import com.spheremall.core.jsonapi.annotations.Meta;
 import com.spheremall.core.jsonapi.annotations.Type;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -19,6 +21,9 @@ public class Entity {
     private Integer id;
 
     public String status;
+
+    public List<ErrorResponse> errors;
+
     public String service;
     public String ver;
 

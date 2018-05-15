@@ -8,20 +8,20 @@ import java.util.List;
  * @author jbegic
  */
 public class Errors {
-	private List<Error> errors;
+    private List<Error> errors;
 
-	public List<Error> getErrors() {
-		return errors;
-	}
+    public List<Error> getErrors() {
+        return errors;
+    }
 
-	public void setErrors(List<Error> errors) {
-		this.errors = errors;
-	}
+    public void setErrors(List<Error> errors) {
+        this.errors = errors;
+    }
 
-	@Override
-	public String toString() {
-		return "Errors{" +
-				"errors=" + (errors != null ? errors : "Undefined") +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "Errors{" +
+                "errors=" + (errors != null ? errors : "Undefined") +
+                '}';
+    }
 }

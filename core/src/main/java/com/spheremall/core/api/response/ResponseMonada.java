@@ -3,16 +3,25 @@ package com.spheremall.core.api.response;
 import com.google.gson.Gson;
 
 public class ResponseMonada {
+
     private final ErrorResponse errorResponse;
     private final String response;
+    private final String status;
 
     public ResponseMonada(String response) {
         this.response = response;
         this.errorResponse = checkError();
+        this.status = checkStatus();
+    }
+
+    private String checkStatus() {
+        Gson gson = new Gson();
+        StatusResponse statusResponse = gson.fromJson(response, StatusResponse.class);
+        return statusResponse.status;
     }
 
     public boolean hasError() {
-        return errorResponse != null;
+        return !this.status.equals("OK");
     }
 
     public String getResponse() {

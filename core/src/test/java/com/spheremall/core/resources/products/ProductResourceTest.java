@@ -33,7 +33,8 @@ public class ProductResourceTest extends SetUpResourceTest {
 
         Product product = client.products()
                 .filters(new Predicate("showInSpecList", FilterOperators.EQUAL, "1"))
-                .full(testProduct.getId()).data();
+                .full(testProduct.getId())
+                .data();
 
         Assert.assertEquals(testProduct.getId().intValue(), product.getId().intValue());
 

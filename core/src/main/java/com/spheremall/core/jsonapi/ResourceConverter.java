@@ -200,7 +200,7 @@ public class ResourceConverter {
             JsonNode rootNode = objectMapper.readTree(dataStream);
 
             // Validate
-            ValidationUtils.ensureNotError(objectMapper, rootNode);
+//            ValidationUtils.ensureNotError(objectMapper, rootNode);
             ValidationUtils.ensureValidResource(rootNode);
 
             JsonNode dataNode = rootNode.get(JSONAPISpecConstants.DATA);
@@ -278,7 +278,7 @@ public class ResourceConverter {
             JsonNode rootNode = objectMapper.readTree(dataStream);
 
             // Validate
-            ValidationUtils.ensureNotError(objectMapper, rootNode);
+//            ValidationUtils.ensureNotError(objectMapper, rootNode);
             ValidationUtils.ensureValidResource(rootNode);
 
             JsonNode dataNode = rootNode.get(JSONAPISpecConstants.DATA);
