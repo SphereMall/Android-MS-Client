@@ -12,5 +12,7 @@ public interface AuthResource extends Resource<AuthResource, Token> {
     User login(String email, String password) throws SphereMallException, IOException;
 
     Token auth(String email, String password) throws SphereMallException, IOException;
+
+    Token getUserToken() throws SphereMallException, IOException;
 }
 

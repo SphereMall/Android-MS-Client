@@ -24,7 +24,7 @@ public class AuthResourceImpl extends BaseResource<Token, AuthResource> implemen
 
     @Override
     public String getURI() {
-        return "oauth";
+        return "auth";
     }
 
     @Override
@@ -70,6 +70,21 @@ public class AuthResourceImpl extends BaseResource<Token, AuthResource> implemen
         params.put(ApiConstants.API_SECRET_TITLE, smClient.getSecretKey());
         params.put("login_email", email);
         params.put("login_password", password);
+        AuthRequest authRequest = new AuthRequest(this.smClient, this);
+        ResponseMonada responseMonada = authRequest.handle(Method.POST, uriAppend, params);
+        if (responseMonada.hasError()) {
+            throw new EntityNotFoundException(responseMonada.getErrorResponse());
+        }
+        return maker.makeSingle(responseMonada.getResponse()).data();
+    }
+
+    @Override
+    public Token getUserToken() throws SphereMallException, IOException {
+        String uriAppend = "token";
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put(ApiConstants.API_CLIENT_ID_TITLE, smClient.getClientId());
+        params.put(ApiConstants.API_SECRET_TITLE, smClient.getSecretKey());
         AuthRequest authRequest = new AuthRequest(this.smClient, this);
         ResponseMonada responseMonada = authRequest.handle(Method.POST, uriAppend, params);
         if (responseMonada.hasError()) {
