@@ -95,6 +95,9 @@ public class JSONAPIDocument<T> {
      * @param meta {@link Map} meta
      */
     public void setMeta(Map<String, ?> meta) {
+        if (meta == null) {
+            meta = new HashMap<>();
+        }
         this.meta = new HashMap<>(meta);
     }
 

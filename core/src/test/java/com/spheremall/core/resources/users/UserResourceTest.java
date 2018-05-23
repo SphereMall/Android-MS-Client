@@ -118,17 +118,4 @@ public class UserResourceTest extends SetUpResourceTest {
 
         Assert.assertNotEquals(user.getId(), user3.getId());
     }
-
-    //    @Test
-    public void testUpdateUser() throws SphereMallException, IOException {
-        User user = client.users()
-                .filters(new Predicate("email", FilterOperators.EQUAL, "v.chernetsky@spheremall.com"))
-                .first().data();
-
-        HashMap<String, String> params = new HashMap<>();
-        params.put("loginName", "v.chernetsky");
-        params.put("email", "v.chernetsky@spheremall.com");
-        params.put("password", "202cb962ac59075b964b07152d234b70");
-        Response<User> userResponse = client.users().update(user.getId(), params);
-    }
 }

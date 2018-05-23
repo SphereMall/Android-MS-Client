@@ -7,7 +7,9 @@ import com.spheremall.core.jsonapi.JSONAPIDocument;
 import com.spheremall.core.jsonapi.ResourceConverter;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ObjectMaker<T extends Entity> implements Maker<T> {
 
@@ -24,7 +26,11 @@ public class ObjectMaker<T extends Entity> implements Maker<T> {
         resourceConverter.enableDeserializationOption(DeserializationFeature.ALLOW_UNKNOWN_INCLUSIONS);
         JSONAPIDocument<List<T>> document = resourceConverter.readDocumentCollection(response.getBytes(), clazz);
         T entity = clazz.cast(document.get().get(0));
-        return new Response<>(entity, document.getMeta());
+        Map<String, ?> meta = document.getMeta();
+        if (meta == null) {
+            meta = new HashMap<>();
+        }
+        return new Response<>(entity, meta);
     }
 
     @Override
@@ -33,6 +39,10 @@ public class ObjectMaker<T extends Entity> implements Maker<T> {
         resourceConverter.enableDeserializationOption(DeserializationFeature.ALLOW_UNKNOWN_INCLUSIONS);
         JSONAPIDocument<List<T>> document = resourceConverter.readDocumentCollection(response.getBytes(), clazz);
         List<T> entities = Collections.checkedList(resourceConverter.readDocumentCollection(response.getBytes(), clazz).get(), clazz);
-        return new Response<>(entities, document.getMeta());
+        Map<String, ?> meta = document.getMeta();
+        if (meta == null) {
+            meta = new HashMap<>();
+        }
+        return new Response<>(entities, meta);
     }
 }
