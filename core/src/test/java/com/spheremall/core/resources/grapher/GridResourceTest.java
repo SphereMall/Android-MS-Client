@@ -5,7 +5,7 @@ import com.spheremall.core.entities.Facets;
 import com.spheremall.core.entities.Response;
 import com.spheremall.core.entities.products.Product;
 import com.spheremall.core.exceptions.SphereMallException;
-import com.spheremall.core.filters.FilterOperators;
+import com.spheremall.core.filters.grid.AttributeFilter;
 import com.spheremall.core.filters.grid.EntityFilter;
 import com.spheremall.core.filters.grid.FunctionalNameFilter;
 import com.spheremall.core.filters.grid.GridFilter;
@@ -51,11 +51,18 @@ public class GridResourceTest extends SetUpResourceTest {
     @Test
     public void testGridFacets() throws SphereMallException, IOException {
         GridFilter gridFilter = new GridFilter();
-        FunctionalNameFilter functionalNameFilter = new FunctionalNameFilter(1);
-        gridFilter.elements(functionalNameFilter);
-        gridFilter.addFilter("showInSpecList", FilterOperators.EQUAL, "1");
+        gridFilter
+                .elements(
+                        new AttributeFilter(2661),
+                        new AttributeFilter(2634),
+                        new AttributeFilter(2627),
+                        new EntityFilter("products"),
+                        new FunctionalNameFilter(1));
 
-        Response<Facets> facets = client.grid().facets();
+        Assert.assertNotNull(gridFilter.toParams());
+        Response<Facets> facets = client.grid()
+                .filters(gridFilter)
+                .facets();
         Facets facetsEntity = facets.data();
         Assert.assertNotNull(facetsEntity);
         Assert.assertNotNull(facetsEntity.attributes);
