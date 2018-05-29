@@ -68,7 +68,14 @@ public class GridFilter extends Filter {
                 for (GridFilterElement element : levelElements) {
                     String key = element.name;
                     try {
-                        conditionObject.put(key, element.asArray());
+                        if (conditionObject.has(key)) {
+                            JSONArray array = element.asArray();
+                            for (int i = 0; i < array.length(); i++) {
+                                conditionObject.getJSONArray(key).put(array.get(i));
+                            }
+                        } else {
+                            conditionObject.put(key, element.asArray());
+                        }
                     } catch (JSONException e) {
                         Log.e("GridFilter", e.getLocalizedMessage());
                     }
