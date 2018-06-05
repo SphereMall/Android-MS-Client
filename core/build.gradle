@@ -36,7 +36,7 @@ android {
     buildToolsVersion '27.0.3'
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -85,11 +85,11 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:2.18.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.3'
     //NETWORK
-    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.6.0'
-    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     testImplementation 'com.squareup.okhttp3:mockwebserver:3.9.0'
     implementation 'org.mindrot:jbcrypt:0.3m'
 }
