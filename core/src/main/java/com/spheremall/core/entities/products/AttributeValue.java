@@ -7,8 +7,8 @@ import com.spheremall.core.entities.Entity;
 public class AttributeValue extends Entity {
 
     public String value;
+    public int attributeId;
     public String code;
-    public String cssClass;
     public String title;
     public String image;
     public int orderNumber;

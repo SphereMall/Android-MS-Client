@@ -126,7 +126,7 @@ public class SerializationTest {
     }
 
     /**
-     * Covers use-case where global settings are used to disable relationship attribute inclusion but
+     * Covers use-case where global settings are used to disable relationship field inclusion but
      * behaviour is changed trouh local settings provided when serialization is executed.
      *
      * @throws DocumentSerializationException

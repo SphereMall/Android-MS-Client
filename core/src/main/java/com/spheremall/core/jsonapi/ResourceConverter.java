@@ -165,7 +165,7 @@ public class ResourceConverter {
      * @param data  raw data input
      * @param clazz target type
      * @param <T>   type
-     * @return collection of converted elements
+     * @return collection of converted queries
      * @throws RuntimeException in case conversion fails
      */
     @Deprecated
@@ -636,7 +636,7 @@ public class ResourceConverter {
         String id = idNode != null ? idNode.asText().trim() : "";
 
         if (id.isEmpty() && deserializationFeatures.contains(DeserializationFeature.REQUIRE_RESOURCE_ID)) {
-            throw new IllegalArgumentException("BaseResource must have an non null and non-empty 'id' attribute!");
+            throw new IllegalArgumentException("BaseResource must have an non null and non-empty 'id' field!");
         }
 
         String type = object.get(JSONAPISpecConstants.TYPE).asText();
@@ -644,7 +644,7 @@ public class ResourceConverter {
     }
 
     /**
-     * Sets an id attribute value to a target object.
+     * Sets an id field value to a target object.
      *
      * @param target  target POJO
      * @param idValue id node
@@ -832,7 +832,7 @@ public class ResourceConverter {
         // Handle id, meta and relationship fields
         String resourceId = getIdValue(object);
 
-        // Remove id field from resulting attribute node
+        // Remove id field from resulting field node
         attributesNode.remove(configuration.getIdField(object.getClass()).getName());
 
         // Handle meta

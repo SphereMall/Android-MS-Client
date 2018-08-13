@@ -10,7 +10,10 @@ public class Media extends Entity {
     public String title;
     public String imageName;
     public int orderNumber;
-    public int imageTypeId;
+    public int mediaTypeId;
     public int visible;
     public String path;
+    public String createDate;
+    public String lastUpdate;
+    public int mediaDisplayTypeId;
 }

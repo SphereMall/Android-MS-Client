@@ -22,7 +22,7 @@ public class FacetAttributesMapper implements Mapper<FacetsObject, Attribute> {
                 attribute = createAttribute(attr);
                 for (FacetsObject.Attribute value : obj.data.attributes) {
                     if (attr.attributeId == value.attributeId) {
-                        attribute.values.add(createAttributeValue(value));
+                        attribute.attributeValues.add(createAttributeValue(value));
                     }
                 }
                 attributeHashMap.put(attribute.getId().toString(), attribute);
@@ -50,7 +50,7 @@ public class FacetAttributesMapper implements Mapper<FacetsObject, Attribute> {
         attribute.showInSpecList = item.showInSpecList;
         attribute.useInFilter = item.useInFilter;
         attribute.description = item.description;
-        attribute.values = new ArrayList<>();
+        attribute.attributeValues = new ArrayList<>();
         return attribute;
     }
 

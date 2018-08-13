@@ -39,7 +39,6 @@ public abstract class StringGridFilter extends GridFilterElement {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(super.hashCode(), values);
     }
 }

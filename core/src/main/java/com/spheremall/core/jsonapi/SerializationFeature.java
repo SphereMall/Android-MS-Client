@@ -17,12 +17,12 @@ public enum SerializationFeature {
 	INCLUDE_RELATIONSHIP_ATTRIBUTES(false),
 
 	/**
-	 * If enabled, meta attribute will be serialized
+	 * If enabled, meta field will be serialized
 	 */
 	INCLUDE_META(true),
 
 	/**
-	 * If enabled, links attribute will be serialized
+	 * If enabled, links field will be serialized
 	 */
 	INCLUDE_LINKS(true);
 

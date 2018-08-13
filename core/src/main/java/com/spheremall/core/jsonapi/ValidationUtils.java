@@ -41,7 +41,7 @@ public class ValidationUtils {
     }
 
     /**
-     * Ensures that provided node does not hold 'errors' attribute.
+     * Ensures that provided node does not hold 'errors' field.
      *
      * @param resourceNode resource node
      * @throws ResourceParseException

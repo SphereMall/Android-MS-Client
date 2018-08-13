@@ -1,6 +1,7 @@
 package com.spheremall.core.jsonapi.retrofit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.spheremall.core.entities.products.AttributeValue;
 import com.spheremall.core.entities.products.Brand;
 import com.spheremall.core.entities.products.FunctionalName;
@@ -131,6 +132,16 @@ public class RetrofitTest {
 
         Assert.assertNotNull(user);
         Assert.assertEquals("liz", user.getName());
+    }
+
+    @Test
+    public void getProductTest() throws IOException {
+        String userResponse = IOUtils.getResourceAsString("product_detail.json");
+
+        Gson gson = new Gson();
+        Product product = gson.fromJson(userResponse, Product.class);
+
+        Assert.assertNotNull(product);
     }
 
     @Test

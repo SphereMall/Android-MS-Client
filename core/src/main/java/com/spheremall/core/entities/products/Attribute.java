@@ -20,8 +20,11 @@ public class Attribute extends Entity {
     public int useInFilter;
 
     @Relationship(value = "attributeValues", resolve = true, relType = RelType.RELATED)
-    public List<AttributeValue> values;
+    public List<AttributeValue> attributeValues;
 
     @Relationship(value = "attributeGroups", resolve = true, relType = RelType.RELATED)
     public AttributeGroup group;
+
+    @Relationship(value = "attributeTypes", resolve = true, relType = RelType.RELATED)
+    public List<AttributeType> attributeTypes;
 }

@@ -1,6 +1,7 @@
 package com.spheremall.core.resources;
 
 import com.spheremall.core.SMClient;
+import com.spheremall.core.api.BaseRequest;
 import com.spheremall.core.api.Request;
 import com.spheremall.core.api.configuration.Method;
 import com.spheremall.core.api.response.ResponseMonada;
@@ -28,7 +29,7 @@ public abstract class BaseResource<E extends Entity, R extends Resource> impleme
     protected SMClient smClient = null;
     protected String version;
 
-    protected Request request;
+    protected BaseRequest request;
     protected ObjectMaker<E> maker;
 
     protected Filter filter;

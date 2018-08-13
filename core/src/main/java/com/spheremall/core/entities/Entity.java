@@ -9,6 +9,7 @@ import com.spheremall.core.jsonapi.annotations.Type;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -67,5 +68,25 @@ public class Entity {
 
     public Boolean isSuccess() {
         return status.equals("OK");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Entity)) return false;
+        Entity entity = (Entity) o;
+        return Objects.equals(properties, entity.properties) &&
+                Objects.equals(id, entity.id) &&
+                Objects.equals(status, entity.status) &&
+                Objects.equals(errors, entity.errors) &&
+                Objects.equals(service, entity.service) &&
+                Objects.equals(ver, entity.ver) &&
+                Objects.equals(meta, entity.meta);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(properties, id, status, errors, service, ver, meta);
     }
 }

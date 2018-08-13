@@ -77,7 +77,7 @@ public class ConverterConfiguration {
 
                 if (relationship.resolve() && relationship.relType() == null) {
                     throw new IllegalArgumentException("@Relationship on " + clazz.getName() + "#" +
-                            relationshipField.getName() + " with 'resolve = true' must have a relType attribute " +
+                            relationshipField.getName() + " with 'resolve = true' must have a relType field " +
                             "set.");
                 }
 
@@ -158,7 +158,7 @@ public class ConverterConfiguration {
 
                 if (!Links.class.isAssignableFrom(metaType)) {
                     throw new IllegalArgumentException(String.format("%s is not allowed to be used as @Links " +
-                            "attribute. Only com.github.jasminb.jsonapi.Links or its derivatives" +
+                            "field. Only com.github.jasminb.jsonapi.Links or its derivatives" +
                             " can be annotated as @Links", metaType.getCanonicalName()));
                 } else {
                     linkFieldMap.put(clazz, linkField);

@@ -11,7 +11,7 @@ import java.util.Set;
 public enum DeserializationFeature {
 
 	/**
-	 * This option enforces presence of the 'id' attribute in resources being parsed.
+	 * This option enforces presence of the 'id' field in resources being parsed.
 	 */
 	REQUIRE_RESOURCE_ID(true),
 

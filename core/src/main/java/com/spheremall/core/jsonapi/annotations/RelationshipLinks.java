@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 /**
  * Relationship links annotation.
  *
- * This annotation is used in conjunction with @Relationship annotation, attribute annotated with this annotation
+ * This annotation is used in conjunction with @Relationship annotation, field annotated with this annotation
  * is considered to be {@link Links} related to named relationship object.
  *
  * <pre>

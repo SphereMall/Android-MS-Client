@@ -563,7 +563,7 @@ public class ResourceConverterTest {
         byte[] kebabSerialized = kebabConverter.writeDocument(new JSONAPIDocument<>(longId));
         byte[] normalSerialized = converter.writeDocument(new JSONAPIDocument<>(longId));
 
-        // Validate that the relationship attribute got removed in the Kebab case
+        // Validate that the relationship field got removed in the Kebab case
         final JsonNode readBack = kebabMapper.readTree(kebabSerialized);
         Assert.assertNull(readBack.get("data").get("attributes").get("integer-id-resource"));
         // So the two serializations should be exactly the same

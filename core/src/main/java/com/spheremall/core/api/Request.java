@@ -52,7 +52,7 @@ public class Request implements BaseRequest {
         this.method = method;
         this.uriAppend = uriAppend;
         this.queryParams = queryParams;
-        service = getService();
+        this.service = getService();
 
         Response<ResponseBody> response = executeCall(false);
 

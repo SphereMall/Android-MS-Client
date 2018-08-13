@@ -3,10 +3,14 @@ package com.spheremall.core;
 import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.resources.documets.DocumentsResource;
 import com.spheremall.core.resources.documets.DocumentsResourceImpl;
+import com.spheremall.core.resources.elasticSearch.ElasticSearchResource;
+import com.spheremall.core.resources.elasticSearch.ElasticSearchResourceImpl;
 import com.spheremall.core.resources.grapher.CorrelationsResource;
 import com.spheremall.core.resources.grapher.CorrelationsResourceImpl;
 import com.spheremall.core.resources.grapher.GridResource;
 import com.spheremall.core.resources.grapher.GridResourceImpl;
+import com.spheremall.core.resources.price.ProductPriceConfigurationsResource;
+import com.spheremall.core.resources.price.ProductPriceConfigurationsResourceImpl;
 import com.spheremall.core.resources.products.AttributeDisplayTypesResource;
 import com.spheremall.core.resources.products.AttributeDisplayTypesResourceImpl;
 import com.spheremall.core.resources.products.AttributeGroupsEntitiesResource;
@@ -35,6 +39,8 @@ import com.spheremall.core.resources.products.MediaTypesResource;
 import com.spheremall.core.resources.products.MediaTypesResourceImpl;
 import com.spheremall.core.resources.products.OptionsResource;
 import com.spheremall.core.resources.products.OptionsResourceImpl;
+import com.spheremall.core.resources.products.PriceConfigurationResource;
+import com.spheremall.core.resources.products.PriceConfigurationResourceImpl;
 import com.spheremall.core.resources.products.ProductAttributeValuesResource;
 import com.spheremall.core.resources.products.ProductAttributeValuesResourceImpl;
 import com.spheremall.core.resources.products.ProductResource;
@@ -118,6 +124,14 @@ public interface ServiceInjector {
 
     default ProductResource products() {
         return new ProductResourceImpl((SMClient) this);
+    }
+
+    default PriceConfigurationResource priceConfigurations() {
+        return new PriceConfigurationResourceImpl((SMClient) this);
+    }
+
+    default ProductPriceConfigurationsResource productPriceConfiguration() {
+        return new ProductPriceConfigurationsResourceImpl((SMClient) this);
     }
 
     default BrandsResource brands() {
@@ -274,6 +288,12 @@ public interface ServiceInjector {
     //region [Documents]
     default DocumentsResource documents() {
         return new DocumentsResourceImpl((SMClient) this);
+    }
+    //endregion
+
+    //region [ElasticSearch]
+    default ElasticSearchResource elasticSearch() {
+        return new ElasticSearchResourceImpl((SMClient) this);
     }
     //endregion
 }

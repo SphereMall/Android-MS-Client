@@ -12,9 +12,7 @@ public class Brand extends Entity {
     public String image;
     public String shortDescription;
     public String fullDescription;
-    public String seoTitle;
-    public String seoDescription;
-    public String seoKeywords;
+    public String logo;
     public String orderNumber;
     public String lastUpdate;
 }

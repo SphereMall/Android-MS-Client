@@ -15,7 +15,7 @@ public class SMClient implements ServiceInjector {
     protected PreferencesManager preferencesManager;
     protected Boolean debug = false;
     private static SMClient client = null;
-    protected HttpLoggingInterceptor.Level loggingLevel = HttpLoggingInterceptor.Level.NONE;
+    protected HttpLoggingInterceptor.Level loggingLevel = HttpLoggingInterceptor.Level.BODY;
 
     public static final String userAgent = "SM_SDK_ANDROID_CLIENT";
 

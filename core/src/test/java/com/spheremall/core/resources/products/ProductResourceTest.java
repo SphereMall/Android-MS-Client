@@ -1,6 +1,7 @@
 package com.spheremall.core.resources.products;
 
 import com.spheremall.core.entities.products.Product;
+import com.spheremall.core.entities.price.ProductPriceConfiguration;
 import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.FilterOperators;
 import com.spheremall.core.filters.Predicate;
@@ -42,5 +43,15 @@ public class ProductResourceTest extends SetUpResourceTest {
                 .full(testProduct.urlCode).data();
 
         Assert.assertEquals(testProduct.urlCode, product.urlCode);
+    }
+
+    @Test
+    public void testProductWithEffectedAttributes() throws IOException, SphereMallException {
+        Product product = client.products().detail(405);
+        Assert.assertNotNull(product);
+        Assert.assertTrue(product.productPriceConfigurations.size() > 0);
+
+        ProductPriceConfiguration productPriceConfiguration = product.productPriceConfigurations.get(0);
+        Assert.assertNotNull(productPriceConfiguration);
     }
 }
