@@ -2,6 +2,7 @@ package com.spheremall.core.shop;
 
 import com.spheremall.core.SMClient;
 import com.spheremall.core.entities.shop.Order;
+import com.spheremall.core.entities.shop.OrderItem;
 import com.spheremall.core.entities.users.Address;
 import com.spheremall.core.exceptions.EntityNotFoundException;
 import com.spheremall.core.exceptions.SphereMallException;
@@ -112,7 +113,7 @@ public class Basket extends OrderFinalized {
         return this;
     }
 
-    protected void basketCreate() throws SphereMallException, IOException{
+    protected void basketCreate() throws SphereMallException, IOException {
         Order order = client.basketResource().createNew();
         setOrderData(order);
     }
@@ -158,6 +159,11 @@ public class Basket extends OrderFinalized {
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("id", predicate.id);
+                int itemId = getItemIdByProduct(predicate.id);
+
+                if (itemId > 0) {
+                    jsonObject.put("itemId", getItemIdByProduct(predicate.id));
+                }
 
                 if (predicate.amount != 0) {
                     jsonObject.put("amount", predicate.amount);
@@ -166,7 +172,24 @@ public class Basket extends OrderFinalized {
                     jsonObject.put("compound", predicate.compound);
                 }
 
-                jsonObject.put("attributes", new JSONArray());
+                JSONArray attributes = new JSONArray();
+                if (predicate.getAttributes() != null) {
+                    for (AttributesPredicate attributesPredicate : predicate.getAttributes()) {
+
+                        JSONObject attributeObj = new JSONObject();
+                        attributeObj.put("attributeId", attributesPredicate.attributeId);
+                        attributeObj.put("attributeValueId", attributesPredicate.attributeValueId);
+
+                        if (!attributesPredicate.userValue.isEmpty()) {
+                            attributeObj.put("userValue", attributesPredicate.userValue);
+                        }
+                        attributes.put(attributeObj);
+                    }
+                }
+                if (attributes.length() > 0) {
+                    jsonObject.put("attributes", attributes);
+                }
+
                 jsonArray.put(jsonObject);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -176,5 +199,14 @@ public class Basket extends OrderFinalized {
             params.put("products", jsonArray.toString());
         }
         return params;
+    }
+
+    protected int getItemIdByProduct(int productId) {
+        for (OrderItem order : getItems()) {
+            if (order.productId == productId) {
+                return order.getId();
+            }
+        }
+        return 0;
     }
 }

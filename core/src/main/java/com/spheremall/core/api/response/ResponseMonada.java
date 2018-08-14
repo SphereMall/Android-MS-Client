@@ -21,7 +21,7 @@ public class ResponseMonada {
     }
 
     public boolean hasError() {
-        return !this.status.equals("OK");
+        return !this.status.equals("OK") && !this.status.equals("MULTI_STATUS");
     }
 
     public String getResponse() {

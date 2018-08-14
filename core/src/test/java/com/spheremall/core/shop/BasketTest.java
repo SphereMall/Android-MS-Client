@@ -19,7 +19,6 @@ import java.util.List;
 public class BasketTest extends SetUpResourceTest {
 
     private static final int userId = 5;
-    private static final int basketId = 1862;
 
     @Override
     public void setUp() throws SphereMallException, IOException {
@@ -57,8 +56,13 @@ public class BasketTest extends SetUpResourceTest {
 
         Basket basket = client.basket();
         junit.framework.Assert.assertNotNull(basket);
-
-        Order order = basket.add(new BasketPredicate(product.getId(), 2));
+        BasketPredicate basketPredicate = new BasketPredicate(product.getId(), 2);
+        basketPredicate.setAttributes(
+                new AttributesPredicate(226, 3776, "73"),
+                new AttributesPredicate(227, 3749, "35"),
+                new AttributesPredicate(222, 4337)
+        );
+        Order order = basket.add(basketPredicate);
 
         junit.framework.Assert.assertNotNull(order);
         junit.framework.Assert.assertNotNull(order.items);
@@ -75,7 +79,13 @@ public class BasketTest extends SetUpResourceTest {
         Basket basket = client.basket();
         junit.framework.Assert.assertNotNull(basket);
 
-        Order order = basket.add(new BasketPredicate(product.getId(), 2));
+        BasketPredicate basketPredicate = new BasketPredicate(product.getId(), 2);
+        basketPredicate.setAttributes(
+                new AttributesPredicate(226, 3776, "73"),
+                new AttributesPredicate(227, 3749, "35"),
+                new AttributesPredicate(222, 4337)
+        );
+        Order order = basket.add(basketPredicate);
 
         junit.framework.Assert.assertNotNull(order);
         junit.framework.Assert.assertNotNull(order.items);
@@ -96,7 +106,13 @@ public class BasketTest extends SetUpResourceTest {
         Basket basket = client.basket();
         junit.framework.Assert.assertNotNull(basket);
 
-        Order order = basket.add(new BasketPredicate(product.getId(), 2));
+        BasketPredicate basketPredicate = new BasketPredicate(product.getId(), 2);
+        basketPredicate.setAttributes(
+                new AttributesPredicate(226, 3776, "73"),
+                new AttributesPredicate(227, 3749, "35"),
+                new AttributesPredicate(222, 4337)
+        );
+        Order order = basket.add(basketPredicate);
 
         junit.framework.Assert.assertNotNull(order);
         junit.framework.Assert.assertNotNull(order.items);
@@ -138,7 +154,13 @@ public class BasketTest extends SetUpResourceTest {
         Basket basket = client.basket();
         junit.framework.Assert.assertNotNull(basket);
 
-        Order order = basket.add(new BasketPredicate(product.getId(), 2));
+        BasketPredicate basketPredicate = new BasketPredicate(product.getId(), 2);
+        basketPredicate.setAttributes(
+                new AttributesPredicate(226, 3776, "73"),
+                new AttributesPredicate(227, 3749, "35"),
+                new AttributesPredicate(222, 4337)
+        );
+        Order order = basket.add(basketPredicate);
 
         junit.framework.Assert.assertNotNull(order);
         junit.framework.Assert.assertNotNull(order.items);
@@ -164,7 +186,13 @@ public class BasketTest extends SetUpResourceTest {
         Basket basket = client.basket();
         junit.framework.Assert.assertNotNull(basket);
 
-        Order order = basket.add(new BasketPredicate(product.getId(), 2));
+        BasketPredicate basketPredicate = new BasketPredicate(product.getId(), 2);
+        basketPredicate.setAttributes(
+                new AttributesPredicate(226, 3776, "73"),
+                new AttributesPredicate(227, 3749, "35"),
+                new AttributesPredicate(222, 4337)
+        );
+        Order order = basket.add(basketPredicate);
 
         junit.framework.Assert.assertNotNull(order);
         junit.framework.Assert.assertNotNull(order.items);
@@ -190,7 +218,13 @@ public class BasketTest extends SetUpResourceTest {
 
         Product product = products.get(0);
 
-        Order order = basket.add(new BasketPredicate(product.getId(), 2));
+        BasketPredicate basketPredicate = new BasketPredicate(product.getId(), 2);
+        basketPredicate.setAttributes(
+                new AttributesPredicate(226, 3776, "73"),
+                new AttributesPredicate(227, 3749, "35"),
+                new AttributesPredicate(222, 4337)
+        );
+        Order order = basket.add(basketPredicate);
 
         junit.framework.Assert.assertNotNull(order);
         junit.framework.Assert.assertNotNull(order.items);
@@ -216,7 +250,13 @@ public class BasketTest extends SetUpResourceTest {
         Basket basket = client.basket();
         junit.framework.Assert.assertNotNull(basket);
 
-        Order order = basket.add(new BasketPredicate(product.getId(), 2));
+        BasketPredicate basketPredicate = new BasketPredicate(product.getId(), 2);
+        basketPredicate.setAttributes(
+                new AttributesPredicate(226, 3776, "73"),
+                new AttributesPredicate(227, 3749, "35"),
+                new AttributesPredicate(222, 4337)
+        );
+        Order order = basket.add(basketPredicate);
 
         junit.framework.Assert.assertNotNull(order);
         junit.framework.Assert.assertNotNull(order.items);

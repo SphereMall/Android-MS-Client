@@ -60,6 +60,7 @@ public class ProductResourceImpl extends FullResourceImpl<Product, ProductResour
 
                     for (ProductAttributeValue productAttributeValue : product.productAttributeValues) {
                         if (attribute.getId() == productAttributeValue.attributeId) {
+                            productAttributeValue.showInSpecList = attribute.showInSpecList;
                             attribute.attributeValues.addAll(productAttributeValue.values);
                         }
                     }
