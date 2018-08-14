@@ -10,19 +10,16 @@ import java.util.List;
 @Type("productAttributeValues")
 public class ProductAttributeValue extends Entity {
     public int productId;
-    public int productAttributeValueId;
     public int attributeId;
     public String value;
-    public String valueTitle;
     public String code;
     public String title;
     public String lastUpdate;
     public String orderNumber;
-    public int showInSpecList;
-    public String cssClass;
-    public int useInFilter;
 
     @Relationship(value = "attributeValues", resolve = true, relType = RelType.RELATED)
-    public List<AttributeValue> values;
+    public List<AttributeValue> attributeValues;
 
+    @Relationship(value = "attributes", resolve = true, relType = RelType.RELATED)
+    public List<Attribute> attributes;
 }
