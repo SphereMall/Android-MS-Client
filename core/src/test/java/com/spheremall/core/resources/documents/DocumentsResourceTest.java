@@ -19,5 +19,4 @@ public class DocumentsResourceTest extends SetUpResourceTest {
         Assert.assertNotNull(document);
         Assert.assertEquals(Integer.valueOf(9318), document.getId());
     }
-
 }

@@ -1,6 +1,8 @@
 package com.spheremall.core.entities.shop;
 
 import com.spheremall.core.entities.Entity;
+import com.spheremall.core.jsonapi.RelType;
+import com.spheremall.core.jsonapi.annotations.Relationship;
 import com.spheremall.core.jsonapi.annotations.Type;
 
 import java.util.List;
@@ -31,5 +33,7 @@ public class Order extends Entity {
     public String orderComment;
     public String createdDate;
     public String updateDate;
+
+    @Relationship(value = "items", resolve = true, relType = RelType.RELATED)
     public List<OrderItem> items;
 }

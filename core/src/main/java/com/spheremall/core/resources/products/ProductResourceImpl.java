@@ -6,6 +6,7 @@ import com.spheremall.core.api.response.ResponseMonada;
 import com.spheremall.core.entities.Response;
 import com.spheremall.core.entities.products.Attribute;
 import com.spheremall.core.entities.products.Product;
+import com.spheremall.core.entities.products.ProductAttributeValue;
 import com.spheremall.core.exceptions.EntityNotFoundException;
 import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.makers.ObjectMaker;
@@ -57,11 +58,11 @@ public class ProductResourceImpl extends FullResourceImpl<Product, ProductResour
 
                     attribute.attributeValues = new ArrayList<>();
 
-//                    for (ProductAttributeValue productAttributeValue : product.productAttributeValues) {
-//                        if (attribute.getId() == productAttributeValue.attributeId) {
-//                            attribute.attributeValues.addAll(productAttributeValue.attributeValues);
-//                        }
-//                    }
+                    for (ProductAttributeValue productAttributeValue : product.productAttributeValues) {
+                        if (attribute.getId() == productAttributeValue.attributeId) {
+                            attribute.attributeValues.addAll(productAttributeValue.attributeValues);
+                        }
+                    }
 
                     for (String affectedAttr : affectAttributes) {
                         if (attribute.getId().toString().equals(affectedAttr)) {

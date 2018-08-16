@@ -7,8 +7,9 @@ import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.FilterOperators;
 import com.spheremall.core.filters.Predicate;
 import com.spheremall.core.resources.SetUpResourceTest;
+import com.spheremall.core.shop.AttributesPredicate;
 import com.spheremall.core.shop.Basket;
-import com.spheremall.core.shop.BasketPredicate;
+import com.spheremall.core.shop.AddBasketPredicate;
 import com.spheremall.core.shop.OrderFinalized;
 
 import junit.framework.Assert;
@@ -16,6 +17,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -60,7 +62,12 @@ public class OrdersResourceTest extends SetUpResourceTest {
         Basket basket = client.basket(-1, user.getId());
 
         Product product = client.products().first().data();
-        basket.add(new BasketPredicate(product.getId(), 2));
+        List<AttributesPredicate> predicates = new ArrayList<>();
+        predicates.add(new AttributesPredicate(226, 3776, "73"));
+        predicates.add(new AttributesPredicate(227, 3749, "35"));
+        predicates.add(new AttributesPredicate(222, 4337));
+        AddBasketPredicate basketPredicate = new AddBasketPredicate(product.getId(), 2, predicates);
+        basket.add(basketPredicate);
 
         HashMap<String, String> params = new HashMap<>();
         params.put("statusId", "2");

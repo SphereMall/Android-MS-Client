@@ -13,13 +13,13 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Type {
-	/**
-	 * BaseResource type name.
-	 */
-	String value();
-	
-	/**
-	 * BaseResource path, used to generate <code>self</code> link.
-	 */
-	String path() default "";
+    /**
+     * BaseResource type name.
+     */
+    String value();
+
+    /**
+     * BaseResource path, used to generate <code>self</code> link.
+     */
+    String path() default "";
 }

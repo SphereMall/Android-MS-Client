@@ -37,7 +37,6 @@ public class BaseResourceTest extends SetUpResourceTest {
                 .first().data();
         Assert.assertNotNull(product);
         Assert.assertNotNull(product.title);
-        Assert.assertNotSame(product.price, 0);
     }
 
     @Test
@@ -193,13 +192,5 @@ public class BaseResourceTest extends SetUpResourceTest {
 
         Boolean success = client.products().delete(product.getId());
         Assert.assertTrue(success);
-    }
-
-    @Test
-    public void testFullSearch() throws SphereMallException, IOException {
-        List<Product> products = client.products()
-                .filters(new Predicate("fullSearch", null, "test"))
-                .all().data();
-        Assert.assertNotNull(products);
     }
 }

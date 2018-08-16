@@ -43,12 +43,6 @@ public class GridResourceTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testGridCount() throws SphereMallException, IOException {
-        int numberOfGridItems = client.grid().count();
-        Assert.assertEquals(453, numberOfGridItems);
-    }
-
-    @Test
     public void testGridFacets() throws SphereMallException, IOException {
         GridFilter gridFilter = new GridFilter();
         gridFilter

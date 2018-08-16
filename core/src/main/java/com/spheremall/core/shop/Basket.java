@@ -44,7 +44,7 @@ public class Basket extends OrderFinalized {
         return client;
     }
 
-    public Order add(BasketPredicate... predicates) throws SphereMallException, IOException {
+    public Order add(AddBasketPredicate... predicates) throws SphereMallException, IOException {
         if (id == DEFAULT_ORDER_ID) {
             basketCreate();
         }
@@ -55,23 +55,23 @@ public class Basket extends OrderFinalized {
         return order;
     }
 
-    public Order remove(BasketPredicate... predicates) throws SphereMallException, IOException {
+    public Order remove(Integer... itemIds) throws SphereMallException, IOException {
         if (id == DEFAULT_ORDER_ID) {
             throw new IllegalArgumentException("Can not delete items. Shop is not created.");
         }
 
-        HashMap<String, String> params = queryParams(Arrays.asList(predicates));
+        HashMap<String, String> params = removeParams(itemIds);
 
         Order order = client.basketResource().removeItems(params);
         setOrderData(order);
         return order;
     }
 
-    public Order update(BasketPredicate... predicates) throws SphereMallException, IOException {
+    public Order update(UpdateBasketPredicate... predicates) throws SphereMallException, IOException {
         if (id == DEFAULT_ORDER_ID) {
             basketCreate();
         }
-        HashMap<String, String> params = queryParams(Arrays.asList(predicates));
+        HashMap<String, String> params = updateParams(Arrays.asList(predicates));
         params.putAll(updateParams);
         Order order = client.basketResource().update(id, params).data();
         setOrderData(order);
@@ -149,27 +149,19 @@ public class Basket extends OrderFinalized {
         updateParams.put(addressKey + "Id", address.getId().toString());
     }
 
-    protected HashMap<String, String> queryParams(List<BasketPredicate> predicates) {
+    protected HashMap<String, String> queryParams(List<AddBasketPredicate> predicates) {
         HashMap<String, String> params = new HashMap<>();
 
         params.put("basketId", String.valueOf(getId()));
 
         JSONArray jsonArray = new JSONArray();
-        for (BasketPredicate predicate : predicates) {
+        for (AddBasketPredicate predicate : predicates) {
             try {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("id", predicate.id);
-                int itemId = getItemIdByProduct(predicate.id);
-
-                if (itemId > 0) {
-                    jsonObject.put("itemId", getItemIdByProduct(predicate.id));
-                }
 
                 if (predicate.amount != 0) {
                     jsonObject.put("amount", predicate.amount);
-                }
-                if (predicate.compound != null) {
-                    jsonObject.put("compound", predicate.compound);
                 }
 
                 JSONArray attributes = new JSONArray();
@@ -201,10 +193,51 @@ public class Basket extends OrderFinalized {
         return params;
     }
 
-    protected int getItemIdByProduct(int productId) {
+    protected HashMap<String, String> removeParams(Integer... itemIds) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("basketId", String.valueOf(getId()));
+
+        JSONArray jsonArray = new JSONArray();
+        for (int itemId : itemIds) {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("id", getProductIdByItemId(itemId));
+                jsonObject.put("itemId", itemId);
+                jsonArray.put(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        params.put("products", jsonArray.toString());
+        return params;
+    }
+
+    protected HashMap<String, String> updateParams(List<UpdateBasketPredicate> predicates) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("basketId", String.valueOf(getId()));
+
+        JSONArray jsonArray = new JSONArray();
+        for (UpdateBasketPredicate predicate : predicates) {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("id", getProductIdByItemId(predicate.itemId));
+                jsonObject.put("itemId", predicate.itemId);
+                jsonObject.put("amount", predicate.amount);
+                jsonArray.put(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        if (jsonArray.length() > 0) {
+            params.put("products", jsonArray.toString());
+        }
+        return params;
+    }
+
+    protected int getProductIdByItemId(int itemId) {
         for (OrderItem order : getItems()) {
-            if (order.productId == productId) {
-                return order.getId();
+            if (order.getId() == itemId) {
+                return order.productId;
             }
         }
         return 0;

@@ -197,7 +197,7 @@ public interface ServiceInjector {
 
     //region [Shop]
     default BasketResource basketResource() {
-        return new BasketResourceImpl((SMClient) this, "v2");
+        return new BasketResourceImpl((SMClient) this, "v1");
     }
 
     default Basket basket() throws SphereMallException, IOException {

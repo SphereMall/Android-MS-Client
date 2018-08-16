@@ -31,7 +31,7 @@ public class BasketResourceTest extends SetUpResourceTest {
     @Test
     public void testGetByUserId() throws SphereMallException, IOException {
         User user = client.users().first().data();
-        Order basket = client.basketResource().getByUserId(user.getId()).data();
+        BasketOrder basket = client.basketResource().getByUserId(user.getId()).data();
         Assert.assertNotNull(basket);
         Assert.assertEquals(user.getId().intValue(), basket.userId);
     }
@@ -49,7 +49,30 @@ public class BasketResourceTest extends SetUpResourceTest {
 
         Product product = client.products().first().data();
         HashMap<String, String> params = new HashMap<>();
-        params.put("products", "[{\"id\":" + product.getId() + ", \"amount\":1, \"attributes\":[]}]");
+//        params.put("products", "[{\"id\":" + product.getId() + ", \"amount\":1, \"attributes\":[]}]");
+        params.put("products", "[\n" +
+                "    {\n" +
+                "        \"id\": 405,\n" +
+                "        \"amount\": 2,\n" +
+                "        \"attributes\":[\n" +
+                "            {\n" +
+                "                \"attributeId\":226, \n" +
+                "                \"attributeValueId\":3776,\n" +
+                "                \"userValue\": 73\n" +
+                "            },\n" +
+                "            {\n" +
+                "                \"attributeId\":227, \n" +
+                "                \"attributeValueId\":3749,\n" +
+                "                \"userValue\": 35\n" +
+                "            },\n" +
+                "            {\n" +
+                "                \"attributeId\":222, \n" +
+                "                \"attributeValueId\":4337\n" +
+                "            }\n" +
+                "        ]\n" +
+                "    }\n" +
+                "]");
+
         params.put("basketId", String.valueOf(basketId));
         BasketOrder basketOrder = client.basketResource().create(params).data();
         Assert.assertNotNull(basketOrder);
