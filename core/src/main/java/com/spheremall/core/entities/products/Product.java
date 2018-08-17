@@ -3,6 +3,7 @@ package com.spheremall.core.entities.products;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.spheremall.core.entities.Entity;
 import com.spheremall.core.entities.price.ProductPriceConfiguration;
+import com.spheremall.core.entities.shop.ProductsToPromotions;
 import com.spheremall.core.entities.shop.Promotion;
 import com.spheremall.core.jsonapi.RelType;
 import com.spheremall.core.jsonapi.annotations.Relationship;
@@ -46,6 +47,9 @@ public class Product extends Entity {
     @Relationship(value = "options", resolve = true, relType = RelType.RELATED)
     public List<Option> options;
 
+    @Relationship(value = "productsToPromotions", resolve = true, relType = RelType.RELATED)
+    public List<ProductsToPromotions> productsToPromotions;
+
     @Relationship(value = "promotions", resolve = true, relType = RelType.RELATED)
     public List<Promotion> promotions;
 
@@ -69,11 +73,11 @@ public class Product extends Entity {
                 Objects.equals(productAttributeValues, product.productAttributeValues) &&
                 Objects.equals(images, product.images) &&
                 Objects.equals(options, product.options) &&
-                Objects.equals(promotions, product.promotions);
+                Objects.equals(productsToPromotions, product.productsToPromotions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(urlCode, shortDescription, fullDescription, visible, purchasePrice, price, oldPrice, title, brands, functionalNames, productAttributeValues, images, options, promotions);
+        return Objects.hash(urlCode, shortDescription, fullDescription, visible, purchasePrice, price, oldPrice, title, brands, functionalNames, productAttributeValues, images, options, productsToPromotions);
     }
 }

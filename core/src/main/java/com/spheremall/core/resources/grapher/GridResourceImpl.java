@@ -73,6 +73,7 @@ public class GridResourceImpl extends GrapherResource<GridResource> implements G
     public Response<List<Entity>> all() throws SphereMallException, IOException {
 
         HashMap<String, String> params = getQueryParams();
+        params.put("actions", "promotions");
 
         ResponseMonada responseMonada = request
                 .handle(Method.GET, "", params);

@@ -27,6 +27,8 @@ import com.spheremall.core.entities.shop.OrderItem;
 import com.spheremall.core.entities.shop.OrderStatus;
 import com.spheremall.core.entities.shop.PaymentMethod;
 import com.spheremall.core.entities.shop.PaymentProvider;
+import com.spheremall.core.entities.shop.ProductsToPromotions;
+import com.spheremall.core.entities.shop.Promotion;
 import com.spheremall.core.entities.shop.Vat;
 import com.spheremall.core.entities.users.Address;
 import com.spheremall.core.entities.users.Company;
@@ -75,8 +77,9 @@ public class EntitiesProvider {
         availableEntities.put("entities", SMEntity.class);
         availableEntities.put("users", User.class);
         availableEntities.put("vat", Vat.class);
-        availableEntities.put("users", User.class);
         availableEntities.put("wishListItems", WishListItem.class);
+        availableEntities.put("productsToPromotions", ProductsToPromotions.class);
+        availableEntities.put("promotions", Promotion.class);
     }
 
     private static <K, V> K getKey(Map<K, V> map, V value) {
