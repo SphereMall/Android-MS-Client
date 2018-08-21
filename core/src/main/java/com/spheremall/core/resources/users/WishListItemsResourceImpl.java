@@ -93,7 +93,8 @@ public class WishListItemsResourceImpl extends BaseResource<WishListItem, WishLi
                 .ids(ids)
                 .limit(limit)
                 .offset(offset)
-                .full().data();
+                .detail()
+                .data();
 
         List<WishListItem> responseItems = new ArrayList<>();
 

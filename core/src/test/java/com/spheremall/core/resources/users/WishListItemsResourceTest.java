@@ -11,7 +11,6 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class WishListItemsResourceTest extends SetUpResourceTest {
@@ -71,28 +70,7 @@ public class WishListItemsResourceTest extends SetUpResourceTest {
     @Test
     public void testGetWithList() throws IOException, SphereMallException {
         int userId = client.users().first().data().getId();
-
-        new Thread(() -> {
-            try {
-                List<WishListItem> entities = client.wishListItems().getWishList(userId, 100, 0);
-            } catch (SphereMallException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
-
-        new Thread(() -> {
-            try {
-                List<WishListItem> entities = client.wishListItems().getWishList(userId, 100, 0);
-            } catch (SphereMallException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
-
-        List<WishListItem> entities = new ArrayList<>();
+        List<WishListItem> entities = client.wishListItems().getWishList(userId, 100, 0);
         Assert.assertNotNull(entities);
     }
 }

@@ -7,17 +7,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
+public class ProductPriceConfigurationFilter extends PriceConfigurationFilter {
 
-public class PriceConfigurationFilter {
-
-    protected List<PriceProduct> priceProducts = new ArrayList<>();
-
-    public void addProduct(PriceProduct priceProduct) {
-        priceProducts.add(priceProduct);
-    }
-
+    @Override
     public String getData() throws SphereMallException, JSONException {
         if (priceProducts.isEmpty()) {
             throw new SphereMallException("Property products is empty. Add at least one product for filtering");
@@ -31,21 +23,16 @@ public class PriceConfigurationFilter {
             rowData.put("productId", priceProduct.productId);
 
             if (!priceProduct.attributes.isEmpty()) {
-                JSONObject attrObject = new JSONObject();
-                JSONArray affectAttrObject = new JSONArray();
-                JSONArray valuesObject = new JSONArray();
+                JSONArray affectAttributes = new JSONArray();
 
                 for (AttributeValue attribute : priceProduct.attributes) {
-                    affectAttrObject.put(attribute.attributeId);
-                    valuesObject.put(attribute.getId());
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("attributeId", attribute.attributeId);
+                    jsonObject.put("attributeValueId", attribute.getId());
+                    affectAttributes.put(jsonObject);
                 }
 
-
-                JSONArray array = new JSONArray();
-                array.put(valuesObject);
-                attrObject.put("affectAttributes", affectAttrObject);
-                attrObject.put("values", array);
-                rowData.put("attributes", attrObject);
+                rowData.put("attributes", affectAttributes);
             }
             priceJsonData.put(rowData);
         }

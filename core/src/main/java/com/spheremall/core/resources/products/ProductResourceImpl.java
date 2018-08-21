@@ -48,6 +48,31 @@ public class ProductResourceImpl extends FullResourceImpl<Product, ProductResour
 
         Product product = maker.makeSingle(responseMonada.getResponse()).data();
 
+        combineProductProperties(product);
+
+        return product;
+    }
+
+    @Override
+    public Response<List<Product>> detail() throws IOException, SphereMallException {
+        String urlAppend = "detail/list";
+        ResponseMonada responseMonada = request.handle(Method.GET, urlAppend, getQueryParams());
+        if (responseMonada.hasError()) {
+            throw new EntityNotFoundException(responseMonada.getErrorResponse());
+        }
+
+        Response<List<Product>> productsResponse = maker.makeAsList(responseMonada.getResponse());
+        for (Product product : productsResponse.data()) {
+            combineProductProperties(product);
+        }
+
+        return productsResponse;
+    }
+
+    private void combineProductProperties(Product product) {
+        if (product.productPriceConfigurations == null)
+            return;
+
         if (product.productPriceConfigurations.size() > 0 && product.productPriceConfigurations.get(0).priceConfigurations.size() > 0) {
             List<String> affectAttributes = product.productPriceConfigurations.get(0).priceConfigurations.get(0).affectAttributes;
 
@@ -72,17 +97,5 @@ public class ProductResourceImpl extends FullResourceImpl<Product, ProductResour
                 }
             }
         }
-
-        return product;
-    }
-
-    @Override
-    public Response<List<Product>> detail() throws IOException, SphereMallException {
-        String urlAppend = "detail/list";
-        ResponseMonada responseMonada = request.handle(Method.GET, urlAppend, getQueryParams());
-        if (responseMonada.hasError()) {
-            throw new EntityNotFoundException(responseMonada.getErrorResponse());
-        }
-        return maker.makeAsList(responseMonada.getResponse());
     }
 }
