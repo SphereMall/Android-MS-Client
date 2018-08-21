@@ -3,7 +3,6 @@ package com.spheremall.core.resources.products;
 import com.spheremall.core.SMClient;
 import com.spheremall.core.api.configuration.Method;
 import com.spheremall.core.api.response.ResponseMonada;
-import com.spheremall.core.entities.Response;
 import com.spheremall.core.entities.products.Attribute;
 import com.spheremall.core.entities.products.Product;
 import com.spheremall.core.entities.products.ProductAttributeValue;
@@ -48,30 +47,30 @@ public class ProductResourceImpl extends FullResourceImpl<Product, ProductResour
 
         Product product = maker.makeSingle(responseMonada.getResponse()).data();
 
-        combineProductProperties(product);
-
-        return product;
+        return combineProductProperties(product);
     }
 
     @Override
-    public Response<List<Product>> detail() throws IOException, SphereMallException {
+    public List<Product> detail() throws IOException, SphereMallException {
         String urlAppend = "detail/list";
-        ResponseMonada responseMonada = request.handle(Method.GET, urlAppend, getQueryParams());
+        HashMap<String, String> params = getQueryParams();
+        params.put("actions", "priceconfigurations,promotions");
+        ResponseMonada responseMonada = request.handle(Method.GET, urlAppend, params);
         if (responseMonada.hasError()) {
             throw new EntityNotFoundException(responseMonada.getErrorResponse());
         }
 
-        Response<List<Product>> productsResponse = maker.makeAsList(responseMonada.getResponse());
-        for (Product product : productsResponse.data()) {
-            combineProductProperties(product);
+        List<Product> productsResponse = new ArrayList<>();
+        for (Product product : maker.makeAsList(responseMonada.getResponse()).data()) {
+            productsResponse.add(combineProductProperties(product));
         }
 
         return productsResponse;
     }
 
-    private void combineProductProperties(Product product) {
+    private Product combineProductProperties(Product product) {
         if (product.productPriceConfigurations == null)
-            return;
+            return product;
 
         if (product.productPriceConfigurations.size() > 0 && product.productPriceConfigurations.get(0).priceConfigurations.size() > 0) {
             List<String> affectAttributes = product.productPriceConfigurations.get(0).priceConfigurations.get(0).affectAttributes;
@@ -97,5 +96,6 @@ public class ProductResourceImpl extends FullResourceImpl<Product, ProductResour
                 }
             }
         }
+        return product;
     }
 }
