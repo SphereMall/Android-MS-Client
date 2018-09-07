@@ -3,6 +3,7 @@ package com.spheremall.core.resources.products;
 import com.spheremall.core.SMClient;
 import com.spheremall.core.api.configuration.Method;
 import com.spheremall.core.api.response.ResponseMonada;
+import com.spheremall.core.entities.Response;
 import com.spheremall.core.entities.products.Attribute;
 import com.spheremall.core.entities.products.Product;
 import com.spheremall.core.entities.products.ProductAttributeValue;
@@ -51,7 +52,7 @@ public class ProductResourceImpl extends FullResourceImpl<Product, ProductResour
     }
 
     @Override
-    public List<Product> detail() throws IOException, SphereMallException {
+    public Response<List<Product>> detail() throws IOException, SphereMallException {
         String urlAppend = "detail/list";
         HashMap<String, String> params = getQueryParams();
         params.put("actions", "priceconfigurations,promotions");
@@ -60,12 +61,14 @@ public class ProductResourceImpl extends FullResourceImpl<Product, ProductResour
             throw new EntityNotFoundException(responseMonada.getErrorResponse());
         }
 
+        Response<List<Product>> listResponse = maker.makeAsList(responseMonada.getResponse());
+
         List<Product> productsResponse = new ArrayList<>();
-        for (Product product : maker.makeAsList(responseMonada.getResponse()).data()) {
+        for (Product product : listResponse.data()) {
             productsResponse.add(combineProductProperties(product));
         }
 
-        return productsResponse;
+        return new Response<>(productsResponse, listResponse.meta());
     }
 
     private Product combineProductProperties(Product product) {

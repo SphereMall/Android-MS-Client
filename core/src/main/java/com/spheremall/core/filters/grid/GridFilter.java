@@ -21,6 +21,10 @@ public class GridFilter extends Filter {
     protected List<List<GridFilterElement>> elements = new ArrayList<>();
 
     public GridFilter elements(GridFilterElement... elements) {
+        if (elements.length == 0) {
+            return this;
+        }
+
         List<GridFilterElement> levelElements = new ArrayList<>(Arrays.asList(elements));
         this.elements.add(levelElements);
         return this;

@@ -61,7 +61,12 @@ public class Request implements BaseRequest {
             throw new EntityNotFoundException();
         }
 
-        return new ResponseMonada(responseBody.string());
+        try {
+            String responseString = responseBody.string();
+            return new ResponseMonada(responseString);
+        } finally {
+            responseBody.close();
+        }
     }
 
     private Response<ResponseBody> executeCall(boolean isRepeated) throws SphereMallException, IOException {
