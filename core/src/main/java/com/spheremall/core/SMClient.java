@@ -2,6 +2,7 @@ package com.spheremall.core;
 
 import android.content.Context;
 
+import com.spheremall.core.api.auth.BasicAuthCredentials;
 import com.spheremall.core.utils.PreferencesManager;
 import com.spheremall.core.utils.PreferencesManagerImpl;
 
@@ -16,6 +17,7 @@ public class SMClient implements ServiceInjector {
     protected Boolean debug = false;
     private static SMClient client = null;
     protected HttpLoggingInterceptor.Level loggingLevel = HttpLoggingInterceptor.Level.BODY;
+    protected BasicAuthCredentials credentials = null;
 
     public static final String userAgent = "SM_SDK_ANDROID_CLIENT";
 
@@ -73,6 +75,14 @@ public class SMClient implements ServiceInjector {
 
     public void setLoggingLevel(HttpLoggingInterceptor.Level loggingLevel) {
         this.loggingLevel = loggingLevel;
+    }
+
+    public void setBacisAuth(BasicAuthCredentials basicAuth) {
+        credentials = basicAuth;
+    }
+
+    public BasicAuthCredentials getBasicAuth() {
+        return credentials;
     }
 
     public HttpLoggingInterceptor.Level getLoggingLevel() {

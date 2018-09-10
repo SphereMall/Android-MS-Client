@@ -1,6 +1,7 @@
 package com.spheremall.core.api.configuration;
 
 import com.spheremall.core.SMClient;
+import com.spheremall.core.api.auth.BasicAuthInterceptor;
 import com.spheremall.core.api.services.AuthService;
 
 import org.json.JSONArray;
@@ -67,10 +68,15 @@ public class RetrofitApiConfigurationFactory implements ApiConfigurationFactory<
             builder.addInterceptor(httpLoggingInterceptor);
         }
 
+        if (client != null && client.getBasicAuth() != null) {
+            builder.addInterceptor(new BasicAuthInterceptor(client.getBasicAuth()));
+        }
+
 //        TODO: Test this way of authentication
 //        if (client != null) {
 //            builder.authenticator(new SMAuthenticator());
 //        }
+
         return builder
                 .addNetworkInterceptor(new RequestInterceptor())
                 .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
