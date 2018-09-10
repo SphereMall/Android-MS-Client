@@ -60,7 +60,7 @@ public class ProductResourceTest extends SetUpResourceTest {
 
     @Test
     public void testProductWithEffectedAttributes() throws IOException, SphereMallException {
-        Product product = client.products().detail(1816);
+        Product product = client.products().detail(703);
         Assert.assertNotNull(product);
         Assert.assertTrue(product.productPriceConfigurations.size() > 0);
 

@@ -72,10 +72,8 @@ public class ProductResourceImpl extends FullResourceImpl<Product, ProductResour
     }
 
     private Product combineProductProperties(Product product) {
-        if (product.productPriceConfigurations == null)
-            return product;
 
-        if (product.productPriceConfigurations.size() > 0 && product.productPriceConfigurations.get(0).priceConfigurations.size() > 0) {
+        if (product.productPriceConfigurations != null && product.productPriceConfigurations.size() > 0 && product.productPriceConfigurations.get(0).priceConfigurations.size() > 0) {
             List<String> affectAttributes = product.productPriceConfigurations.get(0).priceConfigurations.get(0).affectAttributes;
 
             if (affectAttributes.size() > 0) {
@@ -83,13 +81,7 @@ public class ProductResourceImpl extends FullResourceImpl<Product, ProductResour
 
                 for (Attribute attribute : product.attributes) {
 
-                    attribute.attributeValues = new ArrayList<>();
-
-                    for (ProductAttributeValue productAttributeValue : product.productAttributeValues) {
-                        if (attribute.getId() == productAttributeValue.attributeId) {
-                            attribute.attributeValues.addAll(productAttributeValue.attributeValues);
-                        }
-                    }
+                    setMapAttributeValues(product, attribute);
 
                     for (String affectedAttr : affectAttributes) {
                         if (attribute.getId().toString().equals(affectedAttr)) {
@@ -98,7 +90,21 @@ public class ProductResourceImpl extends FullResourceImpl<Product, ProductResour
                     }
                 }
             }
+        } else {
+            for (Attribute attribute : product.attributes) {
+                setMapAttributeValues(product, attribute);
+            }
         }
         return product;
+    }
+
+    private void setMapAttributeValues(Product product, Attribute attribute) {
+        attribute.attributeValues = new ArrayList<>();
+
+        for (ProductAttributeValue productAttributeValue : product.productAttributeValues) {
+            if (attribute.getId() == productAttributeValue.attributeId) {
+                attribute.attributeValues.addAll(productAttributeValue.attributeValues);
+            }
+        }
     }
 }
