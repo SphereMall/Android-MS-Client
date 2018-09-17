@@ -1,11 +1,12 @@
 package com.spheremall.core.filters.grid;
 
+
 import java.util.Objects;
 
 public class PriceRangeFilter extends IdentificatorFilter {
 
-    public PriceRangeFilter(Integer... values) {
-        super(values);
+    public PriceRangeFilter(Integer price1, Integer price2) {
+        super(price1, price2);
         this.name = "priceRange";
     }
 
