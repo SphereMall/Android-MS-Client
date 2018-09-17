@@ -9,6 +9,7 @@ import com.spheremall.core.filters.grid.AttributeFilter;
 import com.spheremall.core.filters.grid.EntityFilter;
 import com.spheremall.core.filters.grid.FunctionalNameFilter;
 import com.spheremall.core.filters.grid.GridFilter;
+import com.spheremall.core.filters.grid.PriceRangeFilter;
 import com.spheremall.core.resources.SetUpResourceTest;
 
 import org.junit.Assert;
@@ -28,7 +29,7 @@ public class GridResourceTest extends SetUpResourceTest {
     @Test
     public void testGridFilter() throws SphereMallException, IOException {
         GridFilter gridFilter = new GridFilter();
-        gridFilter.elements(new EntityFilter("products"));
+        gridFilter.elements(new EntityFilter("products"), new PriceRangeFilter(10, 4000));
 
         List<Entity> entities = client.grid()
                 .filters(gridFilter)
