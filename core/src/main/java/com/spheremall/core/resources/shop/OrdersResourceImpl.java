@@ -67,9 +67,6 @@ public class OrdersResourceImpl extends BaseResource<Order, OrdersResource> impl
         }
         OrderHistoryMaker maker = new OrderHistoryMaker(OrderHistoryJson.class);
         OrderHistoryJson orderHistoryJson = maker.makeSingle(responseMonada.getResponse()).data();
-        if (!orderHistoryJson.isSuccess()) {
-            throw new EntityNotFoundException();
-        }
         List<Order> orders = new ArrayList<>();
         orders.addAll(orderHistoryJson.data);
         return orders;

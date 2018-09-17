@@ -8,6 +8,7 @@ import com.spheremall.core.entities.Response;
 import com.spheremall.core.entities.pojo.UserId;
 import com.spheremall.core.entities.users.Address;
 import com.spheremall.core.entities.users.User;
+import com.spheremall.core.entities.users.UserByDevice;
 import com.spheremall.core.exceptions.EntityNotFoundException;
 import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.FilterOperators;
@@ -161,12 +162,11 @@ public class UserResourceImpl extends BaseResource<User, UserResource> implement
         if (responseMonada.hasError()) {
             throw new EntityNotFoundException(responseMonada.getErrorResponse());
         }
-        UserIdMaker userIdmaker = new UserIdMaker(UserId.class);
-        Response<UserId> response = userIdmaker.makeSingle(responseMonada.getResponse());
+//        UserIdMaker userIdmaker = new UserIdMaker(UserId.class);
+//        Response<UserId> response = userIdmaker.makeSingle(responseMonada.getResponse());
+        ObjectMaker<UserByDevice> maker = new ObjectMaker<>(UserByDevice.class);
+        Response<UserByDevice> response = maker.makeSingle(responseMonada.getResponse());
 
-        if (!response.data().isSuccess()) {
-            throw new EntityNotFoundException(responseMonada.getErrorResponse());
-        }
-        return get(response.data().data.userId).data();
+        return get(response.data().userId).data();
     }
 }
