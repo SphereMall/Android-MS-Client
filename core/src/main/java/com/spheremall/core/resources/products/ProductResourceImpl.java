@@ -4,6 +4,7 @@ import com.spheremall.core.SMClient;
 import com.spheremall.core.api.configuration.Method;
 import com.spheremall.core.api.response.ResponseMonada;
 import com.spheremall.core.entities.Response;
+import com.spheremall.core.entities.price.PriceConfiguration;
 import com.spheremall.core.entities.products.Attribute;
 import com.spheremall.core.entities.products.Product;
 import com.spheremall.core.entities.products.ProductAttributeValue;
@@ -73,29 +74,44 @@ public class ProductResourceImpl extends FullResourceImpl<Product, ProductResour
 
     private Product combineProductProperties(Product product) {
 
-        if (product.productPriceConfigurations != null && product.productPriceConfigurations.size() > 0 && product.productPriceConfigurations.get(0).priceConfigurations.size() > 0) {
-            List<String> affectAttributes = product.productPriceConfigurations.get(0).priceConfigurations.get(0).affectAttributes;
+        if (product.productPriceConfigurations == null || product.productPriceConfigurations.size() == 0) {
+            mapAttributes(product);
+            return product;
+        }
 
-            if (affectAttributes.size() > 0) {
-                product.affectedAttributes = new ArrayList<>();
+        List<PriceConfiguration> priceConfigurations = product.productPriceConfigurations.get(0).priceConfigurations;
+        if (priceConfigurations == null || priceConfigurations.size() == 0) {
+            mapAttributes(product);
+            return product;
+        }
 
-                for (Attribute attribute : product.attributes) {
+        List<String> affectAttributes = priceConfigurations.get(0).affectAttributes;
 
-                    setMapAttributeValues(product, attribute);
+        if (affectAttributes == null || affectAttributes.size() == 0) {
+            mapAttributes(product);
+            return product;
+        }
 
-                    for (String affectedAttr : affectAttributes) {
-                        if (attribute.getId().toString().equals(affectedAttr)) {
-                            product.affectedAttributes.add(attribute);
-                        }
-                    }
+        product.affectedAttributes = new ArrayList<>();
+
+        for (Attribute attribute : product.attributes) {
+
+            setMapAttributeValues(product, attribute);
+
+            for (String affectedAttr : affectAttributes) {
+                if (attribute.getId().toString().equals(affectedAttr)) {
+                    product.affectedAttributes.add(attribute);
                 }
             }
-        } else {
-            for (Attribute attribute : product.attributes) {
-                setMapAttributeValues(product, attribute);
-            }
         }
+
         return product;
+    }
+
+    private void mapAttributes(Product product) {
+        for (Attribute attribute : product.attributes) {
+            setMapAttributeValues(product, attribute);
+        }
     }
 
     private void setMapAttributeValues(Product product, Attribute attribute) {
