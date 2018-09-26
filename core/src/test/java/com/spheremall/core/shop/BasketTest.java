@@ -7,9 +7,9 @@ import com.spheremall.core.entities.shop.PaymentMethod;
 import com.spheremall.core.entities.users.Address;
 import com.spheremall.core.entities.users.User;
 import com.spheremall.core.exceptions.SphereMallException;
-import com.spheremall.core.filters.FilterOperators;
-import com.spheremall.core.filters.Predicate;
 import com.spheremall.core.resources.SetUpResourceTest;
+
+import junit.framework.Assert;
 
 import org.junit.Test;
 
@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BasketTest extends SetUpResourceTest {
-
-    private static final int userId = 5;
 
     @Override
     public void setUp() throws SphereMallException, IOException {
@@ -137,7 +135,6 @@ public class BasketTest extends SetUpResourceTest {
     @Test
     public void testSetUser() throws SphereMallException, IOException {
         User user = client.users()
-                .filters(new Predicate("id", FilterOperators.NOT_EQUAL, String.valueOf(userId)))
                 .first().data();
 
         junit.framework.Assert.assertNotNull(user);
@@ -169,7 +166,7 @@ public class BasketTest extends SetUpResourceTest {
         junit.framework.Assert.assertNotNull(order.items);
         junit.framework.Assert.assertTrue(order.items.size() > 0);
         junit.framework.Assert.assertEquals(product.getId().intValue(), order.items.get(0).productId);
-        junit.framework.Assert.assertTrue(order.items.get(0).amount == 2);
+        Assert.assertEquals(2, order.items.get(0).amount);
 
         DeliveryProvider deliveryProvider = client.deliveryProviders().first().data();
         junit.framework.Assert.assertNotNull(deliveryProvider);
@@ -201,7 +198,7 @@ public class BasketTest extends SetUpResourceTest {
         junit.framework.Assert.assertNotNull(order.items);
         junit.framework.Assert.assertTrue(order.items.size() > 0);
         junit.framework.Assert.assertEquals(product.getId().intValue(), order.items.get(0).productId);
-        junit.framework.Assert.assertTrue(order.items.get(0).amount == 2);
+        Assert.assertEquals(2, order.items.get(0).amount);
 
         Address address = client.addresses().first().data();
         junit.framework.Assert.assertNotNull(address);

@@ -83,7 +83,7 @@ public class OrdersResourceImpl extends BaseResource<Order, OrdersResource> impl
             return null;
         }
 
-        OrderFinalized orderFinalized = new OrderFinalized(smClient);
+        OrderFinalized orderFinalized = new OrderFinalized(smClient, "v1");
         orderFinalized.setOrderData(order.get(0));
         return orderFinalized;
     }

@@ -52,14 +52,7 @@ public class ProductResourceTest extends SetUpResourceTest {
                 .detail();
 
         Assert.assertNotNull(productsResponse);
-        Assert.assertTrue(productsResponse.meta().get("limit").toString().equals("10"));
-        Assert.assertTrue(productsResponse.meta().get("offset").toString().equals("0"));
-
-    }
-
-    @Test
-    public void testProductWithEffectedAttributes() throws IOException, SphereMallException {
-        Product product = client.products().detail(703);
-        Assert.assertNotNull(product);
+        Assert.assertEquals("10", productsResponse.meta().get("limit").toString());
+        Assert.assertEquals("0", productsResponse.meta().get("offset").toString());
     }
 }

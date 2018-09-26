@@ -33,7 +33,7 @@ if (propFile.canRead()) {
 android {
     compileSdkVersion 27
 
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.2'
 
     defaultConfig {
         minSdkVersion 19

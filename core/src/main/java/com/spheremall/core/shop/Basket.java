@@ -20,19 +20,19 @@ public class Basket extends OrderFinalized {
 
     protected HashMap<String, String> updateParams = new HashMap<>();
 
-    public Basket(SMClient client) throws SphereMallException, IOException {
-        super(client);
+    public Basket(SMClient client, String version) throws SphereMallException, IOException {
+        super(client, version);
         basketCreate();
     }
 
-    public Basket(SMClient client, int basketId) throws SphereMallException, IOException {
-        super(client);
+    public Basket(SMClient client, int basketId, String version) throws SphereMallException, IOException {
+        super(client, version);
         this.id = basketId;
         this.get(this.id);
     }
 
-    public Basket(SMClient client, int basketId, int userId) throws SphereMallException, IOException {
-        super(client);
+    public Basket(SMClient client, int basketId, int userId, String version) throws SphereMallException, IOException {
+        super(client, version);
         if (basketId == DEFAULT_ORDER_ID) {
             this.getByUserId(userId);
         } else {

@@ -202,21 +202,21 @@ public interface ServiceInjector {
 
     default Basket basket() throws SphereMallException, IOException {
         if (Store.basket == null) {
-            Store.basket = new Basket((SMClient) this);
+            Store.basket = new Basket((SMClient) this, "v1");
         }
         return Store.basket;
     }
 
     default Basket basket(int basketId) throws SphereMallException, IOException {
         if (Store.basket == null || Store.basket.getId() != basketId) {
-            Store.basket = new Basket((SMClient) this, basketId);
+            Store.basket = new Basket((SMClient) this, basketId, "v1");
         }
         return Store.basket;
     }
 
     default Basket basket(int basketId, int userId) throws SphereMallException, IOException {
         if (Store.basket == null || Store.basket.getId() != basketId || Store.basket.getUserId() != userId) {
-            Store.basket = new Basket((SMClient) this, basketId, userId);
+            Store.basket = new Basket((SMClient) this, basketId, userId, "v1");
         }
         return Store.basket;
     }

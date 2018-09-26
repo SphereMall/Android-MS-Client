@@ -11,6 +11,10 @@ public class AttributeDisplayTypesResourceImpl extends BaseResource<AttributeDis
         super(smClient);
     }
 
+    public AttributeDisplayTypesResourceImpl(SMClient client, String version) {
+        super(client, version);
+    }
+
     @Override
     public String getURI() {
         return "attributedisplaytypes";

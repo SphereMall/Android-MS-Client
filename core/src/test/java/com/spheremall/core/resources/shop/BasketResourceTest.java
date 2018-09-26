@@ -15,6 +15,8 @@ import java.util.HashMap;
 
 public class BasketResourceTest extends SetUpResourceTest {
 
+    private String version = "v1";
+
     @Override
     public void setUp() throws SphereMallException, IOException {
         super.setUp();

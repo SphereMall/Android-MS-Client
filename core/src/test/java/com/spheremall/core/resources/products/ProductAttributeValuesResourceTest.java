@@ -39,7 +39,7 @@ public class ProductAttributeValuesResourceTest extends SetUpResourceTest {
         Assert.assertNotNull(product);
 
         List<ProductAttributeValue> productAttributeValues = client.productAttributeValues()
-                .filters(new Predicate("productId", FilterOperators.EQUAL, "627"))
+                .filters(new Predicate("productId", FilterOperators.EQUAL, product.getId().toString()))
                 .all().data();
 
         Assert.assertNotNull(productAttributeValues);

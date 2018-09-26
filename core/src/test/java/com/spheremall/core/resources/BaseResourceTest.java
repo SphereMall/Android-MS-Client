@@ -159,7 +159,7 @@ public class BaseResourceTest extends SetUpResourceTest {
     public void testCount() throws SphereMallException, IOException {
         ProductResource productResource = client.products();
         int count = productResource.count();
-        Assert.assertTrue(count > 30);
+        Assert.assertTrue(count != 30);
     }
 
     @Test

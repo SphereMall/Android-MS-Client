@@ -16,9 +16,11 @@ public class OrderFinalized {
     protected Order order;
     protected int id = DEFAULT_ORDER_ID;
     protected SMClient client;
+    protected String version;
 
-    public OrderFinalized(SMClient client) {
+    public OrderFinalized(SMClient client, String verison) {
         this.client = client;
+        this.version = verison;
     }
 
     public SMClient getClient() {
