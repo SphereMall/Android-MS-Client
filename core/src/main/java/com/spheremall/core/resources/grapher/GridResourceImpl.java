@@ -93,7 +93,7 @@ public class GridResourceImpl extends GrapherResource<GridResource> implements G
     @Override
     public Response<Facets> facets() throws SphereMallException, IOException {
         HashMap<String, String> params = getQueryParams();
-        ResponseMonada responseMonada = request.handle(Method.GET, "/filter", params);
+        ResponseMonada responseMonada = request.handle(Method.GET, "filter", params);
 
         if (responseMonada.hasError()) {
             throw new EntityNotFoundException();

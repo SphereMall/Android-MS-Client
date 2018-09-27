@@ -2,11 +2,14 @@ package com.spheremall.core.resources.users;
 
 import com.spheremall.core.SMClient;
 import com.spheremall.core.api.configuration.Method;
+import com.spheremall.core.api.response.ErrorResponse;
 import com.spheremall.core.api.response.ResponseMonada;
 import com.spheremall.core.entities.SMEntity;
 import com.spheremall.core.entities.products.Product;
 import com.spheremall.core.entities.users.WishListItem;
 import com.spheremall.core.exceptions.EntityNotFoundException;
+import com.spheremall.core.exceptions.NotFoundException;
+import com.spheremall.core.exceptions.ServiceException;
 import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.FilterOperators;
 import com.spheremall.core.filters.Predicate;
@@ -79,9 +82,21 @@ public class WishListItemsResourceImpl extends BaseResource<WishListItem, WishLi
 
     @Override
     public List<WishListItem> getWishList(int userId, int limit, int offset) throws SphereMallException, IOException {
-        List<WishListItem> wishListItems = filters(new Predicate("userId", FilterOperators.EQUAL, String.valueOf(userId)))
-                .limit(100)
-                .all().data();
+        List<WishListItem> wishListItems;
+        try {
+            wishListItems = filters(new Predicate("userId", FilterOperators.EQUAL, String.valueOf(userId)))
+                    .limit(100)
+                    .all().data();
+        } catch (NotFoundException e) {
+            if (e.getError() != null && e.getError().errors != null && e.getError().errors.size() > 0) {
+                for (ErrorResponse.Error error : e.getError().errors) {
+                    if (error.errorCode.equals("NOT_FOUND")) {
+                        throw new EntityNotFoundException();
+                    }
+                }
+            }
+            throw new ServiceException(e);
+        }
 
         List<Integer> ids = new ArrayList<>();
         for (WishListItem item : wishListItems) {

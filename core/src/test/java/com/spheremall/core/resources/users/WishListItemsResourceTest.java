@@ -70,7 +70,7 @@ public class WishListItemsResourceTest extends SetUpResourceTest {
     @Test
     public void testGetWithList() throws IOException, SphereMallException {
         int userId = client.users().first().data().getId();
-        List<WishListItem> entities = client.wishListItems().getWishList(3, 100, 0);
+        List<WishListItem> entities = client.wishListItems().getWishList(4789, 100, 0);
         Assert.assertNotNull(entities);
     }
 }
