@@ -24,6 +24,11 @@ public class Product extends Entity {
     public int price;
     public int oldPrice;
     public String title;
+    public int disable;
+    public int isMain;
+    public Double rating;
+    public int reviewAmount;
+    public int priceTypeId;
 
     @Relationship(value = "productPriceConfigurations", resolve = true, relType = RelType.RELATED)
     public List<ProductPriceConfiguration> productPriceConfigurations;
