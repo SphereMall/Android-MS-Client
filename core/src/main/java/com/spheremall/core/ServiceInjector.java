@@ -1,8 +1,12 @@
 package com.spheremall.core;
 
 import com.spheremall.core.exceptions.SphereMallException;
+import com.spheremall.core.resources.documets.CommentsResource;
+import com.spheremall.core.resources.documets.CommentsResourceImpl;
 import com.spheremall.core.resources.documets.DocumentsResource;
 import com.spheremall.core.resources.documets.DocumentsResourceImpl;
+import com.spheremall.core.resources.documets.EntitiesAverageRatingResource;
+import com.spheremall.core.resources.documets.EntitiesAverageRatingResourceImpl;
 import com.spheremall.core.resources.elasticSearch.ElasticSearchResource;
 import com.spheremall.core.resources.elasticSearch.ElasticSearchResourceImpl;
 import com.spheremall.core.resources.grapher.CorrelationsResource;
@@ -288,6 +292,14 @@ public interface ServiceInjector {
     //region [Documents]
     default DocumentsResource documents() {
         return new DocumentsResourceImpl((SMClient) this);
+    }
+
+    default CommentsResource comments() {
+        return new CommentsResourceImpl((SMClient) this);
+    }
+
+    default EntitiesAverageRatingResource entitiesAverageRating() {
+        return new EntitiesAverageRatingResourceImpl((SMClient) this);
     }
     //endregion
 
