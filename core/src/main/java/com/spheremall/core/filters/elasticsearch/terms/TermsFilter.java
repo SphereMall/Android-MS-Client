@@ -8,10 +8,10 @@ import org.json.JSONObject;
 
 public class TermsFilter extends LeafQueryFilter {
 
-    public final ESFilterCriteria ESFilterCriteria;
+    public final ESFilterCriteria esFilterCriteria;
 
-    public TermsFilter(ESFilterCriteria ESFilterCriteria) {
-        this.ESFilterCriteria = ESFilterCriteria;
+    public TermsFilter(ESFilterCriteria esFilterCriteria) {
+        this.esFilterCriteria = esFilterCriteria;
         this.name = "terms";
     }
 
@@ -19,7 +19,7 @@ public class TermsFilter extends LeafQueryFilter {
     public JSONObject toJson() {
         JSONObject termsFilterJson = new JSONObject();
         try {
-            return termsFilterJson.put(name, ESFilterCriteria.toJson());
+            return termsFilterJson.put(name, esFilterCriteria.toJson());
         } catch (JSONException e) {
             e.printStackTrace();
             return null;

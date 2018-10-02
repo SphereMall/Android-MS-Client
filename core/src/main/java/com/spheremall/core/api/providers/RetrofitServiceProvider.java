@@ -1,4 +1,4 @@
-package com.spheremall.core.api.provides;
+package com.spheremall.core.api.providers;
 
 import com.spheremall.core.api.configuration.ApiConfigurationFactory;
 import com.spheremall.core.api.services.AuthService;

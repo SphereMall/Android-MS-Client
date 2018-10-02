@@ -29,6 +29,9 @@ public class Product extends Entity {
     public Double rating;
     public int reviewAmount;
     public int priceTypeId;
+    public String variantsCompound;
+    public int vatId;
+    public int orderNumber;
 
     @Relationship(value = "productPriceConfigurations", resolve = true, relType = RelType.RELATED)
     public List<ProductPriceConfiguration> productPriceConfigurations;

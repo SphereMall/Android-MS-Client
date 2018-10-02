@@ -12,6 +12,8 @@ import com.spheremall.core.entities.products.CatalogItem;
 import com.spheremall.core.entities.products.EntityAttribute;
 import com.spheremall.core.entities.products.FunctionalName;
 import com.spheremall.core.entities.products.Media;
+import com.spheremall.core.entities.products.MediaDisplayType;
+import com.spheremall.core.entities.products.MediaEntity;
 import com.spheremall.core.entities.products.MediaType;
 import com.spheremall.core.entities.products.Option;
 import com.spheremall.core.entities.products.Product;
@@ -80,6 +82,9 @@ public class EntitiesProvider {
         availableEntities.put("wishListItems", WishListItem.class);
         availableEntities.put("productsToPromotions", ProductsToPromotions.class);
         availableEntities.put("promotions", Promotion.class);
+        availableEntities.put("mediaEntities", MediaEntity.class);
+        availableEntities.put("mediaDisplayTypes", MediaDisplayType.class);
+        availableEntities.put("channelEntities", ChannelEntity.class);
     }
 
     private static <K, V> K getKey(Map<K, V> map, V value) {

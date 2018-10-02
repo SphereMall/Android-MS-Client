@@ -3,8 +3,8 @@ package com.spheremall.core.api;
 import com.spheremall.core.api.configuration.ApiConfigurationFactory;
 import com.spheremall.core.api.configuration.ApiConstants;
 import com.spheremall.core.api.configuration.RetrofitApiConfigurationFactory;
-import com.spheremall.core.api.provides.ApiServiceProvider;
-import com.spheremall.core.api.provides.RetrofitServiceProvider;
+import com.spheremall.core.api.providers.ApiServiceProvider;
+import com.spheremall.core.api.providers.RetrofitServiceProvider;
 import com.spheremall.core.api.services.SMService;
 
 import org.junit.Assert;

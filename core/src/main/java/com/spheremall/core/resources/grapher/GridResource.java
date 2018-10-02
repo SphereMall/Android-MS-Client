@@ -10,6 +10,8 @@ import java.io.IOException;
 
 public interface GridResource extends Resource<GridResource, Entity> {
 
+//    Response<List<Entity>> search(String query) throws SphereMallException, IOException;
+
     Response<Facets> facets() throws SphereMallException, IOException;
 
     @Override

@@ -34,7 +34,9 @@ public class GridMaker extends ObjectMaker<Entity> {
             classes.add(EntitiesProvider.availableEntities.get(receivedTypes.data.get(i).type));
         }
         for (int i = 0; i < receivedTypes.included.size(); i++) {
-            classes.add(EntitiesProvider.availableEntities.get(receivedTypes.included.get(i).type));
+            if (EntitiesProvider.availableEntities.get(receivedTypes.included.get(i).type) != null) {
+                classes.add(EntitiesProvider.availableEntities.get(receivedTypes.included.get(i).type));
+            }
         }
         return classes.toArray(new Class[classes.size()]);
     }

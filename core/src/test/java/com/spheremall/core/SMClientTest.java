@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 import com.spheremall.core.api.configuration.ApiConfigurationFactory;
 import com.spheremall.core.api.configuration.RetrofitApiConfigurationFactory;
-import com.spheremall.core.api.provides.RetrofitServiceProvider;
+import com.spheremall.core.api.providers.RetrofitServiceProvider;
 import com.spheremall.core.resources.products.ProductResource;
 import com.spheremall.core.resources.products.ProductResourceImpl;
 

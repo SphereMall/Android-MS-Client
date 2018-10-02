@@ -40,6 +40,12 @@ public class ProductResourceImpl extends FullResourceImpl<Product, ProductResour
     }
 
     @Override
+    public Response<List<Attribute>> variants(String... codes) throws IOException, SphereMallException {
+        smClient.elasticSearch().all();
+        return null;
+    }
+
+    @Override
     public Product detail(int id) throws IOException, SphereMallException {
         String urlAppend = "detail/" + id;
         ResponseMonada responseMonada = request.handle(Method.GET, urlAppend, new HashMap<>());

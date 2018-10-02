@@ -49,6 +49,8 @@ import com.spheremall.core.resources.products.ProductAttributeValuesResource;
 import com.spheremall.core.resources.products.ProductAttributeValuesResourceImpl;
 import com.spheremall.core.resources.products.ProductResource;
 import com.spheremall.core.resources.products.ProductResourceImpl;
+import com.spheremall.core.resources.products.ProductVariantsResource;
+import com.spheremall.core.resources.products.ProductVariantsResourceImpl;
 import com.spheremall.core.resources.shop.BasketResource;
 import com.spheremall.core.resources.shop.BasketResourceImpl;
 import com.spheremall.core.resources.shop.CurrenciesRateResource;
@@ -168,6 +170,10 @@ public interface ServiceInjector {
 
     default CatalogItemsResource catalogItems() {
         return new CatalogItemsResourceImpl((SMClient) this);
+    }
+
+    default ProductVariantsResource productVariants() {
+        return new ProductVariantsResourceImpl((SMClient) this);
     }
     //endregion
 

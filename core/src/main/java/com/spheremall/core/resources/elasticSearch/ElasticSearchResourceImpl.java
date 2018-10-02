@@ -3,16 +3,18 @@ package com.spheremall.core.resources.elasticSearch;
 import com.spheremall.core.SMClient;
 import com.spheremall.core.api.ESRequest;
 import com.spheremall.core.api.configuration.Method;
+import com.spheremall.core.api.response.ElasticSearchResponse;
 import com.spheremall.core.api.response.ResponseMonada;
 import com.spheremall.core.entities.Entity;
 import com.spheremall.core.entities.Facets;
 import com.spheremall.core.entities.Response;
-import com.spheremall.core.exceptions.EntityNotFoundException;
 import com.spheremall.core.exceptions.MethodNotFoundException;
 import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.Filter;
 import com.spheremall.core.filters.Predicate;
+import com.spheremall.core.makers.ESResponseMaker;
 import com.spheremall.core.makers.ObjectMaker;
+import com.spheremall.core.mappers.ESEntityMapper;
 import com.spheremall.core.resources.BaseResource;
 import com.spheremall.core.specifications.base.FilterSpecification;
 
@@ -55,20 +57,24 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
         return null;
     }
 
+
     @Override
-    public Response<List<Entity>> all() throws IOException, SphereMallException {
+    public List<Entity> fetch() throws SphereMallException, IOException {
         HashMap<String, String> params = getQueryParams();
-        ResponseMonada responseMonada = this.request.handle(Method.GET, "_search", params);
-        if (responseMonada.hasError()) {
-            throw new EntityNotFoundException(responseMonada.getErrorResponse());
-        }
-        return maker.makeAsList(responseMonada.getResponse());
+        ResponseMonada responseMonada = request.handle(Method.GET, params.get("index") + "/_search", getQueryParams());
+
+        ESResponseMaker esResponseMaker = new ESResponseMaker();
+        Response<ElasticSearchResponse> searchResponse = esResponseMaker.makeSingle(responseMonada.getResponse());
+
+        ESEntityMapper esEntityMapper = new ESEntityMapper();
+        return esEntityMapper.doObject(searchResponse.data());
     }
 
     @Override
     public String allTest() throws SphereMallException, IOException {
         HashMap<String, String> params = getQueryParams();
         ResponseMonada responseMonada = request.handle(Method.GET, params.get("index") + "/_search", getQueryParams());
+
         return responseMonada.getResponse();
     }
 
