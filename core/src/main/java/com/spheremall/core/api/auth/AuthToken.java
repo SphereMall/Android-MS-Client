@@ -50,7 +50,7 @@ public class AuthToken {
         HashMap<String, String> params = new HashMap<>();
         params.put(ApiConstants.API_CLIENT_ID_TITLE, client.getClientId());
         params.put(ApiConstants.API_SECRET_TITLE, client.getSecretKey());
-        mapTokenResponse(service.getToken(getAuthUserAgent(), client.getVersion(), "admin/token", params).execute());
+        mapTokenResponse(service.getToken(getAuthUserAgent(), client.getVersion(), "auth/token", params).execute());
     }
 
     private void mapTokenResponse(Response<ResponseBody> response) throws ServiceException, JSONException, IOException {

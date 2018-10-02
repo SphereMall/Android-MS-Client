@@ -15,8 +15,6 @@ public class DocumentsResourceTest extends SetUpResourceTest {
     @Test
     public void testGetFirst() throws SphereMallException, IOException {
         Document document = client.documents().first().data();
-
         Assert.assertNotNull(document);
-        Assert.assertEquals(Integer.valueOf(9318), document.getId());
     }
 }

@@ -10,6 +10,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.HTTP;
 import retrofit2.http.Header;
+import retrofit2.http.HeaderMap;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -19,6 +20,7 @@ public interface SMService {
 
     @GET("/{version}/{resource}")
     Call<ResponseBody> get(
+            @HeaderMap Map<String, String> headers,
             @Header("Authorization") String token,
             @Header("User-Agent") String userAgent,
             @Path("version") String version,
@@ -29,6 +31,7 @@ public interface SMService {
     @FormUrlEncoded
     @PUT("/{version}/{resource}")
     Call<ResponseBody> update(
+            @HeaderMap Map<String, String> headers,
             @Header("Authorization") String token,
             @Header("User-Agent") String userAgent,
             @Path("version") String version,
@@ -39,6 +42,7 @@ public interface SMService {
     @FormUrlEncoded
     @POST("/{version}/{resource}")
     Call<ResponseBody> create(
+            @HeaderMap Map<String, String> headers,
             @Header("Authorization") String token,
             @Header("User-Agent") String userAgent,
             @Path("version") String version,
@@ -49,6 +53,7 @@ public interface SMService {
     @FormUrlEncoded
     @HTTP(method = "DELETE", path = "/{version}/{resource}", hasBody = true)
     Call<ResponseBody> delete(
+            @HeaderMap Map<String, String> headers,
             @Header("Authorization") String token,
             @Header("User-Agent") String userAgent,
             @Path("version") String version,

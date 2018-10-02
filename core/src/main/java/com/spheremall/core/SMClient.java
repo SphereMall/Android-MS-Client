@@ -6,6 +6,9 @@ import com.spheremall.core.api.auth.BasicAuthCredentials;
 import com.spheremall.core.utils.PreferencesManager;
 import com.spheremall.core.utils.PreferencesManagerImpl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import okhttp3.logging.HttpLoggingInterceptor;
 
 public class SMClient implements ServiceInjector {
@@ -18,6 +21,7 @@ public class SMClient implements ServiceInjector {
     private static SMClient client = null;
     protected HttpLoggingInterceptor.Level loggingLevel = HttpLoggingInterceptor.Level.BODY;
     protected BasicAuthCredentials credentials = null;
+    protected Map<String, String> headers = new HashMap<>();
 
     public static final String userAgent = "SM_SDK_ANDROID_CLIENT";
 
@@ -87,5 +91,17 @@ public class SMClient implements ServiceInjector {
 
     public HttpLoggingInterceptor.Level getLoggingLevel() {
         return loggingLevel;
+    }
+
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
+
+    public void setHeader(String name, String value) {
+        this.headers.put(name, value);
+    }
+
+    public void setHeaders(Map<String, String> headers) {
+        this.headers = headers;
     }
 }

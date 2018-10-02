@@ -70,7 +70,7 @@ public class Request implements BaseRequest {
     }
 
     private Response<ResponseBody> executeCall(boolean isRepeated) throws SphereMallException, IOException {
-//        setAuthorization();
+        setAuthorization();
         Call<ResponseBody> call = getCallMethod();
         if (call == null) {
             throw new ServiceException();
@@ -134,6 +134,7 @@ public class Request implements BaseRequest {
         switch (method) {
             case GET: {
                 return service.get(
+                        client.getHeaders(),
                         headerAuth,
                         headerUserAgent,
                         resource.getVersion(),
@@ -142,6 +143,7 @@ public class Request implements BaseRequest {
             }
             case POST:
                 return service.create(
+                        client.getHeaders(),
                         headerAuth,
                         headerUserAgent,
                         resource.getVersion(),
@@ -150,6 +152,7 @@ public class Request implements BaseRequest {
                 );
             case PUT:
                 return service.update(
+                        client.getHeaders(),
                         headerAuth,
                         headerUserAgent,
                         resource.getVersion(),
@@ -157,6 +160,7 @@ public class Request implements BaseRequest {
                         queryParams);
             case DELETE:
                 return service.delete(
+                        client.getHeaders(),
                         headerAuth,
                         headerUserAgent,
                         resource.getVersion(),

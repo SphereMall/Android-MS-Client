@@ -14,7 +14,6 @@ import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 
 public class ESRequest implements BaseRequest {
@@ -40,7 +39,7 @@ public class ESRequest implements BaseRequest {
         Response response = restClient.performRequest(
                 method.name(),
                 urlBuilder.toString(),
-                Collections.emptyMap(),
+                client.getHeaders(),
                 entity
         );
         String responseString = EntityUtils.toString(response.getEntity());
