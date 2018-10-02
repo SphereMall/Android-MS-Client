@@ -1,6 +1,7 @@
 package com.spheremall.core.resources.elasticSearch;
 
 import com.spheremall.core.entities.Entity;
+import com.spheremall.core.entities.Response;
 import com.spheremall.core.entities.products.Product;
 import com.spheremall.core.entities.products.ProductAttributeValue;
 import com.spheremall.core.exceptions.SphereMallException;
@@ -31,13 +32,16 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
         filter.index("sm-products", "sm-documents")
                 .query(boolFilter);
 
-        List<Entity> entities = client.elasticSearch()
+        Response<List<Entity>> entities = client.elasticSearch()
                 .filters(filter)
                 .fetch();
 
         Assert.assertNotNull(entities);
 
-        for (Entity entity : entities) {
+        int count = Integer.valueOf(entities.meta().get("count").toString());
+        int tmp = 0;
+        for (Entity entity : entities.data()) {
+            tmp++;
             Product product = (Product) entity;
             for (ProductAttributeValue attr : product.productAttributeValues) {
                 if (attr.attributes.get(0).code.equals("colorbas")) {
@@ -45,12 +49,16 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
                 }
             }
         }
+        Assert.assertEquals(count, tmp);
     }
 
     @Test
     public void testSearch() throws IOException, SphereMallException {
-        List<Entity> entities = client.elasticSearch().search("KOGA");
-        Assert.assertNotNull(entities);
+        Response<List<Entity>> entities = client.elasticSearch()
+                .limit(2)
+                .search("KOGA");
 
+        Assert.assertNotNull(entities);
+        Assert.assertEquals(entities.data().size(), 2);
     }
 }

@@ -27,6 +27,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearchResource> implements ElasticSearchResource {
 
@@ -61,7 +62,7 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
     }
 
     @Override
-    public List<Entity> search(String query) throws SphereMallException, IOException {
+    public Response<List<Entity>> search(String query) throws SphereMallException, IOException {
         ESSearchFilter filter = new ESSearchFilter();
         filter.index("sm-products", "sm-documents");
 
@@ -83,22 +84,28 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
         ResponseMonada responseMonada = request.handle(Method.GET, params.get("index") + "/_search", getQueryParams());
 
         ESResponseMaker esResponseMaker = new ESResponseMaker();
-        Response<ElasticSearchResponse> searchResponse = esResponseMaker.makeSingle(responseMonada.getResponse());
+        ElasticSearchResponse searchResponse = esResponseMaker.makeSingle(responseMonada.getResponse()).data();
 
         ESEntityMapper esEntityMapper = new ESEntityMapper();
-        return esEntityMapper.doObject(searchResponse.data());
+        List<Entity> entities = esEntityMapper.doObject(searchResponse);
+        Map<String, String> meta = new HashMap<>();
+        meta.put("count", String.valueOf(searchResponse.hits.total));
+        return new Response<>(entities, meta);
     }
 
     @Override
-    public List<Entity> fetch() throws SphereMallException, IOException {
+    public Response<List<Entity>> fetch() throws SphereMallException, IOException {
         HashMap<String, String> params = getQueryParams();
         ResponseMonada responseMonada = request.handle(Method.GET, params.get("index") + "/_search", getQueryParams());
 
         ESResponseMaker esResponseMaker = new ESResponseMaker();
-        Response<ElasticSearchResponse> searchResponse = esResponseMaker.makeSingle(responseMonada.getResponse());
+        ElasticSearchResponse searchResponse = esResponseMaker.makeSingle(responseMonada.getResponse()).data();
 
         ESEntityMapper esEntityMapper = new ESEntityMapper();
-        return esEntityMapper.doObject(searchResponse.data());
+        List<Entity> entities = esEntityMapper.doObject(searchResponse);
+        Map<String, String> meta = new HashMap<>();
+        meta.put("count", String.valueOf(searchResponse.hits.total));
+        return new Response<>(entities, meta);
     }
 
     protected HashMap<String, String> getQueryParams() {

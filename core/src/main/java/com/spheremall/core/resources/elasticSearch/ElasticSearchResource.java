@@ -11,9 +11,9 @@ import java.util.List;
 
 public interface ElasticSearchResource extends Resource<ElasticSearchResource, Entity> {
 
-    List<Entity> fetch() throws SphereMallException, IOException;
+    Response<List<Entity>> fetch() throws SphereMallException, IOException;
 
-    List<Entity> search(String query) throws SphereMallException, IOException;
+    Response<List<Entity>> search(String query) throws SphereMallException, IOException;
 
     Response<Facets> facets() throws SphereMallException, IOException;
 }
