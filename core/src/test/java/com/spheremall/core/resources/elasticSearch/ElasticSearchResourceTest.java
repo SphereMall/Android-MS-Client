@@ -20,22 +20,6 @@ import java.util.List;
 public class ElasticSearchResourceTest extends SetUpResourceTest {
 
     @Test
-    public void testSetFilter() throws IOException, SphereMallException {
-        ElasticSearchResource resource = client.elasticSearch();
-
-        TermsFilter urlCodeTermsFilter = new TermsFilter(new TermsFilterCriteria("urlCode", "m7s-ltd-incl-400wh-8713568337908"));
-
-        ESSearchFilter filter = new ESSearchFilter();
-        filter.index("sm-products")
-                .query(urlCodeTermsFilter);
-
-        resource.filters(filter);
-
-        String response = resource.allTest();
-        Assert.assertNotNull(response);
-    }
-
-    @Test
     public void testSetCompoundFilter() throws IOException, SphereMallException {
 
         TermsFilter termsFilter = new TermsFilter(new TermsFilterCriteria("variantsCompound", "fd4e12b4-df24-8882-d068-b73d26949e1f"));
@@ -61,5 +45,12 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
                 }
             }
         }
+    }
+
+    @Test
+    public void testSearch() throws IOException, SphereMallException {
+        List<Entity> entities = client.elasticSearch().search("KOGA");
+        Assert.assertNotNull(entities);
+
     }
 }

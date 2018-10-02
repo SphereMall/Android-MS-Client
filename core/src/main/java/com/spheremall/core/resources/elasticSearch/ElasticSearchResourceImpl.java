@@ -12,6 +12,9 @@ import com.spheremall.core.exceptions.MethodNotFoundException;
 import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.Filter;
 import com.spheremall.core.filters.Predicate;
+import com.spheremall.core.filters.elasticsearch.ESSearchFilter;
+import com.spheremall.core.filters.elasticsearch.compound.BoolFilter;
+import com.spheremall.core.filters.elasticsearch.fulltext.MultiMatchFilter;
 import com.spheremall.core.makers.ESResponseMaker;
 import com.spheremall.core.makers.ObjectMaker;
 import com.spheremall.core.mappers.ESEntityMapper;
@@ -57,9 +60,25 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
         return null;
     }
 
-
     @Override
-    public List<Entity> fetch() throws SphereMallException, IOException {
+    public List<Entity> search(String query) throws SphereMallException, IOException {
+        ESSearchFilter filter = new ESSearchFilter();
+        filter.index("sm-products", "sm-documents");
+
+        MultiMatchFilter matchFilter = new MultiMatchFilter("title_*", query);
+        matchFilter.setFields(
+                "html_*",
+                "title_*",
+                "short_description_*",
+                "full_description_*"
+        );
+
+        BoolFilter boolFilter = new BoolFilter();
+        boolFilter.must(matchFilter);
+        filter.query(boolFilter);
+
+        filters(filter);
+
         HashMap<String, String> params = getQueryParams();
         ResponseMonada responseMonada = request.handle(Method.GET, params.get("index") + "/_search", getQueryParams());
 
@@ -71,11 +90,15 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
     }
 
     @Override
-    public String allTest() throws SphereMallException, IOException {
+    public List<Entity> fetch() throws SphereMallException, IOException {
         HashMap<String, String> params = getQueryParams();
         ResponseMonada responseMonada = request.handle(Method.GET, params.get("index") + "/_search", getQueryParams());
 
-        return responseMonada.getResponse();
+        ESResponseMaker esResponseMaker = new ESResponseMaker();
+        Response<ElasticSearchResponse> searchResponse = esResponseMaker.makeSingle(responseMonada.getResponse());
+
+        ESEntityMapper esEntityMapper = new ESEntityMapper();
+        return esEntityMapper.doObject(searchResponse.data());
     }
 
     protected HashMap<String, String> getQueryParams() {

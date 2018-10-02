@@ -13,7 +13,7 @@ public interface ElasticSearchResource extends Resource<ElasticSearchResource, E
 
     List<Entity> fetch() throws SphereMallException, IOException;
 
-    String allTest() throws SphereMallException, IOException;
+    List<Entity> search(String query) throws SphereMallException, IOException;
 
     Response<Facets> facets() throws SphereMallException, IOException;
 }
