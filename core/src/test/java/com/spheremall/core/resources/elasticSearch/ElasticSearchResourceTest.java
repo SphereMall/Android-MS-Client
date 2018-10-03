@@ -56,6 +56,7 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
     public void testSearch() throws IOException, SphereMallException {
         Response<List<Entity>> entities = client.elasticSearch()
                 .limit(2)
+                .offset(0)
                 .search("KOGA");
 
         Assert.assertNotNull(entities);

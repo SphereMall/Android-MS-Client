@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.Map;
 
 public class MultiMatchFilter extends FullTextFilter {
@@ -30,10 +31,8 @@ public class MultiMatchFilter extends FullTextFilter {
     }
 
     public void setFields(String... fields) {
-        JSONArray array = new JSONArray();
-        array.put(fields);
-
-        queryParams.put(FIELDS, fields);
+        JSONArray array = new JSONArray(Arrays.asList(fields));
+        queryParams.put(FIELDS, array);
     }
 
     public void setTieBreaker(Double tieBreaker) {
