@@ -15,19 +15,19 @@ import java.util.List;
 
 public class ProductResourceTest extends SetUpResourceTest {
     @Test
-    public void testProductFull() throws SphereMallException, IOException {
+    public void testProductDetail() throws SphereMallException, IOException {
 
         Product testProduct = client.products().first().data();
 
         List<Product> products = client.products()
-                .full().data();
+                .detail().data();
 
         Assert.assertNotNull(products);
 
         products = client.products()
                 .limit(1)
                 .ids(testProduct.getId())
-                .full().data();
+                .detail().data();
 
         Assert.assertEquals(1, products.size());
         Assert.assertEquals(testProduct.getId(), products.get(0).getId());
@@ -39,7 +39,7 @@ public class ProductResourceTest extends SetUpResourceTest {
         Assert.assertEquals(testProduct.getId().intValue(), product.getId().intValue());
 
         product = client.products()
-                .full(testProduct.urlCode).data();
+                .detail(testProduct.urlCode);
 
         Assert.assertEquals(testProduct.urlCode, product.urlCode);
     }

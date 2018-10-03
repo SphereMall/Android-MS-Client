@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class BaseResource<E extends Entity, R extends Resource> implements Resource<R, E> {
 
@@ -38,6 +39,7 @@ public abstract class BaseResource<E extends Entity, R extends Resource> impleme
     protected List<Integer> ids = new ArrayList<>();
     protected List<String> fields = new ArrayList<>();
     protected List<String> sort = new ArrayList<>();
+    protected Map<String, String> queryExtraParams = new HashMap<>();
     protected InPredicate in;
 
     public BaseResource(SMClient smClient) {
@@ -150,6 +152,17 @@ public abstract class BaseResource<E extends Entity, R extends Resource> impleme
     public R sort(String... sort) {
         this.sort = Arrays.asList(sort);
         return currentContext();
+    }
+
+    @Override
+    public R addExtraParam(String key, String value) {
+        queryExtraParams.put(key, value);
+        return currentContext();
+    }
+
+    @Override
+    public Map<String, String> getExtraParams() {
+        return queryExtraParams;
     }
 
     @Override
@@ -277,6 +290,10 @@ public abstract class BaseResource<E extends Entity, R extends Resource> impleme
 
         if (filter != null) {
             params.put("where", filter.toString());
+        }
+
+        if (queryExtraParams.size() > 0) {
+            params.putAll(queryExtraParams);
         }
 
         return params;

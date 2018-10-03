@@ -4,12 +4,12 @@ import com.spheremall.core.entities.Response;
 import com.spheremall.core.entities.products.Attribute;
 import com.spheremall.core.entities.products.Product;
 import com.spheremall.core.exceptions.SphereMallException;
-import com.spheremall.core.resources.full.FullResource;
+import com.spheremall.core.resources.full.DetailResource;
 
 import java.io.IOException;
 import java.util.List;
 
-public interface ProductResource extends FullResource<Product, ProductResource> {
+public interface ProductResource extends DetailResource<Product, ProductResource> {
 
     Response<List<Attribute>> variants(String... codes) throws IOException, SphereMallException;
 

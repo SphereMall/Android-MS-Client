@@ -11,6 +11,7 @@ import com.spheremall.core.specifications.base.FilterSpecification;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface Resource<R extends Resource, E extends Entity> {
 
@@ -45,6 +46,10 @@ public interface Resource<R extends Resource, E extends Entity> {
     R in(String field, String... values);
 
     InPredicate getIn();
+
+    R addExtraParam(String key, String value);
+
+    Map<String, String> getExtraParams();
 
     int count() throws IOException, SphereMallException;
 

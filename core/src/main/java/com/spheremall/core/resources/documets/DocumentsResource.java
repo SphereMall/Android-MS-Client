@@ -2,7 +2,7 @@ package com.spheremall.core.resources.documets;
 
 
 import com.spheremall.core.entities.documents.Document;
-import com.spheremall.core.resources.Resource;
+import com.spheremall.core.resources.full.DetailResource;
 
-public interface DocumentsResource extends Resource<DocumentsResource, Document> {
+public interface DocumentsResource extends DetailResource<Document, DocumentsResource> {
 }
