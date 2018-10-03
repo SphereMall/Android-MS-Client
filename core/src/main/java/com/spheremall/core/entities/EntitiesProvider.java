@@ -1,6 +1,7 @@
 package com.spheremall.core.entities;
 
 import com.spheremall.core.entities.documents.Document;
+import com.spheremall.core.entities.documents.EntityAttributeValue;
 import com.spheremall.core.entities.products.Attribute;
 import com.spheremall.core.entities.products.AttributeDisplayType;
 import com.spheremall.core.entities.products.AttributeGroup;
@@ -66,6 +67,7 @@ public class EntitiesProvider {
         availableEntities.put("functionalNames", FunctionalName.class);
         availableEntities.put("invoices", Invoice.class);
         availableEntities.put("images", Media.class);
+        availableEntities.put("media", Media.class);
         availableEntities.put("imageTypes", MediaType.class);
         availableEntities.put("userMessages", Message.class);
         availableEntities.put("options", Option.class);
@@ -85,6 +87,7 @@ public class EntitiesProvider {
         availableEntities.put("mediaEntities", MediaEntity.class);
         availableEntities.put("mediaDisplayTypes", MediaDisplayType.class);
         availableEntities.put("channelEntities", ChannelEntity.class);
+        availableEntities.put("entityAttributeValues", EntityAttributeValue.class);
     }
 
     private static <K, V> K getKey(Map<K, V> map, V value) {

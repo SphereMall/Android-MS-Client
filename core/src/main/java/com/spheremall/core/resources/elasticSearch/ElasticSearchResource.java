@@ -15,5 +15,7 @@ public interface ElasticSearchResource extends Resource<ElasticSearchResource, E
 
     Response<List<Entity>> search(String query) throws SphereMallException, IOException;
 
+    Response<List<Entity>> search(String query, List<String> indexes) throws SphereMallException, IOException;
+
     Response<Facets> facets() throws SphereMallException, IOException;
 }

@@ -32,14 +32,14 @@ import retrofit2.Retrofit;
 
 public class Request implements BaseRequest {
 
-    private SMClient client;
-    private BaseResource resource;
-    private String headerAuth, headerUserAgent;
-    private AuthToken authToken;
-    private Method method;
-    private String uriAppend;
-    private HashMap<String, String> queryParams;
-    private SMService service;
+    protected SMClient client;
+    protected BaseResource resource;
+    protected String headerAuth, headerUserAgent;
+    protected AuthToken authToken;
+    protected Method method;
+    protected String uriAppend;
+    protected HashMap<String, String> queryParams;
+    protected SMService service;
 
     public Request(SMClient client, BaseResource resource) {
         this.client = client;

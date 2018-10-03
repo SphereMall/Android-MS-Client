@@ -14,6 +14,12 @@ public class ResponseMonada {
         this.status = checkStatus();
     }
 
+    public ResponseMonada(ErrorResponse errorResponse) {
+        this.response = null;
+        this.status = null;
+        this.errorResponse = errorResponse;
+    }
+
     private String checkStatus() {
         Gson gson = new Gson();
         StatusResponse statusResponse = gson.fromJson(response, StatusResponse.class);

@@ -25,6 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,14 +58,19 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
     }
 
     @Override
-    public Response<Facets> facets() throws SphereMallException, IOException {
-        return null;
+    public Response<Facets> facets() {
+        throw new RuntimeException("Method is not implemented yet");
     }
 
     @Override
-    public Response<List<Entity>> search(String query) throws SphereMallException, IOException {
+    public Response<List<Entity>> search(String query, List<String> indexes) throws SphereMallException, IOException {
         ESSearchFilter filter = new ESSearchFilter();
-        filter.index("sm-products", "sm-documents");
+        String indexesArray[] = new String[indexes.size()];
+        for (int i = 0; i < indexes.size(); i++) {
+            indexesArray[i] = indexes.get(i);
+        }
+
+        filter.index(indexesArray);
 
         MultiMatchFilter matchFilter = new MultiMatchFilter("title_*", query);
         matchFilter.setFields(
@@ -91,6 +97,14 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
         Map<String, String> meta = new HashMap<>();
         meta.put("count", String.valueOf(searchResponse.hits.total));
         return new Response<>(entities, meta);
+    }
+
+    @Override
+    public Response<List<Entity>> search(String query) throws SphereMallException, IOException {
+        List<String> indexes = new ArrayList<>();
+        indexes.add("sm-products");
+        indexes.add("sm-documents");
+        return search(query, indexes);
     }
 
     @Override
