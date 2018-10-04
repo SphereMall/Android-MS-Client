@@ -2,6 +2,7 @@ package com.spheremall.core.resources.products;
 
 import com.spheremall.core.entities.Response;
 import com.spheremall.core.entities.products.Product;
+import com.spheremall.core.entities.products.ProductVariantsContainer;
 import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.FilterOperators;
 import com.spheremall.core.filters.Predicate;
@@ -11,6 +12,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ProductResourceTest extends SetUpResourceTest {
@@ -54,5 +57,16 @@ public class ProductResourceTest extends SetUpResourceTest {
         Assert.assertNotNull(productsResponse);
         Assert.assertEquals("10", productsResponse.meta().get("limit").toString());
         Assert.assertEquals("0", productsResponse.meta().get("offset").toString());
+    }
+
+    @Test
+    public void testVariants() throws IOException, SphereMallException {
+        List<String> codes = new ArrayList<>();
+        codes.add("frametype");
+        codes.add("colorcom");
+        codes.add("colorbas");
+
+        List<ProductVariantsContainer> containers = client.products().variants(Arrays.asList(4108, 4509, 4597), codes);
+        Assert.assertNotNull(containers);
     }
 }

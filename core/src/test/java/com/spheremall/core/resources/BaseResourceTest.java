@@ -1,5 +1,6 @@
 package com.spheremall.core.resources;
 
+import com.spheremall.core.entities.Response;
 import com.spheremall.core.entities.products.Product;
 import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.Filter;
@@ -17,6 +18,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import okhttp3.logging.HttpLoggingInterceptor;
 
 public class BaseResourceTest extends SetUpResourceTest {
 
@@ -47,12 +50,23 @@ public class BaseResourceTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testIn() {
+    public void testIn() throws IOException, SphereMallException {
+        client.setLoggingLevel(HttpLoggingInterceptor.Level.HEADERS);
+
+        List<Product> products = client.products()
+                .limit(2)
+                .all().data();
+
+        Assert.assertNotNull(products);
+        Assert.assertEquals(products.size(), 2);
+
         ProductResource productResource = client.products()
-                .in("id", "6329", "6351");
+                .in("id", String.valueOf(products.get(0).getId()), String.valueOf(products.get(1).getId()));
 
         InPredicate in = productResource.getIn();
+        Response<List<Product>> listResponse = productResource.all();
         Assert.assertNotNull(in);
+        Assert.assertNotNull(listResponse);
         Assert.assertEquals(in.getField(), "id");
     }
 
@@ -68,8 +82,8 @@ public class BaseResourceTest extends SetUpResourceTest {
         productResource.sort("-id");
         List<Product> products = productResource.all().data();
         Assert.assertEquals(products.size(), 2);
-        Assert.assertTrue(products.get(0).getId().equals(items.get(0).getId()));
-        Assert.assertTrue(products.get(1).getId().equals(items.get(1).getId()));
+        Assert.assertEquals(products.get(0).getId(), items.get(0).getId());
+        Assert.assertEquals(products.get(1).getId(), items.get(1).getId());
     }
 
     @Test
@@ -86,8 +100,8 @@ public class BaseResourceTest extends SetUpResourceTest {
         productResource.in("id", list.get(0).getId().toString(), list.get(1).getId().toString());
         List<Product> products = productResource.all().data();
         Assert.assertEquals(products.size(), 2);
-        Assert.assertTrue(products.get(0).getId().equals(list.get(0).getId()));
-        Assert.assertTrue(products.get(1).getId().equals(list.get(1).getId()));
+        Assert.assertEquals(products.get(0).getId(), list.get(0).getId());
+        Assert.assertEquals(products.get(1).getId(), list.get(1).getId());
     }
 
     @Test
@@ -153,13 +167,6 @@ public class BaseResourceTest extends SetUpResourceTest {
         Filter filter = productResource.getFilters();
         Assert.assertEquals(stringFilter, filter.toString());
 
-    }
-
-    @Test
-    public void testCount() throws SphereMallException, IOException {
-        ProductResource productResource = client.products();
-        int count = productResource.count();
-        Assert.assertTrue(count != 30);
     }
 
     @Test

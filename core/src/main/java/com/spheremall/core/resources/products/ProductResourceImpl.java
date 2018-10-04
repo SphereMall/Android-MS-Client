@@ -4,14 +4,14 @@ import com.spheremall.core.SMClient;
 import com.spheremall.core.api.configuration.Method;
 import com.spheremall.core.api.response.ResponseMonada;
 import com.spheremall.core.entities.Response;
-import com.spheremall.core.entities.price.PriceConfiguration;
-import com.spheremall.core.entities.products.Attribute;
 import com.spheremall.core.entities.products.Product;
-import com.spheremall.core.entities.products.ProductAttributeValue;
+import com.spheremall.core.entities.products.ProductVariant;
+import com.spheremall.core.entities.products.ProductVariantsContainer;
 import com.spheremall.core.exceptions.EntityNotFoundException;
 import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.makers.ObjectMaker;
 import com.spheremall.core.resources.BaseResource;
+import com.spheremall.core.utils.ArrayUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ProductResourceImpl extends BaseResource<Product, ProductResource> implements ProductResource {
+
+    protected ProductAttributesBuilder attributesBuilder = new ProductAttributesBuilder();
 
     public ProductResourceImpl(SMClient client) {
         super(client);
@@ -40,9 +42,18 @@ public class ProductResourceImpl extends BaseResource<Product, ProductResource> 
     }
 
     @Override
-    public Response<List<Attribute>> variants(String... codes) throws IOException, SphereMallException {
-        smClient.elasticSearch().all();
-        return null;
+    public List<ProductVariantsContainer> variants(List<Integer> productIds, List<String> attributeCodes) throws IOException, SphereMallException {
+        ArrayUtils<Integer> arrayUtils = new ArrayUtils<>();
+
+        List<ProductVariant> productVariants = smClient.productVariants()
+                .in("productId", arrayUtils.numericListToStringArray(productIds))
+                .limit(100)
+                .all()
+                .data();
+
+        ProductVariantsBuilder variantsBuilder = new ProductVariantsBuilder(smClient, attributesBuilder);
+
+        return variantsBuilder.build(attributeCodes, productVariants);
     }
 
     @Override
@@ -65,7 +76,7 @@ public class ProductResourceImpl extends BaseResource<Product, ProductResource> 
 
         Product product = maker.makeSingle(responseMonada.getResponse()).data();
 
-        return combineProductProperties(product);
+        return attributesBuilder.combineProductProperties(product);
     }
 
     @Override
@@ -82,61 +93,9 @@ public class ProductResourceImpl extends BaseResource<Product, ProductResource> 
 
         List<Product> productsResponse = new ArrayList<>();
         for (Product product : listResponse.data()) {
-            productsResponse.add(combineProductProperties(product));
+            productsResponse.add(attributesBuilder.combineProductProperties(product));
         }
 
         return new Response<>(productsResponse, listResponse.meta());
-    }
-
-    private Product combineProductProperties(Product product) {
-
-        if (product.productPriceConfigurations == null || product.productPriceConfigurations.size() == 0) {
-            mapAttributes(product);
-            return product;
-        }
-
-        List<PriceConfiguration> priceConfigurations = product.productPriceConfigurations.get(0).priceConfigurations;
-        if (priceConfigurations == null || priceConfigurations.size() == 0) {
-            mapAttributes(product);
-            return product;
-        }
-
-        List<String> affectAttributes = priceConfigurations.get(0).affectAttributes;
-
-        if (affectAttributes == null || affectAttributes.size() == 0) {
-            mapAttributes(product);
-            return product;
-        }
-
-        product.affectedAttributes = new ArrayList<>();
-
-        for (Attribute attribute : product.attributes) {
-
-            setMapAttributeValues(product, attribute);
-
-            for (String affectedAttr : affectAttributes) {
-                if (attribute.getId().toString().equals(affectedAttr)) {
-                    product.affectedAttributes.add(attribute);
-                }
-            }
-        }
-
-        return product;
-    }
-
-    private void mapAttributes(Product product) {
-        for (Attribute attribute : product.attributes) {
-            setMapAttributeValues(product, attribute);
-        }
-    }
-
-    private void setMapAttributeValues(Product product, Attribute attribute) {
-        attribute.attributeValues = new ArrayList<>();
-
-        for (ProductAttributeValue productAttributeValue : product.productAttributeValues) {
-            if (attribute.getId() == productAttributeValue.attributeId) {
-                attribute.attributeValues.addAll(productAttributeValue.attributeValues);
-            }
-        }
     }
 }

@@ -98,7 +98,6 @@ public class RetrofitApiConfigurationFactory implements ApiConfigurationFactory<
             authParams.put(ApiConstants.API_SECRET_TITLE, client.getSecretKey());
             AuthService authService = createComponent(createApiClient()).create(AuthService.class);
             try {
-
                 retrofit2.Response<ResponseBody> tokenResponse = authService.getToken(ApiConstants.API_USER_AGENT_PREFIX + SMClient.userAgent,
                         client.getVersion(), "/oauth", authParams).execute();
                 if (tokenResponse.code() == 200) {
