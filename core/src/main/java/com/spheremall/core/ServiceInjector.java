@@ -83,6 +83,8 @@ import com.spheremall.core.resources.users.AuthResource;
 import com.spheremall.core.resources.users.AuthResourceImpl;
 import com.spheremall.core.resources.users.CompaniesResource;
 import com.spheremall.core.resources.users.CompaniesResourceImpl;
+import com.spheremall.core.resources.users.ExternalUserRelationResource;
+import com.spheremall.core.resources.users.ExternalUserRelationResourceImpl;
 import com.spheremall.core.resources.users.MessagesResource;
 import com.spheremall.core.resources.users.MessagesResourceImpl;
 import com.spheremall.core.resources.users.UserResource;
@@ -201,6 +203,10 @@ public interface ServiceInjector {
 
     default AuthResource auth() {
         return new AuthResourceImpl((SMClient) this);
+    }
+
+    default ExternalUserRelationResource externalUserRelationResource() {
+        return new ExternalUserRelationResourceImpl((SMClient) this);
     }
 
     //endregion

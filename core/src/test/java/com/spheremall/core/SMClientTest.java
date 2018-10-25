@@ -42,6 +42,7 @@ public class SMClientTest {
     @Test
     public void testCreateSMClient() {
         SMClient smClient = SMClient.initialize(context, gatewayUrl, clientId, secretKey, version);
+
         Assert.assertEquals(smClient.getClass().getCanonicalName(), SMClient.class.getCanonicalName());
     }
 
