@@ -10,14 +10,13 @@ import com.spheremall.core.exceptions.MethodNotFoundException;
 import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.makers.GridMaker;
 import com.spheremall.core.makers.ObjectMaker;
-import com.spheremall.core.resources.BaseResource;
 import com.spheremall.core.utils.CorrelationTypeHelper;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-public class CorrelationsResourceImpl extends BaseResource<Entity, CorrelationsResource> implements CorrelationsResource {
+public class CorrelationsResourceImpl extends GrapherResource<CorrelationsResource> implements CorrelationsResource {
 
     public CorrelationsResourceImpl(SMClient smClient) {
         super(smClient);
