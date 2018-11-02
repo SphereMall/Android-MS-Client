@@ -98,4 +98,24 @@ public class ProductResourceImpl extends BaseResource<Product, ProductResource> 
 
         return new Response<>(productsResponse, listResponse.meta());
     }
+
+    @Override
+    public Response<List<Product>> variants(List<Integer> productIds) throws IOException, SphereMallException {
+        String urlAppend = "detail/variants";
+        ids(productIds);
+        limit(100);
+        ResponseMonada responseMonada = request.handle(Method.GET, urlAppend, super.getQueryParams());
+        if (responseMonada.hasError()) {
+            throw new EntityNotFoundException(responseMonada.getErrorResponse());
+        }
+
+        Response<List<Product>> listResponse = maker.makeAsList(responseMonada.getResponse());
+
+        List<Product> productsResponse = new ArrayList<>();
+        for (Product product : listResponse.data()) {
+            productsResponse.add(attributesBuilder.combineProductProperties(product));
+        }
+
+        return new Response<>(productsResponse, listResponse.meta());
+    }
 }
