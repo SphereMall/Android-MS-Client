@@ -60,6 +60,14 @@ public class ProductResourceTest extends SetUpResourceTest {
     }
 
     @Test
+    public void testProductDetailById() throws IOException, SphereMallException {
+        Product productsResponse = client.products()
+                .detail(1080);
+
+        Assert.assertNotNull(productsResponse);
+    }
+
+    @Test
     public void testVariants() throws IOException, SphereMallException {
         List<String> codes = new ArrayList<>();
         codes.add("frametype");

@@ -52,6 +52,9 @@ public class Product extends Entity {
     @JsonProperty("media")
     public List<Media> images;
 
+    @Relationship(value = "mediaEntities", resolve = true, relType = RelType.RELATED)
+    public List<MediaEntity> mediaEntities;
+
     @Relationship(value = "options", resolve = true, relType = RelType.RELATED)
     public List<Option> options;
 
