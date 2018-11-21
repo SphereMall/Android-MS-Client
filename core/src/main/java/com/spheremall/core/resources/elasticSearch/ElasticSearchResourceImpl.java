@@ -13,8 +13,12 @@ import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.Filter;
 import com.spheremall.core.filters.Predicate;
 import com.spheremall.core.filters.elasticsearch.ESSearchFilter;
+import com.spheremall.core.filters.elasticsearch.common.ESFilterCriteria;
 import com.spheremall.core.filters.elasticsearch.compound.BoolFilter;
+import com.spheremall.core.filters.elasticsearch.criterions.AttributeFilterCriteria;
+import com.spheremall.core.filters.elasticsearch.criterions.TermsFilterCriteria;
 import com.spheremall.core.filters.elasticsearch.fulltext.MultiMatchFilter;
+import com.spheremall.core.filters.elasticsearch.terms.TermsFilter;
 import com.spheremall.core.makers.ESResponseMaker;
 import com.spheremall.core.makers.ObjectMaker;
 import com.spheremall.core.mappers.ESEntityMapper;
@@ -80,9 +84,10 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
                 "full_description_*"
         );
 
-        BoolFilter boolFilter = new BoolFilter();
-        boolFilter.must(matchFilter);
-        filter.query(boolFilter);
+        BoolFilter boolSearchFilter = new BoolFilter();
+        boolSearchFilter.must(matchFilter);
+
+        filter.query(boolSearchFilter);
 
         filters(filter);
 
@@ -105,6 +110,23 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
         indexes.add("sm-products");
         indexes.add("sm-documents");
         return search(query, indexes);
+    }
+
+    @Override
+    public Response<List<Entity>> search(String query, ESSearchFilter filter) throws SphereMallException, IOException {
+        filters(filter);
+
+        HashMap<String, String> params = getQueryParams();
+        ResponseMonada responseMonada = request.handle(Method.GET, params.get("index") + "/_search", getQueryParams());
+
+        ESResponseMaker esResponseMaker = new ESResponseMaker();
+        ElasticSearchResponse searchResponse = esResponseMaker.makeSingle(responseMonada.getResponse()).data();
+
+        ESEntityMapper esEntityMapper = new ESEntityMapper();
+        List<Entity> entities = esEntityMapper.doObject(searchResponse);
+        Map<String, String> meta = new HashMap<>();
+        meta.put("count", String.valueOf(searchResponse.hits.total));
+        return new Response<>(entities, meta);
     }
 
     @Override

@@ -57,7 +57,7 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
         Response<List<Entity>> entities = client.elasticSearch()
                 .limit(2)
                 .offset(0)
-                .search("KOGA");
+                .search("milner");
 
         Assert.assertNotNull(entities);
         Assert.assertEquals(entities.data().size(), 2);
