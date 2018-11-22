@@ -158,6 +158,8 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
 
             params.clear();
 
+            params.putAll(getExtraParams());
+
             params.put("index", paramsJson.getString("index"));
             paramsJson.remove("index");
             params.put("body", paramsJson.toString());
