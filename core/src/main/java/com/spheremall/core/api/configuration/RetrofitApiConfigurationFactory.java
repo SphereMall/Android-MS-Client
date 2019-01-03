@@ -46,6 +46,12 @@ public class RetrofitApiConfigurationFactory implements ApiConfigurationFactory<
         this.level = HttpLoggingInterceptor.Level.BASIC;
     }
 
+    public RetrofitApiConfigurationFactory(String endpoint, boolean debug, HttpLoggingInterceptor.Level loggingLevel) {
+        this.endpoint = endpoint;
+        this.debug = debug;
+        this.level = loggingLevel;
+    }
+
     @Override
     public Retrofit createConfiguration() {
         return createComponent(createApiClient());
@@ -72,58 +78,11 @@ public class RetrofitApiConfigurationFactory implements ApiConfigurationFactory<
             builder.addInterceptor(new BasicAuthInterceptor(client.getBasicAuth()));
         }
 
-//        TODO: Test this way of authentication
-//        if (client != null) {
-//            builder.authenticator(new SMAuthenticator());
-//        }
-
         return builder
                 .addNetworkInterceptor(new RequestInterceptor())
                 .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
                 .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
                 .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
                 .build();
-    }
-
-    private class SMAuthenticator implements Authenticator {
-
-        @Override
-        public Request authenticate(Route route, Response response) {
-            if (responseCount(response) >= 2) {
-                return null;
-            }
-
-            HashMap<String, String> authParams = new HashMap<>();
-            authParams.put(ApiConstants.API_CLIENT_ID_TITLE, client.getClientId());
-            authParams.put(ApiConstants.API_SECRET_TITLE, client.getSecretKey());
-            AuthService authService = createComponent(createApiClient()).create(AuthService.class);
-            try {
-                retrofit2.Response<ResponseBody> tokenResponse = authService.getToken(ApiConstants.API_USER_AGENT_PREFIX + SMClient.userAgent,
-                        client.getVersion(), "/oauth", authParams).execute();
-                if (tokenResponse.code() == 200) {
-                    JSONObject mainObject = new JSONObject(response.body().string());
-                    JSONArray data = mainObject.getJSONArray("data");
-                    JSONObject tokenObj = data.getJSONObject(0);
-                    String token = tokenObj.getString("token");
-                    client.getPreferencesManager().setToken(token);
-                    return response.request().newBuilder()
-                            .header("Authorization", "Bearer " + token)
-                            .build();
-                } else {
-                    return null;
-                }
-
-            } catch (IOException | JSONException e) {
-                return null;
-            }
-        }
-    }
-
-    private static int responseCount(Response response) {
-        int result = 1;
-        while ((response = response.priorResponse()) != null) {
-            result++;
-        }
-        return result;
     }
 }

@@ -37,6 +37,8 @@ import com.spheremall.core.resources.products.EntityAttributesResource;
 import com.spheremall.core.resources.products.EntityAttributesResourceImpl;
 import com.spheremall.core.resources.products.FunctionalNamesResource;
 import com.spheremall.core.resources.products.FunctionalNamesResourceImpl;
+import com.spheremall.core.resources.products.MediaDisplayTypeResource;
+import com.spheremall.core.resources.products.MediaDisplayTypeResourceImpl;
 import com.spheremall.core.resources.products.MediaResource;
 import com.spheremall.core.resources.products.MediaResourceImpl;
 import com.spheremall.core.resources.products.MediaTypesResource;
@@ -51,6 +53,8 @@ import com.spheremall.core.resources.products.ProductResource;
 import com.spheremall.core.resources.products.ProductResourceImpl;
 import com.spheremall.core.resources.products.ProductVariantsResource;
 import com.spheremall.core.resources.products.ProductVariantsResourceImpl;
+import com.spheremall.core.resources.products.UnitOfMeasureResource;
+import com.spheremall.core.resources.products.UnitOfMeasureResourceImpl;
 import com.spheremall.core.resources.shop.BasketResource;
 import com.spheremall.core.resources.shop.BasketResourceImpl;
 import com.spheremall.core.resources.shop.CurrenciesRateResource;
@@ -176,6 +180,14 @@ public interface ServiceInjector {
 
     default ProductVariantsResource productVariants() {
         return new ProductVariantsResourceImpl((SMClient) this);
+    }
+
+    default MediaDisplayTypeResource mediaDisplayTypes() {
+        return new MediaDisplayTypeResourceImpl((SMClient) this);
+    }
+
+    default UnitOfMeasureResource unitsOfMeasure() {
+        return new UnitOfMeasureResourceImpl((SMClient) this);
     }
     //endregion
 

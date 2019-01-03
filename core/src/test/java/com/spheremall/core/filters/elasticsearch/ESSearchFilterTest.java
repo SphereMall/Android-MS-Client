@@ -36,7 +36,7 @@ public class ESSearchFilterTest {
 
         String searchFilterString = searchFilter.toString();
 
-        Assert.assertNotNull(searchFilterString);
+        Assert.assertNull(searchFilterString);
     }
 
     @Test
