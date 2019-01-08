@@ -13,7 +13,7 @@ public interface ProductResource extends DetailResource<Product, ProductResource
 
     List<ProductVariantsContainer> variants(List<Integer> productIds, List<String> attributeCodes) throws IOException, SphereMallException;
 
-    Response<List<Product>> variants(List<Integer> productIds) throws IOException, SphereMallException;
+    Response<List<Product>> variants(List<Integer> productIds) throws IOException, SphereMallException, CloneNotSupportedException;
 
     Product detail(int id) throws IOException, SphereMallException;
 

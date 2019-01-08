@@ -8,7 +8,7 @@ import com.spheremall.core.jsonapi.annotations.Type;
 import java.util.List;
 
 @Type("attributes")
-public class Attribute extends Entity {
+public class Attribute extends Entity implements Cloneable {
 
     public int showInSpecList;
     public String code;
@@ -27,4 +27,9 @@ public class Attribute extends Entity {
 
     @Relationship(value = "attributeTypes", resolve = true, relType = RelType.RELATED)
     public List<AttributeType> attributeTypes;
+
+    @Override
+    public Attribute clone() throws CloneNotSupportedException {
+        return (Attribute) super.clone();
+    }
 }

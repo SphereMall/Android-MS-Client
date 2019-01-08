@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Type("products")
-public class Product extends Entity {
+public class Product extends Entity implements Cloneable {
 
     public String urlCode;
     public String shortDescription;
@@ -44,6 +44,9 @@ public class Product extends Entity {
 
     @Relationship(value = "productAttributeValues", resolve = true, relType = RelType.RELATED)
     public List<ProductAttributeValue> productAttributeValues;
+
+    @Relationship(value = "attributeValues", resolve = true, relType = RelType.RELATED)
+    public List<AttributeValue> attributeValues;
 
     @Relationship(value = "attributes", resolve = true, relType = RelType.RELATED)
     public List<Attribute> attributes;
@@ -90,5 +93,10 @@ public class Product extends Entity {
     @Override
     public int hashCode() {
         return Objects.hash(urlCode, shortDescription, fullDescription, visible, purchasePrice, price, oldPrice, title, brands, functionalNames, productAttributeValues, images, options, productsToPromotions);
+    }
+
+    @Override
+    public Product clone() throws CloneNotSupportedException {
+        return (Product) super.clone();
     }
 }

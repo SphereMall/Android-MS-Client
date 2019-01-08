@@ -14,7 +14,7 @@ import java.util.Set;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Type("base")
-public class Entity {
+public class Entity implements Cloneable{
 
     private HashMap<String, String> properties = new HashMap<>();
 

@@ -2,8 +2,8 @@ package com.spheremall.core.resources.products;
 
 import com.spheremall.core.entities.price.PriceConfiguration;
 import com.spheremall.core.entities.products.Attribute;
+import com.spheremall.core.entities.products.AttributeValue;
 import com.spheremall.core.entities.products.Product;
-import com.spheremall.core.entities.products.ProductAttributeValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,32 +13,37 @@ public class ProductAttributesBuilder {
     public Product combineProductProperties(Product product) {
 
         if (product.productPriceConfigurations == null || product.productPriceConfigurations.size() == 0) {
-            mapAttributes(product);
-            return product;
+            return mapAttributes(product);
         }
 
         List<PriceConfiguration> priceConfigurations = product.productPriceConfigurations.get(0).priceConfigurations;
         if (priceConfigurations == null || priceConfigurations.size() == 0) {
-            mapAttributes(product);
-            return product;
+            return mapAttributes(product);
         }
 
         List<String> affectAttributes = priceConfigurations.get(0).affectAttributes;
 
         if (affectAttributes == null || affectAttributes.size() == 0) {
-            mapAttributes(product);
-            return product;
+            return mapAttributes(product);
         }
 
         product.affectedAttributes = new ArrayList<>();
 
         for (Attribute attribute : product.attributes) {
 
-            setMapAttributeValues(product, attribute);
+            Attribute attr = null;
+            try {
+                attr = mapAttributeValues(product.attributeValues, attribute);
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+
+            if (attr == null)
+                continue;
 
             for (String affectedAttr : affectAttributes) {
-                if (attribute.getId().toString().equals(affectedAttr)) {
-                    product.affectedAttributes.add(attribute);
+                if (attr.getId().toString().equals(affectedAttr)) {
+                    product.affectedAttributes.add(attr);
                 }
             }
         }
@@ -46,19 +51,33 @@ public class ProductAttributesBuilder {
         return product;
     }
 
-    private void mapAttributes(Product product) {
-        for (Attribute attribute : product.attributes) {
-            setMapAttributeValues(product, attribute);
+    private Product mapAttributes(Product product) {
+
+        try {
+            Product item = product.clone();
+            item.attributes = new ArrayList<>();
+            for (Attribute attribute : product.attributes) {
+                item.attributes.add(mapAttributeValues(product.attributeValues, attribute));
+
+            }
+            return item;
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
-    private void setMapAttributeValues(Product product, Attribute attribute) {
-        attribute.attributeValues = new ArrayList<>();
+    private Attribute mapAttributeValues(List<AttributeValue> attributeValues, Attribute attribute) throws CloneNotSupportedException {
+        List<AttributeValue> attrValues = new ArrayList<>();
 
-        for (ProductAttributeValue productAttributeValue : product.productAttributeValues) {
-            if (attribute.getId() == productAttributeValue.attributeId) {
-                attribute.attributeValues.addAll(productAttributeValue.attributeValues);
+        for (AttributeValue attrValue : attributeValues) {
+            if (attribute.getId() == attrValue.attributeId) {
+                attrValues.add(attrValue.clone());
             }
         }
+
+        Attribute clonedAttribute = attribute.clone();
+        clonedAttribute.attributeValues = new ArrayList<>(attrValues);
+        return clonedAttribute;
     }
 }

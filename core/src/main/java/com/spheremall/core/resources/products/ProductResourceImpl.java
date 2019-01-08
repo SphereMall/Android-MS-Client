@@ -100,7 +100,7 @@ public class ProductResourceImpl extends BaseResource<Product, ProductResource> 
     }
 
     @Override
-    public Response<List<Product>> variants(List<Integer> productIds) throws IOException, SphereMallException {
+    public Response<List<Product>> variants(List<Integer> productIds) throws IOException, SphereMallException, CloneNotSupportedException {
         String urlAppend = "detail/variants";
         ids(productIds);
         limit(100);
@@ -111,10 +111,15 @@ public class ProductResourceImpl extends BaseResource<Product, ProductResource> 
 
         Response<List<Product>> listResponse = maker.makeAsList(responseMonada.getResponse());
 
+        List<Product> data = listResponse.data();
+
         List<Product> productsResponse = new ArrayList<>();
-        for (Product product : listResponse.data()) {
-            productsResponse.add(attributesBuilder.combineProductProperties(product));
+        for (Product product : data) {
+            Product changedProduct = attributesBuilder.combineProductProperties(product);
+            productsResponse.add(changedProduct);
         }
+
+        System.out.println(productsResponse);
 
         return new Response<>(productsResponse, listResponse.meta());
     }

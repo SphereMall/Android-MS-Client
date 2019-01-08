@@ -4,7 +4,7 @@ import com.spheremall.core.jsonapi.annotations.Type;
 import com.spheremall.core.entities.Entity;
 
 @Type("attributeValues")
-public class AttributeValue extends Entity {
+public class AttributeValue extends Entity implements Cloneable {
 
     public String value;
     public int attributeId;
@@ -14,4 +14,9 @@ public class AttributeValue extends Entity {
     public int orderNumber;
     public int amount;
     public int showInSpecList;
+
+    @Override
+    public AttributeValue clone() throws CloneNotSupportedException {
+        return (AttributeValue) super.clone();
+    }
 }

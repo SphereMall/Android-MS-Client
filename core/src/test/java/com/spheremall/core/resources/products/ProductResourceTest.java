@@ -68,18 +68,10 @@ public class ProductResourceTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testVariants() throws IOException, SphereMallException {
-        List<String> codes = new ArrayList<>();
-        codes.add("frametype");
-        codes.add("colorcom");
-        codes.add("colorbas");
-
-        List<ProductVariantsContainer> containers = client.products().variants(Arrays.asList(4108, 4509, 4597), codes);
-        Assert.assertNotNull(containers);
-
-        List<Integer> ids = new ArrayList<>();
-        ids.add(1096);
-        Response<List<Product>> variants = client.products().variants(ids);
+    public void testVariants() throws IOException, SphereMallException, CloneNotSupportedException {
+        List<Integer> list = new ArrayList<>();
+        list.add(117);
+        Response<List<Product>> variants = client.products().variants(list);
         Assert.assertNotNull(variants);
         Assert.assertNotNull(variants.data());
         Assert.assertTrue(variants.data().size() > 0);
