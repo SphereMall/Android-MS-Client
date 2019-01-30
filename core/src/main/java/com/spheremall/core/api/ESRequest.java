@@ -15,6 +15,7 @@ import com.spheremall.core.exceptions.UnauthorizedException;
 import com.spheremall.core.resources.BaseResource;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,7 +48,7 @@ public class ESRequest extends com.spheremall.core.api.Request {
 
         StringBuilder urlBuilder = getURI(uriAppend);
 
-        RequestBody requestBody = RequestBody.create(JSON, queryParams.get(BODY).getBytes("UTF-8"));
+        RequestBody requestBody = RequestBody.create(JSON, queryParams.get(BODY).getBytes(StandardCharsets.UTF_8));
 
         Request.Builder requestBuilder = new Request.Builder()
                 .url(client.getGatewayUrl() + urlBuilder.toString())

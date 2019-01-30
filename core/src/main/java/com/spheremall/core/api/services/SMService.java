@@ -5,6 +5,7 @@ import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -59,5 +60,15 @@ public interface SMService {
             @Path("version") String version,
             @Path("resource") String resource,
             @FieldMap(encoded = true) Map<String, String> params
+    );
+
+    @GET("/{version}/{resource}")
+    Call<ResponseBody> getRaw(
+            @HeaderMap Map<String, String> headers,
+            @Header("Authorization") String token,
+            @Header("User-Agent") String userAgent,
+            @Path("version") String version,
+            @Path("resource") String resource,
+            @Body String rawBody
     );
 }

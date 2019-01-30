@@ -166,6 +166,14 @@ public class Request implements BaseRequest {
                         resource.getVersion(),
                         uri,
                         queryParams);
+            case RAW_GET:
+                return service.getRaw(
+                        client.getHeaders(),
+                        headerAuth,
+                        headerUserAgent,
+                        resource.getVersion(),
+                        uri,
+                        queryParams.get("rawBody"));
             default: {
                 return null;
             }

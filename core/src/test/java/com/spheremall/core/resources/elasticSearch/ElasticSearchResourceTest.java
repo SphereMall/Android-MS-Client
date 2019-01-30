@@ -8,11 +8,11 @@ import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.elasticsearch.ESSearchFilter;
 import com.spheremall.core.filters.elasticsearch.compound.BoolFilter;
 import com.spheremall.core.filters.elasticsearch.criterions.TermsFilterCriteria;
+import com.spheremall.core.filters.elasticsearch.facets.models.ESFacets;
 import com.spheremall.core.filters.elasticsearch.terms.TermsFilter;
 import com.spheremall.core.resources.SetUpResourceTest;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -61,5 +61,11 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
 
         Assert.assertNotNull(entities);
         Assert.assertEquals(entities.data().size(), 2);
+    }
+
+    @Test
+    public void testGetFacets() throws IOException, SphereMallException {
+        ESFacets facets = client.elasticSearch().facets().data();
+        Assert.assertNotNull(facets);
     }
 }

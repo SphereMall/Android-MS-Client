@@ -1,12 +1,12 @@
 package com.spheremall.core.filters.elasticsearch;
 
 import com.spheremall.core.filters.elasticsearch.compound.BoolFilter;
+import com.spheremall.core.filters.elasticsearch.criterions.SortFilter;
 import com.spheremall.core.filters.elasticsearch.criterions.TermsFilterCriteria;
 import com.spheremall.core.filters.elasticsearch.fulltext.MatchFilter;
 import com.spheremall.core.filters.elasticsearch.terms.TermsFilter;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 public class ESSearchFilterTest {
@@ -49,6 +49,25 @@ public class ESSearchFilterTest {
 
         ESSearchFilter searchFilter = new ESSearchFilter();
         searchFilter.index("sm-products")
+                .query(boolFilter);
+
+        String searchFilterString = searchFilter.toString();
+
+        Assert.assertNotNull(searchFilterString);
+    }
+
+    @Test
+    public void testBoolQueryAndSort() {
+
+        TermsFilter termsFilter = new TermsFilter(new TermsFilterCriteria("brandId", "333"));
+        TermsFilter termsFilter2 = new TermsFilter(new TermsFilterCriteria("isMain", "1"));
+        BoolFilter boolFilter = new BoolFilter();
+        boolFilter.must(termsFilter, termsFilter2);
+
+        ESSearchFilter searchFilter = new ESSearchFilter();
+        searchFilter.index("sm-products")
+                .sort(new SortFilter("price", SortFilter.Sort.ASC))
+                .source("price")
                 .query(boolFilter);
 
         String searchFilterString = searchFilter.toString();

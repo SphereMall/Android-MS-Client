@@ -4,8 +4,7 @@ import com.spheremall.core.filters.elasticsearch.terms.PriceRangeFilter;
 import com.spheremall.core.filters.elasticsearch.terms.RangeFilter;
 import com.spheremall.core.filters.elasticsearch.terms.TextAttributesRangeFilter;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 public class RangeFilterTest {

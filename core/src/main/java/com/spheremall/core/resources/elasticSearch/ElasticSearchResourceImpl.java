@@ -2,6 +2,7 @@ package com.spheremall.core.resources.elasticSearch;
 
 import com.spheremall.core.SMClient;
 import com.spheremall.core.api.ESRequest;
+import com.spheremall.core.api.Request;
 import com.spheremall.core.api.configuration.Method;
 import com.spheremall.core.api.response.ElasticSearchResponse;
 import com.spheremall.core.api.response.ResponseMonada;
@@ -17,6 +18,7 @@ import com.spheremall.core.filters.elasticsearch.common.ESFilterCriteria;
 import com.spheremall.core.filters.elasticsearch.compound.BoolFilter;
 import com.spheremall.core.filters.elasticsearch.criterions.AttributeFilterCriteria;
 import com.spheremall.core.filters.elasticsearch.criterions.TermsFilterCriteria;
+import com.spheremall.core.filters.elasticsearch.facets.models.ESFacets;
 import com.spheremall.core.filters.elasticsearch.fulltext.MultiMatchFilter;
 import com.spheremall.core.filters.elasticsearch.terms.TermsFilter;
 import com.spheremall.core.makers.ESResponseMaker;
@@ -62,7 +64,29 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
     }
 
     @Override
-    public Response<Facets> facets() {
+    public Response<ESFacets> facets() throws IOException, SphereMallException {
+        String body = "" +
+                "{\n" +
+                "    \"attributes\": [\n" +
+                "        \"reward\"\n" +
+                "    ],\n" +
+                "    \"priceRange\": true,\n" +
+                "    \"brands\": true,\n" +
+                "    \"functionalNames\": true,\n" +
+                "    \"factorValues\": [\n" +
+                "        \"3\"\n" +
+                "    ]\n" +
+                "}";
+//        HashMap<String, String> params = new HashMap<>();
+//        params.put("body", body);
+//        Request smRequest = new Request(smClient, this);
+//        ResponseMonada monada = smRequest.handle(Method.RAW_GET, "filter", params);
+//        if (monada.hasError()) {
+//            System.out.println("errors");
+//        } else {
+//            System.out.println("success");
+//        }
+
         throw new RuntimeException("Method is not implemented yet");
     }
 
@@ -70,6 +94,7 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
     public Response<List<Entity>> search(String query, List<String> indexes) throws SphereMallException, IOException {
         ESSearchFilter filter = new ESSearchFilter();
         String indexesArray[] = new String[indexes.size()];
+
         for (int i = 0; i < indexes.size(); i++) {
             indexesArray[i] = indexes.get(i);
         }

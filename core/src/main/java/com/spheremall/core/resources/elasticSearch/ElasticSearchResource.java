@@ -5,6 +5,7 @@ import com.spheremall.core.entities.Facets;
 import com.spheremall.core.entities.Response;
 import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.elasticsearch.ESSearchFilter;
+import com.spheremall.core.filters.elasticsearch.facets.models.ESFacets;
 import com.spheremall.core.resources.Resource;
 
 import java.io.IOException;
@@ -20,5 +21,5 @@ public interface ElasticSearchResource extends Resource<ElasticSearchResource, E
 
     Response<List<Entity>> search(String query, ESSearchFilter filter) throws SphereMallException, IOException;
 
-    Response<Facets> facets() throws SphereMallException, IOException;
+    Response<ESFacets> facets() throws SphereMallException, IOException;
 }
