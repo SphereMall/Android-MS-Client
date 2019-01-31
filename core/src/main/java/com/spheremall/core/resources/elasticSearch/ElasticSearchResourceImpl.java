@@ -15,18 +15,22 @@ import com.spheremall.core.filters.Filter;
 import com.spheremall.core.filters.Predicate;
 import com.spheremall.core.filters.elasticsearch.ESSearchFilter;
 import com.spheremall.core.filters.elasticsearch.common.ESFilterCriteria;
+import com.spheremall.core.filters.elasticsearch.common.ElasticSearchFilter;
 import com.spheremall.core.filters.elasticsearch.compound.BoolFilter;
 import com.spheremall.core.filters.elasticsearch.criterions.AttributeFilterCriteria;
 import com.spheremall.core.filters.elasticsearch.criterions.TermsFilterCriteria;
 import com.spheremall.core.filters.elasticsearch.facets.models.ESFacets;
 import com.spheremall.core.filters.elasticsearch.fulltext.MultiMatchFilter;
 import com.spheremall.core.filters.elasticsearch.terms.TermsFilter;
+import com.spheremall.core.makers.ESFacetsMaker;
 import com.spheremall.core.makers.ESResponseMaker;
 import com.spheremall.core.makers.ObjectMaker;
 import com.spheremall.core.mappers.ESEntityMapper;
 import com.spheremall.core.resources.BaseResource;
 import com.spheremall.core.specifications.base.FilterSpecification;
+import com.spheremall.core.utils.TextUtils;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -64,30 +68,34 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
     }
 
     @Override
-    public Response<ESFacets> facets() throws IOException, SphereMallException {
-        String body = "" +
-                "{\n" +
-                "    \"attributes\": [\n" +
-                "        \"reward\"\n" +
-                "    ],\n" +
-                "    \"priceRange\": true,\n" +
-                "    \"brands\": true,\n" +
-                "    \"functionalNames\": true,\n" +
-                "    \"factorValues\": [\n" +
-                "        \"3\"\n" +
-                "    ]\n" +
-                "}";
-//        HashMap<String, String> params = new HashMap<>();
-//        params.put("body", body);
-//        Request smRequest = new Request(smClient, this);
-//        ResponseMonada monada = smRequest.handle(Method.RAW_GET, "filter", params);
-//        if (monada.hasError()) {
-//            System.out.println("errors");
-//        } else {
-//            System.out.println("success");
-//        }
+    public Response<ESFacets> facets(ESFacets choosedFacets, ESFacets userFacets, String groupBy, List<String> entities) throws IOException, SphereMallException {
+        Request request = new Request(smClient, this);
+        String uriAppend = "filter";
 
-        throw new RuntimeException("Method is not implemented yet");
+        HashMap<String, String> params = new HashMap<>();
+        JSONArray filterParams = userFacets.buildParams();
+
+        if (filterParams.length() > 0) {
+            params.put("config", filterParams.toString());
+        }
+
+        if (!groupBy.isEmpty()) {
+            params.put("groupBy", groupBy);
+        }
+
+        if (!entities.isEmpty()) {
+            String joinedEntities = TextUtils.join(",", entities);
+            params.put("entities", joinedEntities);
+        }
+
+        ResponseMonada responseMonada = request.handle(Method.GET, uriAppend, params);
+
+        if (responseMonada.hasError()) {
+            throw new SphereMallException(responseMonada.getErrorResponse());
+        }
+
+        ESFacetsMaker maker = new ESFacetsMaker();
+        return maker.makeSingle(responseMonada.getResponse());
     }
 
     @Override
@@ -114,7 +122,7 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
 
         filter.query(boolSearchFilter);
 
-        filters(filter);
+        filters(filter.asFilter());
 
         HashMap<String, String> params = getQueryParams();
         ResponseMonada responseMonada = request.handle(Method.GET, params.get("index") + "/_search", getQueryParams());
@@ -139,7 +147,7 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
 
     @Override
     public Response<List<Entity>> search(String query, ESSearchFilter filter) throws SphereMallException, IOException {
-        filters(filter);
+        filters(filter.asFilter());
 
         HashMap<String, String> params = getQueryParams();
         ResponseMonada responseMonada = request.handle(Method.GET, params.get("index") + "/_search", getQueryParams());
@@ -175,7 +183,7 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
         try {
             JSONObject paramsJson = new JSONObject(params.get("where"));
             paramsJson.put("size", params.get("limit"));
-            paramsJson.put("from", params.get("offset"));
+            paramsJson.put("min", params.get("offset"));
 
             if (params.containsKey("size")) {
                 paramsJson.put("size", params.get("size"));

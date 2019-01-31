@@ -67,4 +67,9 @@ public class ESSearchFilter extends Filter implements ElasticSearchFilter {
         }
         return queryJson;
     }
+
+    @Override
+    public Filter asFilter() {
+        return this;
+    }
 }

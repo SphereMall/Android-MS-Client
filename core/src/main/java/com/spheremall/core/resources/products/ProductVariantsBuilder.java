@@ -78,7 +78,7 @@ public class ProductVariantsBuilder {
                 .query(boolFilter);
 
         return client.elasticSearch()
-                .filters(filter)
+                .filters(filter.asFilter())
                 .limit(100)
                 .fetch().data();
     }

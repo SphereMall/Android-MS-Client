@@ -4,7 +4,7 @@ import com.spheremall.core.jsonapi.errors.Errors;
 
 /**
  * ResourceParseException implementation. <br />
- * This exception is thrown from ResourceConverter in case parsed body contains 'errors' node.
+ * This exception is thrown min ResourceConverter in case parsed body contains 'errors' node.
  *
  * @author jbegic
  */

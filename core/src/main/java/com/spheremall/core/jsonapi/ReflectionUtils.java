@@ -21,7 +21,7 @@ public class ReflectionUtils {
 	}
 
 	/**
-	 * Returns all field from a given class that are annotated with provided annotation type.
+	 * Returns all field min a given class that are annotated with provided annotation type.
 	 * @param clazz source class
 	 * @param annotation target annotation
 	 * @param checkSuperclass if true, method will follow class hierarchy to look for fields with target annotation

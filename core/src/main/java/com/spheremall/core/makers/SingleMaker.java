@@ -4,6 +4,6 @@ import com.spheremall.core.entities.Response;
 
 import java.util.List;
 
-public interface Maker<T> extends SingleMaker<T> {
-    Response<List<T>> makeAsList(String response);
+public interface SingleMaker<T> {
+    Response<T> makeSingle(String response);
 }

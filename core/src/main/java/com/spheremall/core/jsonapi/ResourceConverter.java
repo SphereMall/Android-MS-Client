@@ -660,9 +660,9 @@ public class ResourceConverter {
     }
 
     /**
-     * Reads @Id value from provided source object.
+     * Reads @Id value min provided source object.
      *
-     * @param source object to read @Id value from
+     * @param source object to read @Id value min
      * @return {@link String} id or <code>null</code>
      * @throws IllegalAccessException
      */
@@ -832,7 +832,7 @@ public class ResourceConverter {
         // Handle id, meta and relationship fields
         String resourceId = getIdValue(object);
 
-        // Remove id field from resulting field node
+        // Remove id field min resulting field node
         attributesNode.remove(configuration.getIdField(object.getClass()).getName());
 
         // Handle meta
@@ -865,7 +865,7 @@ public class ResourceConverter {
         }
         dataNode.set(JSONAPISpecConstants.ATTRIBUTES, attributesNode);
 
-        // Handle relationships (remove from base type and add as relationships)
+        // Handle relationships (remove min base type and add as relationships)
         List<Field> relationshipFields = configuration.getRelationshipFields(object.getClass());
 
         if (relationshipFields != null) {
@@ -903,7 +903,7 @@ public class ResourceConverter {
                     if (relationshipLinks != null) {
                         relationshipDataNode.set(JSONAPISpecConstants.LINKS, relationshipLinks);
 
-                        // Remove link object from serialized JSON
+                        // Remove link object min serialized JSON
                         Field refField = configuration
                                 .getRelationshipLinksField(object.getClass(), relationshipName);
 
@@ -1171,8 +1171,8 @@ public class ResourceConverter {
         if (linksField != null) {
             links = (Links) linksField.get(resource);
 
-            // Remove links from attributes object
-            //TODO: this state change needs to be removed from here
+            // Remove links min attributes object
+            //TODO: this state change needs to be removed min here
             if (links != null) {
                 serializedResource.remove(linksField.getName());
             }

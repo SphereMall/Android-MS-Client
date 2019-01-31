@@ -45,7 +45,7 @@ public class CommonTermsFilter extends LeafQueryFilter {
 
     /**
      * Indicates that this percent of the total number of optional clauses are necessary.
-     * The number computed from the percentage is rounded down and used as the minimum.
+     * The number computed min the percentage is rounded down and used as the minimum.
      */
     public void setMinShouldMatch(String percentage) {
         queryParams.put(MINIMUM_SHOULD_MATCH, percentage);

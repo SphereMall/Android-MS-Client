@@ -16,6 +16,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ElasticSearchResourceTest extends SetUpResourceTest {
@@ -33,7 +34,7 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
                 .query(boolFilter);
 
         Response<List<Entity>> entities = client.elasticSearch()
-                .filters(filter)
+                .filters(filter.asFilter())
                 .fetch();
 
         Assert.assertNotNull(entities);
@@ -65,7 +66,9 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
 
     @Test
     public void testGetFacets() throws IOException, SphereMallException {
-        ESFacets facets = client.elasticSearch().facets().data();
-        Assert.assertNotNull(facets);
+
+        List<String> entities = new ArrayList<>();
+        entities.add("sm-products");
+//        Response<ESFacets> facets = client.elasticSearch().facets(new ESFacets(), "", entities);
     }
 }

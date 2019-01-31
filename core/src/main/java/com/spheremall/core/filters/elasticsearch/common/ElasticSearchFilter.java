@@ -1,8 +1,9 @@
 package com.spheremall.core.filters.elasticsearch.common;
 
 import com.spheremall.core.filters.elasticsearch.criterions.SortFilter;
+import com.spheremall.core.specifications.base.FilterSpecification;
 
-public interface ElasticSearchFilter {
+public interface ElasticSearchFilter extends FilterSpecification {
 
     ElasticSearchFilter index(String... indexes);
 
