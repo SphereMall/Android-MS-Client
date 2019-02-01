@@ -113,7 +113,7 @@ public class ESFacetsTest {
         ESPriceRangeModel model = new ESPriceRangeModel();
         model.minPrice = 0;
         model.maxPrice = 100;
-        facets.priceRange = model;
+        facets.priceRangeModel = model;
     }
 
     private void prepareBrands() {

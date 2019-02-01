@@ -16,6 +16,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
+import retrofit2.http.Url;
 
 public interface SMService {
 
@@ -62,13 +63,12 @@ public interface SMService {
             @FieldMap(encoded = true) Map<String, String> params
     );
 
-    @GET("/{version}/{resource}")
-    Call<ResponseBody> getRaw(
+    @GET
+    Call<ResponseBody> get(
+            @Url String url,
             @HeaderMap Map<String, String> headers,
             @Header("Authorization") String token,
             @Header("User-Agent") String userAgent,
-            @Path("version") String version,
-            @Path("resource") String resource,
-            @Body String rawBody
+            @QueryMap Map<String, String> options
     );
 }

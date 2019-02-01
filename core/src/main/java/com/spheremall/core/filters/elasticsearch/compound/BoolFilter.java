@@ -27,19 +27,35 @@ public class BoolFilter extends CompoundQueryFilter {
     }
 
     public void must(ElasticSearchQuery... elements) {
-        this.elements.put(MUST, new ArrayList<>(Arrays.asList(elements)));
+        if (this.elements.containsKey(MUST)) {
+            this.elements.get(MUST).addAll(Arrays.asList(elements));
+        } else {
+            this.elements.put(MUST, new ArrayList<>(Arrays.asList(elements)));
+        }
     }
 
     public void should(ElasticSearchQuery... elements) {
-        this.elements.put(SHOULD, new ArrayList<>(Arrays.asList(elements)));
+        if (this.elements.containsKey(SHOULD)) {
+            this.elements.get(SHOULD).addAll(Arrays.asList(elements));
+        } else {
+            this.elements.put(SHOULD, new ArrayList<>(Arrays.asList(elements)));
+        }
     }
 
     public void mustNot(ElasticSearchQuery... elements) {
-        this.elements.put(MUST_NOT, new ArrayList<>(Arrays.asList(elements)));
+        if (this.elements.containsKey(MUST_NOT)) {
+            this.elements.get(MUST_NOT).addAll(Arrays.asList(elements));
+        } else {
+            this.elements.put(MUST_NOT, new ArrayList<>(Arrays.asList(elements)));
+        }
     }
 
     public void filter(ElasticSearchQuery... elements) {
-        this.elements.put(FILTER, new ArrayList<>(Arrays.asList(elements)));
+        if (this.elements.containsKey(FILTER)) {
+            this.elements.get(FILTER).addAll(Arrays.asList(elements));
+        } else {
+            this.elements.put(FILTER, new ArrayList<>(Arrays.asList(elements)));
+        }
     }
 
     @Override

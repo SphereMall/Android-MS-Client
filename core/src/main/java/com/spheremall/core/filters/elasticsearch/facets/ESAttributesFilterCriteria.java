@@ -1,7 +1,8 @@
 package com.spheremall.core.filters.elasticsearch.facets;
 
-import com.spheremall.core.exceptions.SphereMallException;
-import com.spheremall.core.filters.elasticsearch.facets.models.ESAttributeModel;
+import com.spheremall.core.filters.elasticsearch.common.ElasticSearchQuery;
+import com.spheremall.core.filters.elasticsearch.criterions.TermsFilterCriteria;
+import com.spheremall.core.filters.elasticsearch.terms.TermsFilter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,19 +11,20 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 public class ESAttributesFilterCriteria implements ESCatalogFilterCriteria {
 
-    private final HashMap<String, ArrayList<String>> attributes = new HashMap<>();
+    public final HashMap<String, List<String>> attributes = new HashMap<>();
 
-    public final String code;
-    public final List<String> values = new ArrayList<>();
+    protected final String code;
+    protected final List<String> values = new ArrayList<>();
 
     public ESAttributesFilterCriteria(String code, String... value) {
         this.code = code;
         this.values.addAll(Arrays.asList(value));
+        this.attributes.put(code, this.values);
     }
 
     @Override
@@ -31,33 +33,38 @@ public class ESAttributesFilterCriteria implements ESCatalogFilterCriteria {
     }
 
     @Override
-    public String toJson() throws SphereMallException {
-//        try {
-//            JSONObject object = new JSONObject();
-//            HashSet<String> processedAttrCodes = new HashSet<>();
-//
-//            for (ESAttributeModel attribute : code) {
-//                if (processedAttrCodes.contains(attribute.code)) continue;
-//
-//                processedAttrCodes.add(attribute.code);
-//
-//                JSONArray attrsArray = new JSONArray();
-//                for (ESAttributeModel nestedAttr : attributes) {
-//                    if (attribute.code.equals(nestedAttr.code)) {
-//                        attrsArray.put(nestedAttr.value);
-//                    }
-//                }
-//                JSONObject value = new JSONObject();
-//                value.put("value", attrsArray);
-//                object.put(attribute.code, value);
-//            }
-//            return object;
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//            throw new SphereMallException(e);
+    public ESCatalogFilterCriteria update(ESCatalogFilterCriteria newCriteria) {
+        if (newCriteria instanceof ESAttributesFilterCriteria) {
+            ESAttributesFilterCriteria attrCriteria = (ESAttributesFilterCriteria) newCriteria;
+            attributes.put(attrCriteria.code, attrCriteria.values);
+        }
+        return this;
+    }
 
-        //{attributes:{"reward":{"value":["0","1"]}}}
-//        }
-        return "{\"reward\":{\"value\":[\"0\",\"1\"]}}";
+    @Override
+    public JSONObject toJson() throws JSONException {
+        JSONObject codesJson = new JSONObject();
+        for (Map.Entry<String, List<String>> entry : attributes.entrySet()) {
+            JSONArray attrValues = new JSONArray();
+            for (String value : entry.getValue()) {
+                attrValues.put(value);
+            }
+            codesJson.put(entry.getKey(), attrValues);
+        }
+
+        JSONObject attributesJson = new JSONObject();
+        attributesJson.put(name(), codesJson);
+        return attributesJson;
+    }
+
+    @Override
+    public List<ElasticSearchQuery> toQuery() {
+        List<ElasticSearchQuery> queries = new ArrayList<>();
+        for (Map.Entry<String, List<String>> entry : attributes.entrySet()) {
+            TermsFilterCriteria criteria = new TermsFilterCriteria(entry.getKey() + "_attr.attributeValue", entry.getValue());
+            TermsFilter termsFilter = new TermsFilter(criteria);
+            queries.add(termsFilter);
+        }
+        return queries;
     }
 }

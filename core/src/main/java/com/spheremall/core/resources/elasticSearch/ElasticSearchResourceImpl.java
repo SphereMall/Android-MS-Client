@@ -19,6 +19,7 @@ import com.spheremall.core.filters.elasticsearch.common.ElasticSearchFilter;
 import com.spheremall.core.filters.elasticsearch.compound.BoolFilter;
 import com.spheremall.core.filters.elasticsearch.criterions.AttributeFilterCriteria;
 import com.spheremall.core.filters.elasticsearch.criterions.TermsFilterCriteria;
+import com.spheremall.core.filters.elasticsearch.facets.ESCatalogFilter;
 import com.spheremall.core.filters.elasticsearch.facets.models.ESFacets;
 import com.spheremall.core.filters.elasticsearch.fulltext.MultiMatchFilter;
 import com.spheremall.core.filters.elasticsearch.terms.TermsFilter;
@@ -68,16 +69,13 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
     }
 
     @Override
-    public Response<ESFacets> facets(ESFacets choosedFacets, ESFacets userFacets, String groupBy, List<String> entities) throws IOException, SphereMallException {
-        Request request = new Request(smClient, this);
-        String uriAppend = "filter";
+    public Response<ESFacets> facets(ESCatalogFilter filter, String groupBy, List<String> entities) throws IOException, SphereMallException, JSONException {
+        Request smRequest = new Request(smClient, this);
+        String uriAppend = smClient.getVersion() + "/" + getURI() + "/filter";
 
         HashMap<String, String> params = new HashMap<>();
-        JSONArray filterParams = userFacets.buildParams();
 
-        if (filterParams.length() > 0) {
-            params.put("config", filterParams.toString());
-        }
+        params.put("config", filter.toConfig().toString());
 
         if (!groupBy.isEmpty()) {
             params.put("groupBy", groupBy);
@@ -88,7 +86,7 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
             params.put("entities", joinedEntities);
         }
 
-        ResponseMonada responseMonada = request.handle(Method.GET, uriAppend, params);
+        ResponseMonada responseMonada = smRequest.handle(Method.RAW_GET, uriAppend, params);
 
         if (responseMonada.hasError()) {
             throw new SphereMallException(responseMonada.getErrorResponse());
@@ -183,7 +181,7 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
         try {
             JSONObject paramsJson = new JSONObject(params.get("where"));
             paramsJson.put("size", params.get("limit"));
-            paramsJson.put("min", params.get("offset"));
+            paramsJson.put("from", params.get("offset"));
 
             if (params.containsKey("size")) {
                 paramsJson.put("size", params.get("size"));
@@ -215,7 +213,8 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
 
     @Override
     public ElasticSearchResource filters(FilterSpecification filter) {
-        throw new MethodNotFoundException("Method filters(FilterSpecification filter) can not be use with Elasticsearch");
+        super.filters(filter);
+        return this;
     }
 
     @Override

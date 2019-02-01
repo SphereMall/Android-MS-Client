@@ -13,7 +13,8 @@ public class ESFacets {
     public List<ESBrandModel> brands = new ArrayList<>();
     public List<ESFunctionalNameModel> functionalNames = new ArrayList<>();
     public List<ESFactorValueModel> factorValues = new ArrayList<>();
-    public ESPriceRangeModel priceRange;
+    public List<Integer> priceRange;
+    public ESPriceRangeModel priceRangeModel;
 
     public JSONArray buildParams() {
 
@@ -74,8 +75,8 @@ public class ESFacets {
 
         JSONObject object = new JSONObject();
         JSONArray range = new JSONArray();
-        object.put("min", priceRange.minPrice);
-        object.put("max", priceRange.maxPrice);
+        object.put("min", priceRangeModel.minPrice);
+        object.put("max", priceRangeModel.maxPrice);
         return range.put(object);
     }
 
