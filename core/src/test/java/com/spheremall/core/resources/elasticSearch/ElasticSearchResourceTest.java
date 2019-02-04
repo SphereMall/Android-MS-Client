@@ -13,6 +13,7 @@ import com.spheremall.core.filters.elasticsearch.criterions.TermsFilterCriteria;
 import com.spheremall.core.filters.elasticsearch.facets.ESAttributesFilterCriteria;
 import com.spheremall.core.filters.elasticsearch.facets.ESCatalogFilter;
 import com.spheremall.core.filters.elasticsearch.facets.ESCatalogFilterImpl;
+import com.spheremall.core.filters.elasticsearch.facets.ESPriceRangeFilterCriteria;
 import com.spheremall.core.filters.elasticsearch.facets.configs.ESAttributesConfig;
 import com.spheremall.core.filters.elasticsearch.facets.configs.ESBrandsConfig;
 import com.spheremall.core.filters.elasticsearch.facets.configs.ESFactorValuesConfig;
@@ -107,6 +108,44 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
         ));
 
         filter.add(new ESAttributesFilterCriteria("reward", "0"));
+
+        TermsFilterCriteria isMain = new TermsFilterCriteria("isMain", "1");
+        TermsFilter isMainFilter = new TermsFilter(isMain);
+
+        TermsFilterCriteria channel = new TermsFilterCriteria("channelIds", "5");
+        TermsFilter channelFilter = new TermsFilter(channel);
+
+        BoolFilter boolFilter = filter.toBoolFilter();
+        boolFilter.must(isMainFilter, channelFilter);
+
+        ElasticSearchFilter elasticSearchFilter = new ESSearchFilter();
+        elasticSearchFilter.index("sm-products");
+        elasticSearchFilter.source("scope");
+        elasticSearchFilter.query(boolFilter);
+        elasticSearchFilter.sort(new SortFilter("3_factorValues.value", SortFilter.Sort.DESC));
+
+
+        Response<List<Entity>> entities = client.elasticSearch()
+                .filters(elasticSearchFilter)
+                .limit(50)
+                .fetch();
+
+        Assert.assertNotNull(entities);
+    }
+
+    @Test
+    public void testGetEurosparenProductsData() throws IOException, SphereMallException {
+
+        ESCatalogFilter filter = new ESCatalogFilterImpl(Arrays.asList(
+                new ESPriceRangeConfig(),
+                new ESBrandsConfig(),
+                new ESAttributesConfig(Collections.singletonList("reward")),
+                new ESFunctionalNamesConfig(),
+                new ESFactorValuesConfig(Arrays.asList(1, 3))
+        ));
+
+        filter.add(new ESAttributesFilterCriteria("reward", "1"));
+        filter.add(new ESPriceRangeFilterCriteria(34500, 42000));
 
         TermsFilterCriteria isMain = new TermsFilterCriteria("isMain", "1");
         TermsFilter isMainFilter = new TermsFilter(isMain);
