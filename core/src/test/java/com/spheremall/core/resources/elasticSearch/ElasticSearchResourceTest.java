@@ -162,12 +162,27 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
         elasticSearchFilter.query(boolFilter);
         elasticSearchFilter.sort(new SortFilter("3_factorValues.value", SortFilter.Sort.DESC));
 
-
         Response<List<Entity>> entities = client.elasticSearch()
                 .filters(elasticSearchFilter)
                 .limit(50)
                 .fetch();
 
         Assert.assertNotNull(entities);
+    }
+
+    @Test
+    public void testGetFacetsWithParams() throws JSONException, IOException, SphereMallException {
+        ESCatalogFilter filter = new ESCatalogFilterImpl(Arrays.asList(
+                new ESPriceRangeConfig(),
+                new ESBrandsConfig(),
+                new ESAttributesConfig(Collections.singletonList("reward"))
+        ));
+
+        filter.add(new ESAttributesFilterCriteria("reward", "1"));
+        filter.add(new ESPriceRangeFilterCriteria(10000, 45000));
+        List<String> entities = new ArrayList<>();
+        entities.add("sm-products");
+        ESFacets facets = client.elasticSearch().facets(filter, "variantsCompound", entities).data();
+        Assert.assertNotNull(facets);
     }
 }

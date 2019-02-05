@@ -49,7 +49,9 @@ public class ESAttributesFilterCriteria implements ESCatalogFilterCriteria {
             for (String value : entry.getValue()) {
                 attrValues.put(value);
             }
-            codesJson.put(entry.getKey(), attrValues);
+            JSONObject valueObject = new JSONObject();
+            valueObject.put("value", attrValues);
+            codesJson.put(entry.getKey(), valueObject);
         }
 
         JSONObject attributesJson = new JSONObject();

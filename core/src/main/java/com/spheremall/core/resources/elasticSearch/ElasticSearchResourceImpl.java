@@ -75,15 +75,23 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
 
         HashMap<String, String> params = new HashMap<>();
 
-        params.put("config", filter.toConfig().toString());
+        JSONObject config = filter.toConfig();
+        if (config != null) {
+            params.put("config", filter.toConfig().toString());
+        }
 
-        if (!groupBy.isEmpty()) {
+        if (groupBy != null && !groupBy.isEmpty()) {
             params.put("groupBy", groupBy);
         }
 
-        if (!entities.isEmpty()) {
+        if (entities != null && !entities.isEmpty()) {
             String joinedEntities = TextUtils.join(",", entities);
             params.put("entities", joinedEntities);
+        }
+
+        JSONArray filterParams = filter.toParams();
+        if (filterParams != null && filterParams.length() > 0) {
+            params.put("params", filterParams.toString());
         }
 
         ResponseMonada responseMonada = smRequest.handle(Method.RAW_GET, uriAppend, params);
