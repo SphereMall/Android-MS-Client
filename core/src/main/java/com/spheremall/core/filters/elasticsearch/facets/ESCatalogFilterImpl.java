@@ -73,10 +73,15 @@ public class ESCatalogFilterImpl implements ESCatalogFilter {
     @Override
     public BoolFilter toBoolFilter() {
         BoolFilter boolFilter = new BoolFilter();
+        boolean isQueryAdded = false;
+
         for (Map.Entry<String, ESCatalogFilterCriteria> entry : queryParams.entrySet()) {
             ElasticSearchQuery[] items = new ElasticSearchQuery[entry.getValue().toQuery().size()];
             boolFilter.must(entry.getValue().toQuery().toArray(items));
+            isQueryAdded = true;
         }
+        if (!isQueryAdded) return null;
+
         return boolFilter;
     }
 }

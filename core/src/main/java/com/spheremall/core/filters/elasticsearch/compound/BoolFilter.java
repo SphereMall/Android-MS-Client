@@ -19,7 +19,7 @@ public class BoolFilter extends CompoundQueryFilter {
     private static final String MUST_NOT = "must_not";
     private static final String FILTER = "filter";
 
-    private LinkedHashMap<String, ArrayList<ElasticSearchQuery>> elements;
+    public final LinkedHashMap<String, ArrayList<ElasticSearchQuery>> elements;
 
     public BoolFilter() {
         this.name = "bool";

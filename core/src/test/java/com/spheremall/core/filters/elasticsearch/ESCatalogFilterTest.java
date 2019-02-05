@@ -59,4 +59,20 @@ public class ESCatalogFilterTest {
         catalogFilter.add(criteria6);
         Assert.assertNotNull(catalogFilter);
     }
+
+    @Test
+    public void testCreateBody() {
+        ESCatalogFilterImpl catalogFilter = new ESCatalogFilterImpl(Arrays.asList(
+                new ESPriceRangeConfig(),
+                new ESFactorValuesConfig(Arrays.asList(1, 2, 3)),
+                new ESBrandsConfig(),
+                new ESAttributesConfig(Arrays.asList("reward", "minpricepoints")),
+                new ESFunctionalNamesConfig()
+        ));
+
+        Assert.assertNull(catalogFilter.toBoolFilter());
+
+        catalogFilter.add(new ESPriceRangeFilterCriteria(1, 2));
+        Assert.assertNotNull(catalogFilter.toBoolFilter());
+    }
 }
