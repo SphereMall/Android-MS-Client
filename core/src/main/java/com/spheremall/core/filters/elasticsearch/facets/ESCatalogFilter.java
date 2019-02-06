@@ -20,4 +20,6 @@ public interface ESCatalogFilter {
     JSONObject toConfig() throws SphereMallException, JSONException;
 
     BoolFilter toBoolFilter();
+
+    String hash();
 }

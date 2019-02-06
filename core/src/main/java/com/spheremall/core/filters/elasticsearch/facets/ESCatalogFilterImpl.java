@@ -62,7 +62,7 @@ public class ESCatalogFilterImpl implements ESCatalogFilter {
     }
 
     @Override
-    public JSONObject toConfig() throws SphereMallException, JSONException {
+    public JSONObject toConfig() throws JSONException {
         JSONObject configObject = new JSONObject();
         for (ESCatalogConfig config : configParams) {
             configObject.put(config.name(), config.toConfig());
@@ -83,5 +83,15 @@ public class ESCatalogFilterImpl implements ESCatalogFilter {
         if (!isQueryAdded) return null;
 
         return boolFilter;
+    }
+
+    @Override
+    public String hash() {
+        BoolFilter boolFilter = toBoolFilter();
+        if (boolFilter == null) return null;
+
+        return String.valueOf(
+                boolFilter.toJson()
+                        .toString().hashCode());
     }
 }
