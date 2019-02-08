@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadProducts(): Observable<List<Product>> {
         return Observable.fromCallable {
-            return@fromCallable sphereMallClient.products().full().data()
+            return@fromCallable sphereMallClient.products().detail().data()
         }
     }
 

@@ -19,4 +19,7 @@ public class MediaEntity extends Entity {
 
     @Relationship(value = "mediaDisplayTypes", resolve = true, relType = RelType.RELATED)
     public List<MediaDisplayType> mediaDisplayTypes;
+
+    @Relationship(value = "media", resolve = true, relType = RelType.RELATED)
+    public List<Media> media;
 }

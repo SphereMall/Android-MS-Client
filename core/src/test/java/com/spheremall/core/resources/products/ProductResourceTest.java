@@ -76,4 +76,10 @@ public class ProductResourceTest extends SetUpResourceTest {
         Assert.assertNotNull(variants.data());
         Assert.assertTrue(variants.data().size() > 0);
     }
+
+    @Test
+    public void testGetProductDetailImage() throws IOException, SphereMallException {
+        Product product = client.products().detail(111);
+        Assert.assertNotNull(product.mediaEntities);
+    }
 }
