@@ -58,6 +58,8 @@ public class ESCatalogFilterTest {
         catalogFilter.add(criteria5);
         catalogFilter.add(criteria6);
         Assert.assertNotNull(catalogFilter);
+
+        Assert.assertEquals(6, catalogFilter.count());
     }
 
     @Test

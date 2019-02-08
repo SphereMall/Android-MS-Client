@@ -58,4 +58,9 @@ public class ESFunctionalNamesFilterCriteria implements ESCatalogFilterCriteria 
         queries.add(termsFilter);
         return queries;
     }
+
+    @Override
+    public int count() {
+        return 1;
+    }
 }

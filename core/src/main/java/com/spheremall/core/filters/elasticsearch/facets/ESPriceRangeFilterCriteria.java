@@ -54,4 +54,9 @@ public class ESPriceRangeFilterCriteria implements ESCatalogFilterCriteria {
         priceRangeFilter.setRange((double) min, (double) max);
         return Collections.singletonList(priceRangeFilter);
     }
+
+    @Override
+    public int count() {
+        return 1;
+    }
 }

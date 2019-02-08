@@ -94,4 +94,18 @@ public class ESCatalogFilterImpl implements ESCatalogFilter {
                 boolFilter.toJson()
                         .toString().hashCode());
     }
+
+    @Override
+    public int count() {
+        int amount = 0;
+        for (Map.Entry<String, ESCatalogFilterCriteria> entry : queryParams.entrySet()) {
+            amount += entry.getValue().count();
+        }
+        return amount;
+    }
+
+    @Override
+    public Map<String, ESCatalogFilterCriteria> listOfCriteria() {
+        return queryParams;
+    }
 }

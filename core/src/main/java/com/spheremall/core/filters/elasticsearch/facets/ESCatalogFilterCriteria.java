@@ -16,4 +16,6 @@ public interface ESCatalogFilterCriteria {
     JSONObject toJson() throws SphereMallException, JSONException;
 
     List<ElasticSearchQuery> toQuery();
+
+    int count();
 }

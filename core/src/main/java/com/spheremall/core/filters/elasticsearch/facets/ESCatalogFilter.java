@@ -9,6 +9,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Map;
+
 public interface ESCatalogFilter {
 
     ESCatalogFilter add(ESCatalogFilterCriteria criteria);
@@ -22,4 +24,8 @@ public interface ESCatalogFilter {
     BoolFilter toBoolFilter();
 
     String hash();
+
+    int count();
+
+    Map<String, ESCatalogFilterCriteria> listOfCriteria();
 }

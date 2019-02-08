@@ -69,4 +69,9 @@ public class ESAttributesFilterCriteria implements ESCatalogFilterCriteria {
         }
         return queries;
     }
+
+    @Override
+    public int count() {
+        return attributes.size();
+    }
 }
