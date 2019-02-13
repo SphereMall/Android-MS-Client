@@ -13,7 +13,6 @@ import com.spheremall.core.filters.elasticsearch.criterions.TermsFilterCriteria;
 import com.spheremall.core.filters.elasticsearch.facets.ESAttributesFilterCriteria;
 import com.spheremall.core.filters.elasticsearch.facets.ESCatalogFilter;
 import com.spheremall.core.filters.elasticsearch.facets.ESCatalogFilterImpl;
-import com.spheremall.core.filters.elasticsearch.facets.ESPriceRangeFilterCriteria;
 import com.spheremall.core.filters.elasticsearch.facets.configs.ESAttributesConfig;
 import com.spheremall.core.filters.elasticsearch.facets.configs.ESBrandsConfig;
 import com.spheremall.core.filters.elasticsearch.facets.configs.ESFactorValuesConfig;
@@ -23,7 +22,6 @@ import com.spheremall.core.filters.elasticsearch.facets.models.ESFacets;
 import com.spheremall.core.filters.elasticsearch.terms.TermsFilter;
 import com.spheremall.core.resources.SetUpResourceTest;
 
-import org.bouncycastle.jcajce.provider.symmetric.DES;
 import org.json.JSONException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -82,7 +80,10 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
     @Test
     public void testGetFacets() throws IOException, SphereMallException, JSONException {
         ESCatalogFilterImpl catalogFilter = new ESCatalogFilterImpl(Arrays.asList(
-                new ESPriceRangeConfig(),
+                ESPriceRangeConfig.builder()
+                        .addAttrCodes("minpricepoints")
+                        .addFields("price")
+                        .create(),
                 new ESBrandsConfig(),
                 new ESAttributesConfig(Collections.singletonList("reward")),
                 new ESFunctionalNamesConfig(),
@@ -100,7 +101,10 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
     public void testElasticSearchFilterData() throws IOException, SphereMallException {
 
         ESCatalogFilter filter = new ESCatalogFilterImpl(Arrays.asList(
-                new ESPriceRangeConfig(),
+                ESPriceRangeConfig.builder()
+                        .addAttrCodes("minpricepoints")
+                        .addFields("price")
+                        .create(),
                 new ESBrandsConfig(),
                 new ESAttributesConfig(Collections.singletonList("reward")),
                 new ESFunctionalNamesConfig(),
@@ -137,7 +141,10 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
     public void testGetEurosparenProductsData() throws IOException, SphereMallException {
 
         ESCatalogFilter filter = new ESCatalogFilterImpl(Arrays.asList(
-                new ESPriceRangeConfig(),
+                ESPriceRangeConfig.builder()
+                        .addAttrCodes("minpricepoints")
+                        .addFields("price")
+                        .create(),
                 new ESBrandsConfig(),
                 new ESAttributesConfig(Collections.singletonList("reward")),
                 new ESFunctionalNamesConfig(),
@@ -145,7 +152,6 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
         ));
 
         filter.add(new ESAttributesFilterCriteria("reward", "1"));
-        filter.add(new ESPriceRangeFilterCriteria(34500, 42000));
 
         TermsFilterCriteria isMain = new TermsFilterCriteria("isMain", "1");
         TermsFilter isMainFilter = new TermsFilter(isMain);
@@ -173,13 +179,15 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
     @Test
     public void testGetFacetsWithParams() throws JSONException, IOException, SphereMallException {
         ESCatalogFilter filter = new ESCatalogFilterImpl(Arrays.asList(
-                new ESPriceRangeConfig(),
+                ESPriceRangeConfig.builder()
+                        .addAttrCodes("minpricepoints")
+                        .addFields("price")
+                        .create(),
                 new ESBrandsConfig(),
                 new ESAttributesConfig(Collections.singletonList("reward"))
         ));
 
         filter.add(new ESAttributesFilterCriteria("reward", "1"));
-        filter.add(new ESPriceRangeFilterCriteria(10000, 45000));
         List<String> entities = new ArrayList<>();
         entities.add("sm-products");
         ESFacets facets = client.elasticSearch().facets(filter, "variantsCompound", entities).data();
