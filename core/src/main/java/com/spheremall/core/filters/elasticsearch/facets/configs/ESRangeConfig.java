@@ -35,7 +35,7 @@ public class ESRangeConfig implements ESCatalogConfig {
         JSONObject range = new JSONObject();
         try {
             range.put("attributes", attrArray);
-            range.put("fields", fields);
+            range.put("fields", fieldsArray);
         } catch (JSONException e) {
             e.printStackTrace();
         }
