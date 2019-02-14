@@ -58,6 +58,8 @@ public class ESCatalogFilterImpl implements ESCatalogFilter {
                 paramsObject.put(entry.getKey(), criteriaArray);
             }
         }
+        if (!paramsObject.keys().hasNext()) return params;
+
         return params.put(paramsObject);
     }
 

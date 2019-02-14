@@ -17,7 +17,7 @@ import com.spheremall.core.filters.elasticsearch.facets.configs.ESAttributesConf
 import com.spheremall.core.filters.elasticsearch.facets.configs.ESBrandsConfig;
 import com.spheremall.core.filters.elasticsearch.facets.configs.ESFactorValuesConfig;
 import com.spheremall.core.filters.elasticsearch.facets.configs.ESFunctionalNamesConfig;
-import com.spheremall.core.filters.elasticsearch.facets.configs.ESPriceRangeConfig;
+import com.spheremall.core.filters.elasticsearch.facets.configs.ESRangeConfig;
 import com.spheremall.core.filters.elasticsearch.facets.models.ESFacets;
 import com.spheremall.core.filters.elasticsearch.terms.TermsFilter;
 import com.spheremall.core.resources.SetUpResourceTest;
@@ -80,7 +80,7 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
     @Test
     public void testGetFacets() throws IOException, SphereMallException, JSONException {
         ESCatalogFilterImpl catalogFilter = new ESCatalogFilterImpl(Arrays.asList(
-                ESPriceRangeConfig.builder()
+                ESRangeConfig.builder()
                         .addAttrCodes("minpricepoints")
                         .addFields("price")
                         .create(),
@@ -101,7 +101,7 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
     public void testElasticSearchFilterData() throws IOException, SphereMallException {
 
         ESCatalogFilter filter = new ESCatalogFilterImpl(Arrays.asList(
-                ESPriceRangeConfig.builder()
+                ESRangeConfig.builder()
                         .addAttrCodes("minpricepoints")
                         .addFields("price")
                         .create(),
@@ -141,7 +141,7 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
     public void testGetEurosparenProductsData() throws IOException, SphereMallException {
 
         ESCatalogFilter filter = new ESCatalogFilterImpl(Arrays.asList(
-                ESPriceRangeConfig.builder()
+                ESRangeConfig.builder()
                         .addAttrCodes("minpricepoints")
                         .addFields("price")
                         .create(),
@@ -179,7 +179,7 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
     @Test
     public void testGetFacetsWithParams() throws JSONException, IOException, SphereMallException {
         ESCatalogFilter filter = new ESCatalogFilterImpl(Arrays.asList(
-                ESPriceRangeConfig.builder()
+                ESRangeConfig.builder()
                         .addAttrCodes("minpricepoints")
                         .addFields("price")
                         .create(),

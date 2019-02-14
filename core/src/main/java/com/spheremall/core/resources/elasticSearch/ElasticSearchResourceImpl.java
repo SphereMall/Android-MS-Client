@@ -153,6 +153,7 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
 
     @Override
     public Response<List<Entity>> search(String query, ESSearchFilter filter) throws SphereMallException, IOException {
+
         filters(filter.asFilter());
 
         HashMap<String, String> params = getQueryParams();

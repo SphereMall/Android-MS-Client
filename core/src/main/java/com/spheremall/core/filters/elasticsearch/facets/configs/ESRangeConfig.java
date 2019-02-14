@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ESPriceRangeConfig implements ESCatalogConfig {
+public class ESRangeConfig implements ESCatalogConfig {
 
     private final List<String> attrCodes = new ArrayList<>();
     private final List<String> fields = new ArrayList<>();
 
-    private ESPriceRangeConfig() {
+    private ESRangeConfig() {
     }
 
     public static Builder builder() {
@@ -58,8 +58,8 @@ public class ESPriceRangeConfig implements ESCatalogConfig {
             return this;
         }
 
-        public ESPriceRangeConfig create() {
-            ESPriceRangeConfig config = new ESPriceRangeConfig();
+        public ESRangeConfig create() {
+            ESRangeConfig config = new ESRangeConfig();
             config.attrCodes.addAll(attrCodes);
             config.fields.addAll(fields);
             return config;

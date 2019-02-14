@@ -2,7 +2,7 @@ package com.spheremall.core.filters.elasticsearch.facets;
 
 import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.elasticsearch.common.ElasticSearchQuery;
-import com.spheremall.core.filters.elasticsearch.facets.models.ESPriceRangeModel;
+import com.spheremall.core.filters.elasticsearch.facets.models.ESRangeModel;
 import com.spheremall.core.filters.elasticsearch.terms.PriceRangeFilter;
 
 import org.json.JSONException;
@@ -15,8 +15,8 @@ import java.util.Map;
 
 public class ESRangeFilterCriteria implements ESCatalogFilterCriteria {
 
-    private final Map<String, ESPriceRangeModel> attributesRange = new HashMap<>();
-    private final Map<String, ESPriceRangeModel> fieldsRange = new HashMap<>();
+    private final Map<String, ESRangeModel> attributesRange = new HashMap<>();
+    private final Map<String, ESRangeModel> fieldsRange = new HashMap<>();
 
     private ESRangeFilterCriteria() {
     }
@@ -41,17 +41,17 @@ public class ESRangeFilterCriteria implements ESCatalogFilterCriteria {
         JSONObject attrsObject = new JSONObject();
         JSONObject fieldsObject = new JSONObject();
 
-        for (Map.Entry<String, ESPriceRangeModel> entry : attributesRange.entrySet()) {
+        for (Map.Entry<String, ESRangeModel> entry : attributesRange.entrySet()) {
             JSONObject range = new JSONObject();
-            range.put("gte", entry.getValue().minPrice);
-            range.put("lte", entry.getValue().maxPrice);
+            range.put("gte", entry.getValue().min);
+            range.put("lte", entry.getValue().max);
             attrsObject.put(entry.getKey(), range);
         }
 
-        for (Map.Entry<String, ESPriceRangeModel> entry : fieldsRange.entrySet()) {
+        for (Map.Entry<String, ESRangeModel> entry : fieldsRange.entrySet()) {
             JSONObject range = new JSONObject();
-            range.put("gte", entry.getValue().minPrice);
-            range.put("lte", entry.getValue().maxPrice);
+            range.put("gte", entry.getValue().min);
+            range.put("lte", entry.getValue().max);
             fieldsObject.put(entry.getKey(), range);
         }
         rangeObject.put("attributes", attrsObject);
@@ -65,15 +65,15 @@ public class ESRangeFilterCriteria implements ESCatalogFilterCriteria {
     @Override
     public List<ElasticSearchQuery> toQuery() {
         List<ElasticSearchQuery> queries = new ArrayList<>();
-        for (Map.Entry<String, ESPriceRangeModel> entry : attributesRange.entrySet()) {
+        for (Map.Entry<String, ESRangeModel> entry : attributesRange.entrySet()) {
             PriceRangeFilter priceRangeFilter = new PriceRangeFilter(entry.getKey() + "_attr.attributeValue");
-            priceRangeFilter.setRange((double) entry.getValue().minPrice, (double) entry.getValue().maxPrice);
+            priceRangeFilter.setRange((double) entry.getValue().min, (double) entry.getValue().max);
             queries.add(priceRangeFilter);
         }
 
-        for (Map.Entry<String, ESPriceRangeModel> entry : fieldsRange.entrySet()) {
+        for (Map.Entry<String, ESRangeModel> entry : fieldsRange.entrySet()) {
             PriceRangeFilter priceRangeFilter = new PriceRangeFilter(entry.getKey());
-            priceRangeFilter.setRange((double) entry.getValue().minPrice, (double) entry.getValue().maxPrice);
+            priceRangeFilter.setRange((double) entry.getValue().min, (double) entry.getValue().max);
             queries.add(priceRangeFilter);
         }
 
@@ -86,22 +86,22 @@ public class ESRangeFilterCriteria implements ESCatalogFilterCriteria {
     }
 
     public static class Builder {
-        private final Map<String, ESPriceRangeModel> attributesRange = new HashMap<>();
-        private final Map<String, ESPriceRangeModel> fieldsRange = new HashMap<>();
+        private final Map<String, ESRangeModel> attributesRange = new HashMap<>();
+        private final Map<String, ESRangeModel> fieldsRange = new HashMap<>();
 
         public Builder addFieldRange(String fieldName, long min, long max) {
-            ESPriceRangeModel priceRange = new ESPriceRangeModel();
-            priceRange.minPrice = min;
-            priceRange.maxPrice = max;
+            ESRangeModel priceRange = new ESRangeModel();
+            priceRange.min = min;
+            priceRange.max = max;
 
             fieldsRange.put(fieldName, priceRange);
             return this;
         }
 
         public Builder addAttributeRange(String attrName, long min, long max) {
-            ESPriceRangeModel priceRange = new ESPriceRangeModel();
-            priceRange.minPrice = min;
-            priceRange.maxPrice = max;
+            ESRangeModel priceRange = new ESRangeModel();
+            priceRange.min = min;
+            priceRange.max = max;
 
             attributesRange.put(attrName, priceRange);
             return this;

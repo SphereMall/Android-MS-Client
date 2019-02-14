@@ -1,5 +1,7 @@
 package com.spheremall.core.filters.elasticsearch;
 
+import com.google.gson.Gson;
+import com.spheremall.core.api.response.ESFacetsResponse;
 import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.elasticsearch.facets.ESAttributesFilterCriteria;
 import com.spheremall.core.filters.elasticsearch.facets.ESBrandsFilterCriteria;
@@ -11,17 +13,19 @@ import com.spheremall.core.filters.elasticsearch.facets.configs.ESAttributesConf
 import com.spheremall.core.filters.elasticsearch.facets.configs.ESBrandsConfig;
 import com.spheremall.core.filters.elasticsearch.facets.configs.ESFactorValuesConfig;
 import com.spheremall.core.filters.elasticsearch.facets.configs.ESFunctionalNamesConfig;
-import com.spheremall.core.filters.elasticsearch.facets.configs.ESPriceRangeConfig;
+import com.spheremall.core.filters.elasticsearch.facets.configs.ESRangeConfig;
+import com.spheremall.core.filters.elasticsearch.facets.models.ESFacets;
+import com.spheremall.core.resources.SetUpResourceTest;
 
 import org.json.JSONException;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 
-public class ESCatalogFilterTest {
+public class ESCatalogFilterTest extends SetUpResourceTest {
 
     @Test
     public void testBuildingFilter() throws JSONException, SphereMallException {
@@ -29,7 +33,7 @@ public class ESCatalogFilterTest {
         String expectedConfig = "{\"functionalNames\":\"true\",\"brands\":\"true\",\"range\":{\"attributes\":[\"minpricepoints\"],\"fields\":[\"price\"]},\"attributes\":[\"reward\"],\"factorValues\":[1,2,3]}";
 
         ESCatalogFilterImpl catalogFilter = new ESCatalogFilterImpl(Arrays.asList(
-                ESPriceRangeConfig.builder()
+                ESRangeConfig.builder()
                         .addAttrCodes("minpricepoints")
                         .addFields("price")
                         .create(),
@@ -58,7 +62,7 @@ public class ESCatalogFilterTest {
     @Test
     public void testCreateBody() {
         ESCatalogFilterImpl catalogFilter = new ESCatalogFilterImpl(Arrays.asList(
-                ESPriceRangeConfig.builder()
+                ESRangeConfig.builder()
                         .addAttrCodes("minpricepoints")
                         .addFields("price")
                         .create(),
@@ -72,25 +76,37 @@ public class ESCatalogFilterTest {
     }
 
     @Test
-    public void testRangeFilter() throws JSONException, SphereMallException {
-        String expectedParams = "[{\"range\":{\"attributes\":{\"minpricepoints\":{\"gte\":0,\"lte\":50000},\"minpriceeuro\":{\"gte\":0,\"lte\":50000}},\"fields\":{\"price\":{\"gte\":0,\"lte\":79000}}},\"attributes\":{\"color\":{\"value\":[\"black\",\"white\"]}}}]";
+    public void testRangeFilter() throws JSONException, SphereMallException, IOException {
+        String expectedParams = "[{\"range\":{\"attributes\":{\"minpricepoints\":{\"gte\":0,\"lte\":50000}},\"fields\":{\"price\":{\"gte\":0,\"lte\":79000}}}}]";
 
-        ESCatalogFilterImpl catalogFilter = new ESCatalogFilterImpl(new ArrayList<>());
+        ESCatalogFilterImpl catalogFilter = new ESCatalogFilterImpl(
+                Collections.singletonList(ESRangeConfig.builder()
+                        .addFields("price")
+                        .addAttrCodes("minpricepoints")
+                        .create())
+        );
+
         ESRangeFilterCriteria criteria = ESRangeFilterCriteria.builder()
                 .addFieldRange("price", 0, 79000)
                 .addAttributeRange("minpricepoints", 0, 50000)
-                .addAttributeRange("minpriceeuro", 0, 50000)
                 .create();
 
-        ESCatalogFilterCriteria criteria2 = new ESAttributesFilterCriteria("color", "black", "white");
-
         catalogFilter.add(criteria);
-        catalogFilter.add(criteria2);
 
+        ESFacets facets = client.elasticSearch()
+                .facets(catalogFilter, "variantCompound", Collections.singletonList("sm-products"))
+                .data();
+
+        Assert.assertNotNull(facets);
         Assert.assertEquals(expectedParams, catalogFilter.toParams().toString());
+    }
 
-        String expectedQuery = "{\"bool\":{\"must\":[{\"range\":{\"minpricepoints_attr.attributeValue\":{\"lt\":50000,\"gt\":0}}},{\"range\":{\"minpriceeuro_attr.attributeValue\":{\"lt\":50000,\"gt\":0}}},{\"range\":{\"price\":{\"lt\":79000,\"gt\":0}}},{\"terms\":{\"color_attr.attributeValue\":[\"black\",\"white\"]}}]}}";
+    @Test
+    public void testParseRangeResponse() {
+        String expectedResponse = "{\"data\":{\"range\":[{\"price\":{\"min\":0,\"max\":74999}},{\"minpricepoints\":{\"min\":200,\"max\":50000}}]},\"status\":\"OK\",\"service\":\"ELASTIC_SEARCH_INDEXER\",\"version\":\"2.5.1.2\"}";
 
-        Assert.assertEquals(expectedQuery, catalogFilter.toBoolFilter().toString());
+        Gson gson = new Gson();
+        ESFacetsResponse facetsObject = gson.fromJson(expectedResponse, ESFacetsResponse.class);
+        Assert.assertNotNull(facetsObject);
     }
 }
