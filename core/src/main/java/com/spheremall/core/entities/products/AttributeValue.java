@@ -1,7 +1,11 @@
 package com.spheremall.core.entities.products;
 
+import com.spheremall.core.jsonapi.RelType;
+import com.spheremall.core.jsonapi.annotations.Relationship;
 import com.spheremall.core.jsonapi.annotations.Type;
 import com.spheremall.core.entities.Entity;
+
+import java.util.List;
 
 @Type("attributeValues")
 public class AttributeValue extends Entity implements Cloneable {
@@ -19,4 +23,7 @@ public class AttributeValue extends Entity implements Cloneable {
     public AttributeValue clone() throws CloneNotSupportedException {
         return (AttributeValue) super.clone();
     }
+
+    @Relationship(value = "attributes", resolve = true, relType = RelType.RELATED)
+    public List<Attribute> attribute;
 }

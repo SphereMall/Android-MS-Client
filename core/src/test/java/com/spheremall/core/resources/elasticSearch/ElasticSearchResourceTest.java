@@ -1,6 +1,7 @@
 package com.spheremall.core.resources.elasticSearch;
 
 import com.spheremall.core.entities.Entity;
+import com.spheremall.core.entities.Range;
 import com.spheremall.core.entities.Response;
 import com.spheremall.core.entities.products.Product;
 import com.spheremall.core.entities.products.ProductAttributeValue;
@@ -18,8 +19,10 @@ import com.spheremall.core.filters.elasticsearch.facets.configs.ESBrandsConfig;
 import com.spheremall.core.filters.elasticsearch.facets.configs.ESFactorValuesConfig;
 import com.spheremall.core.filters.elasticsearch.facets.configs.ESFunctionalNamesConfig;
 import com.spheremall.core.filters.elasticsearch.facets.configs.ESRangeConfig;
-import com.spheremall.core.filters.elasticsearch.facets.models.ESFacets;
 import com.spheremall.core.filters.elasticsearch.terms.TermsFilter;
+import com.spheremall.core.jsonapi.DeserializationFeature;
+import com.spheremall.core.jsonapi.JSONAPIDocument;
+import com.spheremall.core.jsonapi.ResourceConverter;
 import com.spheremall.core.resources.SetUpResourceTest;
 
 import org.json.JSONException;
@@ -78,22 +81,19 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testGetFacets() throws IOException, SphereMallException, JSONException {
+    public void testGetFacets() throws IOException, SphereMallException, JSONException, CloneNotSupportedException {
         ESCatalogFilterImpl catalogFilter = new ESCatalogFilterImpl(Arrays.asList(
                 ESRangeConfig.builder()
                         .addAttrCodes("minpricepoints")
                         .addFields("price")
                         .create(),
-                new ESBrandsConfig(),
-                new ESAttributesConfig(Collections.singletonList("reward")),
-                new ESFunctionalNamesConfig(),
-                new ESFactorValuesConfig(Arrays.asList(1, 3))
+                new ESAttributesConfig(Arrays.asList("eurosparencategory", "brand"))
         ));
 
         List<String> entities = new ArrayList<>();
         entities.add("sm-products");
 
-        Response<ESFacets> facets = client.elasticSearch().facets(catalogFilter, "", entities);
+        Response<List<Entity>> facets = client.elasticSearch().facets(catalogFilter, "", entities);
         Assert.assertNotNull(facets);
     }
 
@@ -177,7 +177,19 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testGetFacetsWithParams() throws JSONException, IOException, SphereMallException {
+    public void testMapRange() {
+
+        String data = "{\"data\":{\"type\":\"range\",\"id\":1,\"attributes\":{\"type\":\"field\",\"identity\":\"price\",\"min\":0,\"max\":74999},\"relationships\":[]},\"status\":\"OK\",\"service\":\"ELASTICSEARCH-INDEXER\",\"version\":\"2.5.1.3\"}";
+
+        ResourceConverter resourceConverter = new ResourceConverter(Range.class);
+        resourceConverter.enableDeserializationOption(DeserializationFeature.ALLOW_UNKNOWN_INCLUSIONS);
+        JSONAPIDocument<Range> document = resourceConverter.readDocument(data.getBytes(), Range.class);
+        Range ranges = document.get();
+        Assert.assertNotNull(ranges);
+    }
+
+    @Test
+    public void testGetFacetsWithParams() throws JSONException, IOException, SphereMallException, CloneNotSupportedException {
         ESCatalogFilter filter = new ESCatalogFilterImpl(Arrays.asList(
                 ESRangeConfig.builder()
                         .addAttrCodes("minpricepoints")
@@ -190,7 +202,7 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
         filter.add(new ESAttributesFilterCriteria("reward", "1"));
         List<String> entities = new ArrayList<>();
         entities.add("sm-products");
-        ESFacets facets = client.elasticSearch().facets(filter, "variantsCompound", entities).data();
+        List<Entity> facets = client.elasticSearch().facets(filter, "variantsCompound", entities).data();
         Assert.assertNotNull(facets);
     }
 }

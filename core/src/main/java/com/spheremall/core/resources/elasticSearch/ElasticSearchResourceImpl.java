@@ -7,26 +7,20 @@ import com.spheremall.core.api.configuration.Method;
 import com.spheremall.core.api.response.ElasticSearchResponse;
 import com.spheremall.core.api.response.ResponseMonada;
 import com.spheremall.core.entities.Entity;
-import com.spheremall.core.entities.Facets;
 import com.spheremall.core.entities.Response;
 import com.spheremall.core.exceptions.MethodNotFoundException;
 import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.Filter;
 import com.spheremall.core.filters.Predicate;
 import com.spheremall.core.filters.elasticsearch.ESSearchFilter;
-import com.spheremall.core.filters.elasticsearch.common.ESFilterCriteria;
-import com.spheremall.core.filters.elasticsearch.common.ElasticSearchFilter;
 import com.spheremall.core.filters.elasticsearch.compound.BoolFilter;
-import com.spheremall.core.filters.elasticsearch.criterions.AttributeFilterCriteria;
-import com.spheremall.core.filters.elasticsearch.criterions.TermsFilterCriteria;
 import com.spheremall.core.filters.elasticsearch.facets.ESCatalogFilter;
-import com.spheremall.core.filters.elasticsearch.facets.models.ESFacets;
 import com.spheremall.core.filters.elasticsearch.fulltext.MultiMatchFilter;
-import com.spheremall.core.filters.elasticsearch.terms.TermsFilter;
-import com.spheremall.core.makers.ESFacetsMaker;
 import com.spheremall.core.makers.ESResponseMaker;
+import com.spheremall.core.makers.GridMaker;
 import com.spheremall.core.makers.ObjectMaker;
 import com.spheremall.core.mappers.ESEntityMapper;
+import com.spheremall.core.mappers.FacetsMapper;
 import com.spheremall.core.resources.BaseResource;
 import com.spheremall.core.specifications.base.FilterSpecification;
 import com.spheremall.core.utils.TextUtils;
@@ -69,7 +63,7 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
     }
 
     @Override
-    public Response<ESFacets> facets(ESCatalogFilter filter, String groupBy, List<String> entities) throws IOException, SphereMallException, JSONException {
+    public Response<List<Entity>> facets(ESCatalogFilter filter, String groupBy, List<String> entities) throws IOException, SphereMallException, JSONException {
         Request smRequest = new Request(smClient, this);
         String uriAppend = smClient.getVersion() + "/" + getURI() + "/filter";
 
@@ -100,8 +94,9 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
             throw new SphereMallException(responseMonada.getErrorResponse());
         }
 
-        ESFacetsMaker maker = new ESFacetsMaker();
-        return maker.makeSingle(responseMonada.getResponse());
+        maker = new GridMaker(Entity.class);
+        Response<List<Entity>> response = maker.makeAsList(responseMonada.getResponse());
+        return new Response<>(new FacetsMapper().doObject(response), response.meta());
     }
 
     @Override

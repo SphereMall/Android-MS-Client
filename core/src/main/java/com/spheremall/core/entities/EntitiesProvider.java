@@ -88,6 +88,8 @@ public class EntitiesProvider {
         availableEntities.put("mediaDisplayTypes", MediaDisplayType.class);
         availableEntities.put("channelEntities", ChannelEntity.class);
         availableEntities.put("entityAttributeValues", EntityAttributeValue.class);
+        availableEntities.put("range", Range.class);
+
     }
 
     private static <K, V> K getKey(Map<K, V> map, V value) {

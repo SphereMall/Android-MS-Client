@@ -5,6 +5,7 @@ import com.spheremall.core.jsonapi.RelType;
 import com.spheremall.core.jsonapi.annotations.Relationship;
 import com.spheremall.core.jsonapi.annotations.Type;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Type("attributes")
@@ -20,7 +21,7 @@ public class Attribute extends Entity implements Cloneable {
     public int useInFilter;
 
     @Relationship(value = "attributeValues", resolve = true, relType = RelType.RELATED)
-    public List<AttributeValue> attributeValues;
+    public ArrayList<AttributeValue> attributeValues;
 
     @Relationship(value = "attributeGroups", resolve = true, relType = RelType.RELATED)
     public AttributeGroup group;

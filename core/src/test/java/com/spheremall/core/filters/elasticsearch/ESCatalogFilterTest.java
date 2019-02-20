@@ -1,7 +1,6 @@
 package com.spheremall.core.filters.elasticsearch;
 
-import com.google.gson.Gson;
-import com.spheremall.core.api.response.ESFacetsResponse;
+import com.spheremall.core.entities.Entity;
 import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.elasticsearch.facets.ESAttributesFilterCriteria;
 import com.spheremall.core.filters.elasticsearch.facets.ESBrandsFilterCriteria;
@@ -14,7 +13,6 @@ import com.spheremall.core.filters.elasticsearch.facets.configs.ESBrandsConfig;
 import com.spheremall.core.filters.elasticsearch.facets.configs.ESFactorValuesConfig;
 import com.spheremall.core.filters.elasticsearch.facets.configs.ESFunctionalNamesConfig;
 import com.spheremall.core.filters.elasticsearch.facets.configs.ESRangeConfig;
-import com.spheremall.core.filters.elasticsearch.facets.models.ESFacets;
 import com.spheremall.core.resources.SetUpResourceTest;
 
 import org.json.JSONException;
@@ -24,11 +22,12 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 public class ESCatalogFilterTest extends SetUpResourceTest {
 
     @Test
-    public void testBuildingFilter() throws JSONException, SphereMallException {
+    public void testBuildingFilter() throws JSONException {
 
         String expectedConfig = "{\"functionalNames\":\"true\",\"brands\":\"true\",\"range\":{\"attributes\":[\"minpricepoints\"],\"fields\":[\"price\"]},\"attributes\":[\"reward\"],\"factorValues\":[1,2,3]}";
 
@@ -93,20 +92,11 @@ public class ESCatalogFilterTest extends SetUpResourceTest {
 
         catalogFilter.add(criteria);
 
-        ESFacets facets = client.elasticSearch()
+        List<Entity> facets = client.elasticSearch()
                 .facets(catalogFilter, "variantCompound", Collections.singletonList("sm-products"))
                 .data();
 
         Assert.assertNotNull(facets);
         Assert.assertEquals(expectedParams, catalogFilter.toParams().toString());
-    }
-
-    @Test
-    public void testParseRangeResponse() {
-        String expectedResponse = "{\"data\":{\"range\":[{\"price\":{\"min\":0,\"max\":74999}},{\"minpricepoints\":{\"min\":200,\"max\":50000}}]},\"status\":\"OK\",\"service\":\"ELASTIC_SEARCH_INDEXER\",\"version\":\"2.5.1.2\"}";
-
-        Gson gson = new Gson();
-        ESFacetsResponse facetsObject = gson.fromJson(expectedResponse, ESFacetsResponse.class);
-        Assert.assertNotNull(facetsObject);
     }
 }
