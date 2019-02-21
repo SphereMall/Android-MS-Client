@@ -2,6 +2,7 @@ package com.spheremall.core.api;
 
 import com.google.gson.Gson;
 import com.spheremall.core.SMClient;
+import com.spheremall.core.api.auth.BasicAuthInterceptor;
 import com.spheremall.core.api.configuration.Method;
 import com.spheremall.core.api.response.ElasticSearchError;
 import com.spheremall.core.api.response.ErrorResponse;
@@ -43,6 +44,7 @@ public class ESRequest extends com.spheremall.core.api.Request {
         httpLoggingInterceptor.setLevel(client.getLoggingLevel());
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new BasicAuthInterceptor(client.getBasicAuth()))
                 .addInterceptor(httpLoggingInterceptor)
                 .build();
 
