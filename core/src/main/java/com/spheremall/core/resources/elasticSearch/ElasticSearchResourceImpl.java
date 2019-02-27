@@ -179,6 +179,21 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
         return new Response<>(entities, meta);
     }
 
+    @Override
+    public Response<List<Entity>> fetchTest(Runnable runnable) throws SphereMallException, IOException {
+        HashMap<String, String> params = getQueryParams();
+        ResponseMonada responseMonada = request.handle(Method.GET, params.get("index") + "/_search", getQueryParams());
+
+        ESResponseMaker esResponseMaker = new ESResponseMaker();
+        ElasticSearchResponse searchResponse = esResponseMaker.makeSingle(responseMonada.getResponse()).data();
+        runnable.run();
+        ESEntityMapper esEntityMapper = new ESEntityMapper();
+        List<Entity> entities = esEntityMapper.doObject(searchResponse);
+        Map<String, String> meta = new HashMap<>();
+        meta.put("count", String.valueOf(searchResponse.hits.total));
+        return new Response<>(entities, meta);
+    }
+
     protected HashMap<String, String> getQueryParams() {
         HashMap<String, String> params = super.getQueryParams();
 

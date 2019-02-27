@@ -31,19 +31,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 //        setUpRecyclerView()
 //        displayProducts()
-
         btnGO.setOnClickListener {
             start()
         }
     }
 
     private fun start() {
-        Thread(Runnable {
 
+        Thread(Runnable {
             runOnUiThread {
                 time.text = Date(System.currentTimeMillis()).toString()
             }
-
             val isMain = TermsFilterCriteria("isMain", "1")
             val isMainFilter = TermsFilter(isMain)
 
@@ -61,10 +59,15 @@ class MainActivity : AppCompatActivity() {
             val entities = sphereMallClient.elasticSearch()
                     .filters(elasticSearchFilter.asFilter())
                     .limit(50)
-                    .fetch()
+                    .fetchTest {
+                        runOnUiThread {
+                            start.text = "Start parsing: " + Date(System.currentTimeMillis()).toString()
+                        }
+                    }
 
             runOnUiThread {
                 end.text = Date(System.currentTimeMillis()).toString()
+                countObjects.text = entities.data().size.toString()
             }
         }).start()
     }

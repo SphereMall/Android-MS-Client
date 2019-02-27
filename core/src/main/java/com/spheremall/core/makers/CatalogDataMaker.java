@@ -17,14 +17,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class CatalogMaker extends ObjectMaker<Entity> {
+public class CatalogDataMaker extends ObjectMaker<Entity> {
 
     private JsonArray dataObject = new JsonArray();
     private JsonParser parser = new JsonParser();
 
     private Map<TypeIdRelation, JsonObject> includes = new HashMap<>();
 
-    public CatalogMaker(Class<Entity> clazz) {
+    public CatalogDataMaker(Class<Entity> clazz) {
         super(clazz);
     }
 
