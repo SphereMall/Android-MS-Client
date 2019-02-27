@@ -14,6 +14,6 @@ abstract class AbstractModel<STATE : Contract.State, in ACTION : Contract.Action
     protected fun action(action: ACTION) {
         state.onNext(
                 reducer()
-                        .reduce(state = state.value, action = action))
+                        .reduce(state = state.value!!, action = action))
     }
 }

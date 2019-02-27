@@ -17,12 +17,12 @@ class ProductsViewHolder(itemView: View?) : BaseViewHolder<ProductViewModel>(ite
 
         if (item.product.images != null && item.product.images.size > 0) {
             if (URLUtil.isHttpUrl(item.product.images[0].path) || URLUtil.isHttpsUrl(item.product.images[0].path)) {
-                Picasso.with(itemView.context).load(item.product.images[0].path).into(itemView.ivImage)
+                Picasso.get().load(item.product.images[0].path).into(itemView.ivImage)
             } else {
-                Picasso.with(itemView.context).load(R.drawable.ic_notfound).into(itemView.ivImage)
+                Picasso.get().load(R.drawable.ic_notfound).into(itemView.ivImage)
             }
         } else {
-            Picasso.with(itemView.context).load(R.drawable.ic_notfound).into(itemView.ivImage)
+            Picasso.get().load(R.drawable.ic_notfound).into(itemView.ivImage)
         }
     }
 }
