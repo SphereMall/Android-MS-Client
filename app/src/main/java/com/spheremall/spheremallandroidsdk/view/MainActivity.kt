@@ -1,7 +1,6 @@
 package com.spheremall.spheremallandroidsdk.view
 
 import android.os.Bundle
-import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.view.View
@@ -10,11 +9,7 @@ import com.spheremall.core.SMClient
 import com.spheremall.core.entities.products.Product
 import com.spheremall.core.filters.elasticsearch.ESSearchFilter
 import com.spheremall.core.filters.elasticsearch.compound.BoolFilter
-import com.spheremall.core.filters.elasticsearch.criterions.SortFilter
 import com.spheremall.core.filters.elasticsearch.criterions.TermsFilterCriteria
-import com.spheremall.core.filters.elasticsearch.facets.ESAttributesFilterCriteria
-import com.spheremall.core.filters.elasticsearch.facets.ESCatalogFilterImpl
-import com.spheremall.core.filters.elasticsearch.facets.configs.*
 import com.spheremall.core.filters.elasticsearch.terms.TermsFilter
 import com.spheremall.spheremallandroidsdk.R
 import com.spheremall.spheremallandroidsdk.common.GridAdapter
@@ -36,7 +31,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 //        setUpRecyclerView()
 //        displayProducts()
+
+        btnGO.setOnClickListener {
+            start()
+        }
+    }
+
+    private fun start() {
         Thread(Runnable {
+
+            runOnUiThread {
+                time.text = Date(System.currentTimeMillis()).toString()
+            }
 
             val isMain = TermsFilterCriteria("isMain", "1")
             val isMainFilter = TermsFilter(isMain)
@@ -56,7 +62,10 @@ class MainActivity : AppCompatActivity() {
                     .filters(elasticSearchFilter.asFilter())
                     .limit(50)
                     .fetch()
-            println("size" + entities.data().size.toString())
+
+            runOnUiThread {
+                end.text = Date(System.currentTimeMillis()).toString()
+            }
         }).start()
     }
 
