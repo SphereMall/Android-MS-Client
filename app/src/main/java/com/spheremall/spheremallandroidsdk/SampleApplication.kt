@@ -15,6 +15,7 @@ class SampleApplication : Application() {
                 ApiConstants.API_CLIENT_ID,
                 ApiConstants.API_SECRET_KEY,
                 ApiConstants.API_VERSION)
+
         SMClient.get().setBacisAuth(BasicAuthCredentials("user", "q1w2e3"))
     }
 }

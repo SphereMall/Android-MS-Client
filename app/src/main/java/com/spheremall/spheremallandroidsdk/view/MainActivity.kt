@@ -59,11 +59,7 @@ class MainActivity : AppCompatActivity() {
             val entities = sphereMallClient.elasticSearch()
                     .filters(elasticSearchFilter.asFilter())
                     .limit(50)
-                    .fetchTest {
-                        runOnUiThread {
-                            start.text = "Start parsing: " + Date(System.currentTimeMillis()).toString()
-                        }
-                    }
+                    .fetchTest()
 
             runOnUiThread {
                 end.text = Date(System.currentTimeMillis()).toString()

@@ -205,4 +205,22 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
         List<Entity> facets = client.elasticSearch().facets(filter, "variantsCompound", entities).data();
         Assert.assertNotNull(facets);
     }
+
+    @Test
+    public void testNewMapper() throws IOException, SphereMallException {
+        BoolFilter boolFilter = new BoolFilter();
+
+        ElasticSearchFilter elasticSearchFilter = new ESSearchFilter();
+        elasticSearchFilter.index("sm-products");
+        elasticSearchFilter.source("scope");
+        elasticSearchFilter.query(boolFilter);
+
+
+        Response<List<Entity>> entities = client.elasticSearch()
+                .filters(elasticSearchFilter)
+                .limit(50)
+                .fetchTest();
+
+        Assert.assertNotNull(entities);
+    }
 }

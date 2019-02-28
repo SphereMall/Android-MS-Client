@@ -16,7 +16,7 @@ public interface ElasticSearchResource extends Resource<ElasticSearchResource, E
 
     Response<List<Entity>> fetch() throws SphereMallException, IOException;
 
-    Response<List<Entity>> fetchTest(Runnable runnable) throws SphereMallException, IOException;
+    Response<List<Entity>> fetchTest() throws SphereMallException, IOException;
 
     Response<List<Entity>> search(String query) throws SphereMallException, IOException;
 

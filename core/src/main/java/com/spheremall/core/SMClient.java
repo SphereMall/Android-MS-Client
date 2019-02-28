@@ -19,7 +19,7 @@ public class SMClient implements ServiceInjector {
     protected PreferencesManager preferencesManager;
     protected Boolean debug = false;
     private static SMClient client = null;
-    protected HttpLoggingInterceptor.Level loggingLevel = HttpLoggingInterceptor.Level.BODY;
+    protected HttpLoggingInterceptor.Level loggingLevel = HttpLoggingInterceptor.Level.HEADERS;
     protected BasicAuthCredentials credentials = null;
     protected Map<String, String> headers = new HashMap<>();
 
