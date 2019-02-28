@@ -10,17 +10,19 @@ import com.spheremall.core.entities.Entity;
 import com.spheremall.core.entities.Response;
 import com.spheremall.core.jsonapi.JSONAPIDocument;
 import com.spheremall.core.jsonapi.ResourceConverter;
-import com.spheremall.core.makers.ObjectMaker;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class CatalogMaker extends ObjectMaker<Entity> {
 
     private JsonArray dataObject = new JsonArray();
-    private JsonArray includesObject = new JsonArray();
     private JsonParser parser = new JsonParser();
+
+    private Map<TypeIdRelation, JsonObject> includes = new HashMap<>();
 
     public CatalogMaker(Class<Entity> clazz) {
         super(clazz);
@@ -31,13 +33,27 @@ public class CatalogMaker extends ObjectMaker<Entity> {
         JsonArray jsonArray = jsonObject.getAsJsonArray("data");
         dataObject.add(jsonArray.get(0));
         JsonArray includes = jsonObject.getAsJsonArray("included");
-        includesObject.addAll(includes);
+
+        for (int i = 0; i < includes.size(); i++) {
+            JsonObject object = includes.get(i).getAsJsonObject();
+            if (object.has("id") && object.has("type")) {
+                int id = object.getAsJsonPrimitive("id").getAsInt();
+                String type = object.getAsJsonPrimitive("type").getAsString();
+                if (!this.includes.containsKey(new TypeIdRelation(id, type))) {
+                    this.includes.put(new TypeIdRelation(id, type), object);
+                }
+            }
+        }
     }
 
     @Override
     public Response<List<Entity>> makeAsList(String response) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.add("data", dataObject);
+        JsonArray includesObject = new JsonArray();
+        for (Map.Entry<TypeIdRelation, JsonObject> entry : includes.entrySet()) {
+            includesObject.add(entry.getValue());
+        }
         jsonObject.add("included", includesObject);
 
         String res = jsonObject.toString();
