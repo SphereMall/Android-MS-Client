@@ -1,6 +1,7 @@
 package com.spheremall.core.makers;
 
 import com.google.gson.Gson;
+import com.spheremall.core.api.response.ElasticSearchListResponse;
 import com.spheremall.core.api.response.ElasticSearchResponse;
 import com.spheremall.core.entities.Response;
 
@@ -18,6 +19,8 @@ public class ESResponseMaker implements Maker<ElasticSearchResponse> {
 
     @Override
     public Response<List<ElasticSearchResponse>> makeAsList(String response) {
-        throw new RuntimeException("The implementation is not needed");
+        Gson gson = new Gson();
+        ElasticSearchListResponse searchResponse = gson.fromJson(response, ElasticSearchListResponse.class);
+        return new Response<>(searchResponse.responses, new HashMap<>());
     }
 }

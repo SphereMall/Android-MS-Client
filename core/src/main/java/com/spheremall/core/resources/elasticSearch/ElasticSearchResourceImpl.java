@@ -1,5 +1,7 @@
 package com.spheremall.core.resources.elasticSearch;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.spheremall.core.SMClient;
 import com.spheremall.core.api.ESRequest;
 import com.spheremall.core.api.Request;
@@ -12,10 +14,7 @@ import com.spheremall.core.exceptions.MethodNotFoundException;
 import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.Filter;
 import com.spheremall.core.filters.Predicate;
-import com.spheremall.core.filters.elasticsearch.ESSearchFilter;
-import com.spheremall.core.filters.elasticsearch.compound.BoolFilter;
 import com.spheremall.core.filters.elasticsearch.facets.ESCatalogFilter;
-import com.spheremall.core.filters.elasticsearch.fulltext.MultiMatchFilter;
 import com.spheremall.core.makers.ESResponseMaker;
 import com.spheremall.core.makers.GridMaker;
 import com.spheremall.core.makers.ObjectMaker;
@@ -42,11 +41,6 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
         this.request = new ESRequest(smClient, this);
     }
 
-    public ElasticSearchResourceImpl(SMClient client, String version) {
-        super(client, version);
-        this.request = new ESRequest(smClient, this);
-    }
-
     @Override
     public String getURI() {
         return "elasticsearch";
@@ -60,6 +54,42 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
     @Override
     protected ElasticSearchResource currentContext() {
         return this;
+    }
+
+    @Override
+    public Response<List<Entity>> search() throws SphereMallException, IOException {
+        HashMap<String, String> params = getQueryParams();
+        ResponseMonada responseMonada = request.handle(Method.GET, params.get("index") + "/_search", params);
+
+        ESResponseMaker esResponseMaker = new ESResponseMaker();
+        ElasticSearchResponse searchResponse = esResponseMaker.makeSingle(responseMonada.getResponse()).data();
+
+        ESEntityMapper esEntityMapper = new ESEntityMapper();
+        List<Entity> entities = esEntityMapper.doObject(searchResponse);
+        Map<String, String> meta = new HashMap<>();
+        meta.put("count", String.valueOf(searchResponse.hits.total));
+        return new Response<>(entities, meta);
+    }
+
+    @Override
+    public List<Response<List<Entity>>> multiSearch() throws SphereMallException, IOException {
+        ResponseMonada responseMonada = request.handle(Method.GET, "_msearch", getQueryParams());
+
+        ESResponseMaker esResponseMaker = new ESResponseMaker();
+        List<ElasticSearchResponse> searchResponse = esResponseMaker.makeAsList(responseMonada.getResponse()).data();
+
+        ESEntityMapper esEntityMapper = new ESEntityMapper();
+        List<Response<List<Entity>>> resultEntities = new ArrayList<>();
+
+        for (ElasticSearchResponse response : searchResponse) {
+            List<Entity> entities = esEntityMapper.doObject(response);
+            if (entities.size() > 0) {
+                Map<String, String> meta = new HashMap<>();
+                meta.put("count", String.valueOf(response.hits.total));
+                resultEntities.add(new Response<>(entities, meta));
+            }
+        }
+        return resultEntities;
     }
 
     @Override
@@ -99,96 +129,29 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
         return new Response<>(new FacetsMapper().doObject(response), response.meta());
     }
 
-    @Override
-    public Response<List<Entity>> search(String query, List<String> indexes) throws SphereMallException, IOException {
-        ESSearchFilter filter = new ESSearchFilter();
-        String indexesArray[] = new String[indexes.size()];
-
-        for (int i = 0; i < indexes.size(); i++) {
-            indexesArray[i] = indexes.get(i);
-        }
-
-        filter.index(indexesArray);
-
-        MultiMatchFilter matchFilter = new MultiMatchFilter("title_*", query);
-        matchFilter.setFields(
-                "html_*",
-                "title_*",
-                "short_description_*",
-                "full_description_*"
-        );
-
-        BoolFilter boolSearchFilter = new BoolFilter();
-        boolSearchFilter.must(matchFilter);
-
-        filter.query(boolSearchFilter);
-
-        filters(filter.asFilter());
-
-        HashMap<String, String> params = getQueryParams();
-        ResponseMonada responseMonada = request.handle(Method.GET, params.get("index") + "/_search", getQueryParams());
-
-        ESResponseMaker esResponseMaker = new ESResponseMaker();
-        ElasticSearchResponse searchResponse = esResponseMaker.makeSingle(responseMonada.getResponse()).data();
-
-        ESEntityMapper esEntityMapper = new ESEntityMapper();
-        List<Entity> entities = esEntityMapper.doObject(searchResponse);
-        Map<String, String> meta = new HashMap<>();
-        meta.put("count", String.valueOf(searchResponse.hits.total));
-        return new Response<>(entities, meta);
-    }
-
-    @Override
-    public Response<List<Entity>> search(String query) throws SphereMallException, IOException {
-        List<String> indexes = new ArrayList<>();
-        indexes.add("sm-products");
-        indexes.add("sm-documents");
-        return search(query, indexes);
-    }
-
-    @Override
-    public Response<List<Entity>> search(String query, ESSearchFilter filter) throws SphereMallException, IOException {
-
-        filters(filter.asFilter());
-
-        HashMap<String, String> params = getQueryParams();
-        ResponseMonada responseMonada = request.handle(Method.GET, params.get("index") + "/_search", getQueryParams());
-
-        ESResponseMaker esResponseMaker = new ESResponseMaker();
-        ElasticSearchResponse searchResponse = esResponseMaker.makeSingle(responseMonada.getResponse()).data();
-
-        ESEntityMapper esEntityMapper = new ESEntityMapper();
-        List<Entity> entities = esEntityMapper.doObject(searchResponse);
-        Map<String, String> meta = new HashMap<>();
-        meta.put("count", String.valueOf(searchResponse.hits.total));
-        return new Response<>(entities, meta);
-    }
-
-    @Override
-    public Response<List<Entity>> fetch() throws SphereMallException, IOException {
-        HashMap<String, String> params = getQueryParams();
-        ResponseMonada responseMonada = request.handle(Method.GET, params.get("index") + "/_search", getQueryParams());
-
-        ESResponseMaker esResponseMaker = new ESResponseMaker();
-        ElasticSearchResponse searchResponse = esResponseMaker.makeSingle(responseMonada.getResponse()).data();
-
-        ESEntityMapper esEntityMapper = new ESEntityMapper();
-        List<Entity> entities = esEntityMapper.doObject(searchResponse);
-        Map<String, String> meta = new HashMap<>();
-        meta.put("count", String.valueOf(searchResponse.hits.total));
-        return new Response<>(entities, meta);
-    }
-
     protected HashMap<String, String> getQueryParams() {
         HashMap<String, String> params = super.getQueryParams();
 
         try {
+            if (!isJsonObject(params)) {
+                params.put("body", params.get("where"));
+                return params;
+            }
+
             JSONObject paramsJson = new JSONObject(params.get("where"));
-            paramsJson.put("size", params.get("limit"));
-            paramsJson.put("from", params.get("offset"));
+            if (params.containsKey("limit")) {
+                paramsJson.put("size", params.get("limit"));
+            }
+            if (params.containsKey("offset")) {
+                paramsJson.put("from", params.get("offset"));
+            }
 
             if (params.containsKey("size")) {
                 paramsJson.put("size", params.get("size"));
+            }
+
+            if (params.containsKey("from")) {
+                paramsJson.put("from", params.get("from"));
             }
 
             params.clear();
@@ -198,11 +161,28 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
             params.put("index", paramsJson.getString("index"));
             paramsJson.remove("index");
             params.put("body", paramsJson.toString());
+
+            return params;
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         return params;
+    }
+
+    private boolean isJsonObject(HashMap<String, String> params) {
+        JsonParser jsonParser = new JsonParser();
+        boolean isJsonObject = true;
+        try {
+            JsonElement element = jsonParser.parse(params.get("where"));
+            if (!element.isJsonObject()) {
+                isJsonObject = false;
+            }
+        } catch (Exception e) {
+            isJsonObject = false;
+        }
+        return isJsonObject;
     }
 
     @Override

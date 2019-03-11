@@ -5,6 +5,8 @@ import com.spheremall.core.specifications.base.FilterSpecification;
 
 public interface ElasticSearchFilter extends FilterSpecification {
 
+    String indexes();
+
     ElasticSearchFilter index(String... indexes);
 
     ElasticSearchFilter query(ElasticSearchQuery elasticSearchQuery);
@@ -12,4 +14,8 @@ public interface ElasticSearchFilter extends FilterSpecification {
     ElasticSearchFilter sort(SortFilter sortFilter);
 
     ElasticSearchFilter source(String... fields);
+
+    ElasticSearchFilter setSize(int limit);
+
+    ElasticSearchFilter setFrom(int offset);
 }

@@ -4,8 +4,7 @@ import com.spheremall.core.entities.users.Company;
 import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.resources.SetUpResourceTest;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;

@@ -4,7 +4,6 @@ import com.spheremall.core.api.response.ElasticSearchResponse;
 import com.spheremall.core.entities.Entity;
 import com.spheremall.core.makers.CatalogMaker;
 
-import java.util.Iterator;
 import java.util.List;
 
 public class ESEntityMapper implements Mapper<ElasticSearchResponse, Entity> {
@@ -13,15 +12,10 @@ public class ESEntityMapper implements Mapper<ElasticSearchResponse, Entity> {
     public List<Entity> doObject(ElasticSearchResponse obj) {
         CatalogMaker maker = new CatalogMaker(Entity.class);
 
-        Iterator iterator = obj.hits.hits.iterator();
-        System.out.println("start");
-        while (iterator.hasNext()) {
-            ElasticSearchResponse.Hits hits = (ElasticSearchResponse.Hits) iterator.next();
+        for (ElasticSearchResponse.Hits hits : obj.hits.hits) {
             maker.add(hits.source.scope);
-            iterator.remove();
         }
-        List<Entity> entities = maker.makeAsList("").data();
-        System.out.println("end");
-        return entities;
+
+        return maker.makeAsList("").data();
     }
 }

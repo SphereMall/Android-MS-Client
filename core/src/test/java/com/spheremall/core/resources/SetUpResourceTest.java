@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.spheremall.core.SMClient;
+import com.spheremall.core.api.auth.BasicAuthCredentials;
 import com.spheremall.core.api.configuration.ApiConstants;
 import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.utils.StaticPreferencesManager;
@@ -43,6 +44,9 @@ public class SetUpResourceTest {
                 ApiConstants.API_SECRET_KEY,
                 ApiConstants.API_VERSION);
 
+        BasicAuthCredentials credentials = new BasicAuthCredentials("user", "q1w2e3");
+
+        client.setBacisAuth(credentials);
         client.setPreferencesManager(new StaticPreferencesManager());
         client.setDebug(true);
         client.setLoggingLevel(HttpLoggingInterceptor.Level.BODY);

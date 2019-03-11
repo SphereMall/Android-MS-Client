@@ -51,7 +51,7 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
 
         Response<List<Entity>> entities = client.elasticSearch()
                 .filters(filter.asFilter())
-                .fetch();
+                .search();
 
         Assert.assertNotNull(entities);
 
@@ -70,18 +70,7 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testSearch() throws IOException, SphereMallException {
-        Response<List<Entity>> entities = client.elasticSearch()
-                .limit(2)
-                .offset(0)
-                .search("milner");
-
-        Assert.assertNotNull(entities);
-        Assert.assertEquals(entities.data().size(), 2);
-    }
-
-    @Test
-    public void testGetFacets() throws IOException, SphereMallException, JSONException, CloneNotSupportedException {
+    public void testGetFacets() throws IOException, SphereMallException, JSONException {
         ESCatalogFilterImpl catalogFilter = new ESCatalogFilterImpl(Arrays.asList(
                 ESRangeConfig.builder()
                         .addAttrCodes("minpricepoints")
@@ -132,7 +121,7 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
         Response<List<Entity>> entities = client.elasticSearch()
                 .filters(elasticSearchFilter)
                 .limit(50)
-                .fetch();
+                .search();
 
         Assert.assertNotNull(entities);
     }
@@ -171,7 +160,7 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
         Response<List<Entity>> entities = client.elasticSearch()
                 .filters(elasticSearchFilter)
                 .limit(50)
-                .fetch();
+                .search();
 
         Assert.assertNotNull(entities);
     }

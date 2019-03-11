@@ -80,7 +80,7 @@ public class ProductVariantsBuilder {
         return client.elasticSearch()
                 .filters(filter.asFilter())
                 .limit(100)
-                .fetch().data();
+                .search().data();
     }
 
     private String buildCompoundKeyString(List<String> attributeCodes, Product product) {

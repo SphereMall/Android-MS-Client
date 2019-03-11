@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
             val entities = sphereMallClient.elasticSearch()
                     .filters(elasticSearchFilter.asFilter())
                     .limit(50)
-                    .fetch()
+                    .search()
 
             runOnUiThread {
                 end.text = Date(System.currentTimeMillis()).toString()
