@@ -127,7 +127,7 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
     }
 
     @Test
-    public void testGetEurosparenProductsData() throws IOException, SphereMallException {
+    public void testGetProductsData() throws IOException, SphereMallException {
 
         ESCatalogFilter filter = new ESCatalogFilterImpl(Arrays.asList(
                 ESRangeConfig.builder()
@@ -155,13 +155,15 @@ public class ElasticSearchResourceTest extends SetUpResourceTest {
         elasticSearchFilter.index("sm-products");
         elasticSearchFilter.source("scope");
         elasticSearchFilter.query(boolFilter);
+        elasticSearchFilter.setSize(2);
         elasticSearchFilter.sort(new SortFilter("3_factorValues.value", SortFilter.Sort.DESC));
 
         Response<List<Entity>> entities = client.elasticSearch()
                 .filters(elasticSearchFilter)
-                .limit(50)
+                .limit(3)
                 .search();
 
+        Assert.assertEquals(2, entities.data().size());
         Assert.assertNotNull(entities);
     }
 

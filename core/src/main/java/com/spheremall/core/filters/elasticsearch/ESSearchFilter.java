@@ -18,7 +18,7 @@ public class ESSearchFilter extends Filter implements ElasticSearchFilter {
     private String index = "sm-*";
     private ArrayList<String> sourceFields = new ArrayList<>();
     private SortFilter sortFilter = null;
-    private int size = 10;
+    private int size = 0;
     private int from = 0;
 
     @Override
@@ -77,8 +77,8 @@ public class ESSearchFilter extends Filter implements ElasticSearchFilter {
                 queryJson.put("_source", TextUtils.join(",", sourceFields));
             }
 
-            queryJson.put("size", this.size);
-            queryJson.put("from", this.from);
+            if (this.size > 0) queryJson.put("size", this.size);
+            if (this.from > 0) queryJson.put("from", this.from);
 
             if (sortFilter != null) {
                 queryJson.put(SortFilter.SORT_KEY, sortFilter.toJson().getJSONArray(SortFilter.SORT_KEY));

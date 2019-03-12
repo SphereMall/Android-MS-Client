@@ -129,6 +129,12 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
         return new Response<>(new FacetsMapper().doObject(response), response.meta());
     }
 
+    /**
+     * Creating query params for ElasticSearch Body.
+     * Methods setFrom and "setSize have bigger priority than setLimit and setOffset
+     *
+     * @return queryParams
+     */
     protected HashMap<String, String> getQueryParams() {
         HashMap<String, String> params = super.getQueryParams();
 
@@ -139,19 +145,13 @@ public class ElasticSearchResourceImpl extends BaseResource<Entity, ElasticSearc
             }
 
             JSONObject paramsJson = new JSONObject(params.get("where"));
-            if (params.containsKey("limit")) {
+
+            if (params.containsKey("limit") && !paramsJson.has("size")) {
                 paramsJson.put("size", params.get("limit"));
             }
-            if (params.containsKey("offset")) {
+
+            if (params.containsKey("offset") && !paramsJson.has("from")) {
                 paramsJson.put("from", params.get("offset"));
-            }
-
-            if (params.containsKey("size")) {
-                paramsJson.put("size", params.get("size"));
-            }
-
-            if (params.containsKey("from")) {
-                paramsJson.put("from", params.get("from"));
             }
 
             params.clear();
