@@ -1,7 +1,8 @@
 package com.spheremall.core.filters.elasticsearch.facets;
 
-import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.elasticsearch.common.ElasticSearchQuery;
+import com.spheremall.core.filters.elasticsearch.facets.configs.ESCatalogConfig;
+import com.spheremall.core.filters.elasticsearch.facets.configs.ESRangeConfig;
 import com.spheremall.core.filters.elasticsearch.facets.models.ESRangeModel;
 import com.spheremall.core.filters.elasticsearch.terms.PriceRangeFilter;
 
@@ -36,7 +37,7 @@ public class ESRangeFilterCriteria implements ESCatalogFilterCriteria {
     }
 
     @Override
-    public JSONObject toJson() throws SphereMallException, JSONException {
+    public JSONObject toJson(List<ESCatalogConfig> configs) throws JSONException {
         JSONObject rangeObject = new JSONObject();
         JSONObject attrsObject = new JSONObject();
         JSONObject fieldsObject = new JSONObject();
@@ -45,7 +46,7 @@ public class ESRangeFilterCriteria implements ESCatalogFilterCriteria {
             JSONObject range = new JSONObject();
             range.put("gte", entry.getValue().min);
             range.put("lte", entry.getValue().max);
-            attrsObject.put(entry.getKey(), range);
+            attrsObject.put(findRangeAttribute(configs, entry.getKey()), range);
         }
 
         for (Map.Entry<String, ESRangeModel> entry : fieldsRange.entrySet()) {
@@ -54,8 +55,12 @@ public class ESRangeFilterCriteria implements ESCatalogFilterCriteria {
             range.put("lte", entry.getValue().max);
             fieldsObject.put(entry.getKey(), range);
         }
-        rangeObject.put("attributes", attrsObject);
-        rangeObject.put("fields", fieldsObject);
+        if (attrsObject.keys().hasNext()) {
+            rangeObject.put("attributes", attrsObject);
+        }
+        if (fieldsObject.keys().hasNext()) {
+            rangeObject.put("fields", fieldsObject);
+        }
 
         JSONObject object = new JSONObject();
         object.put(name(), rangeObject);
@@ -83,6 +88,19 @@ public class ESRangeFilterCriteria implements ESCatalogFilterCriteria {
     @Override
     public int count() {
         return attributesRange.size() + fieldsRange.size();
+    }
+
+    private String findRangeAttribute(List<ESCatalogConfig> configs, String key) {
+        for (ESCatalogConfig config : configs) {
+            if (config instanceof ESRangeConfig) {
+                ESRangeConfig rangeConfig = (ESRangeConfig) config;
+                for (String attrCode : rangeConfig.attrCodes) {
+                    if (key.contains(attrCode))
+                        return attrCode;
+                }
+            }
+        }
+        return key;
     }
 
     public static class Builder {

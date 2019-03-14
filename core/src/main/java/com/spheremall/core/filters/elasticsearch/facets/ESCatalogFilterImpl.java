@@ -1,8 +1,5 @@
 package com.spheremall.core.filters.elasticsearch.facets;
 
-import com.spheremall.core.exceptions.SphereMallException;
-import com.spheremall.core.filters.elasticsearch.ESSearchFilter;
-import com.spheremall.core.filters.elasticsearch.common.ElasticSearchFilter;
 import com.spheremall.core.filters.elasticsearch.common.ElasticSearchQuery;
 import com.spheremall.core.filters.elasticsearch.compound.BoolFilter;
 import com.spheremall.core.filters.elasticsearch.facets.configs.ESCatalogConfig;
@@ -11,7 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,12 +39,12 @@ public class ESCatalogFilterImpl implements ESCatalogFilter {
     }
 
     @Override
-    public JSONArray toParams() throws SphereMallException, JSONException {
+    public JSONArray toParams() throws JSONException {
         JSONArray params = new JSONArray();
         JSONObject paramsObject = new JSONObject();
 
         for (Map.Entry<String, ESCatalogFilterCriteria> entry : queryParams.entrySet()) {
-            JSONObject entryObject = entry.getValue().toJson();
+            JSONObject entryObject = entry.getValue().toJson(configParams);
             Object object = entryObject.get(entry.getKey());
             if (object instanceof JSONObject) {
                 JSONObject criteriaObject = entryObject.getJSONObject(entry.getKey());

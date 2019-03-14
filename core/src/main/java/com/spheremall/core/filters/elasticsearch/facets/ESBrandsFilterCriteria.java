@@ -2,6 +2,7 @@ package com.spheremall.core.filters.elasticsearch.facets;
 
 import com.spheremall.core.filters.elasticsearch.common.ElasticSearchQuery;
 import com.spheremall.core.filters.elasticsearch.criterions.TermsFilterCriteria;
+import com.spheremall.core.filters.elasticsearch.facets.configs.ESCatalogConfig;
 import com.spheremall.core.filters.elasticsearch.terms.TermsFilter;
 
 import org.json.JSONArray;
@@ -33,7 +34,7 @@ public class ESBrandsFilterCriteria implements ESCatalogFilterCriteria {
     }
 
     @Override
-    public JSONObject toJson() throws JSONException {
+    public JSONObject toJson(List<ESCatalogConfig> configs) throws JSONException {
         JSONArray idsJson = new JSONArray();
         for (Integer id : brands) {
             idsJson.put(id);

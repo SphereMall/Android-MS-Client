@@ -10,8 +10,8 @@ import java.util.List;
 
 public class ESRangeConfig implements ESCatalogConfig {
 
-    private final List<String> attrCodes = new ArrayList<>();
-    private final List<String> fields = new ArrayList<>();
+    public final List<String> attrCodes = new ArrayList<>();
+    public final List<String> fields = new ArrayList<>();
 
     private ESRangeConfig() {
     }

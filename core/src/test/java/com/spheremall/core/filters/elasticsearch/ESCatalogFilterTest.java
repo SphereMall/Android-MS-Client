@@ -75,6 +75,23 @@ public class ESCatalogFilterTest extends SetUpResourceTest {
     }
 
     @Test
+    public void testCreateFacetsParamsWithDifferentAttributes() throws JSONException {
+        ESCatalogFilterImpl catalogFilter = new ESCatalogFilterImpl(Collections.singletonList(
+                ESRangeConfig.builder()
+                        .addAttrCodes("minpricepoints")
+                        .create()
+        ));
+
+        ESRangeFilterCriteria criteria = ESRangeFilterCriteria.builder()
+                .addAttributeRange("minpricepoints_attr.attributeValue.int", 100, 300)
+                .create();
+
+        catalogFilter.add(criteria);
+        System.out.println(catalogFilter.toParams());
+        System.out.println(catalogFilter.toBoolFilter());
+    }
+
+    @Test
     public void testRangeFilter() throws JSONException, SphereMallException, IOException {
         String expectedParams = "[{\"range\":{\"attributes\":{\"minpricepoints\":{\"gte\":0,\"lte\":50000}},\"fields\":{\"price\":{\"gte\":0,\"lte\":79000}}}}]";
 

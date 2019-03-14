@@ -2,6 +2,7 @@ package com.spheremall.core.filters.elasticsearch.facets;
 
 import com.spheremall.core.filters.elasticsearch.common.ElasticSearchQuery;
 import com.spheremall.core.filters.elasticsearch.criterions.TermsFilterCriteria;
+import com.spheremall.core.filters.elasticsearch.facets.configs.ESCatalogConfig;
 import com.spheremall.core.filters.elasticsearch.terms.TermsFilter;
 
 import org.json.JSONArray;
@@ -42,7 +43,7 @@ public class ESAttributesFilterCriteria implements ESCatalogFilterCriteria {
     }
 
     @Override
-    public JSONObject toJson() throws JSONException {
+    public JSONObject toJson(List<ESCatalogConfig> configs) throws JSONException {
         JSONObject codesJson = new JSONObject();
         for (Map.Entry<String, List<String>> entry : attributes.entrySet()) {
             JSONArray attrValues = new JSONArray();

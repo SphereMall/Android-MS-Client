@@ -1,7 +1,7 @@
 package com.spheremall.core.filters.elasticsearch.facets;
 
-import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.elasticsearch.common.ElasticSearchQuery;
+import com.spheremall.core.filters.elasticsearch.facets.configs.ESCatalogConfig;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,7 +13,7 @@ public interface ESCatalogFilterCriteria {
 
     ESCatalogFilterCriteria update(ESCatalogFilterCriteria newCriteria);
 
-    JSONObject toJson() throws SphereMallException, JSONException;
+    JSONObject toJson(List<ESCatalogConfig> configs) throws JSONException;
 
     List<ElasticSearchQuery> toQuery();
 

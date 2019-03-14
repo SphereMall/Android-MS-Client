@@ -2,6 +2,7 @@ package com.spheremall.core.filters.elasticsearch.facets;
 
 import com.spheremall.core.filters.elasticsearch.common.ElasticSearchQuery;
 import com.spheremall.core.filters.elasticsearch.criterions.TermsFilterCriteria;
+import com.spheremall.core.filters.elasticsearch.facets.configs.ESCatalogConfig;
 import com.spheremall.core.filters.elasticsearch.terms.TermsFilter;
 
 import org.json.JSONArray;
@@ -10,10 +11,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class ESFunctionalNamesFilterCriteria implements ESCatalogFilterCriteria {
@@ -35,7 +34,7 @@ public class ESFunctionalNamesFilterCriteria implements ESCatalogFilterCriteria 
     }
 
     @Override
-    public JSONObject toJson() throws JSONException {
+    public JSONObject toJson(List<ESCatalogConfig> configs) throws JSONException {
         JSONArray idsJson = new JSONArray();
         for (Integer id : functionalNames) {
             idsJson.put(id);
