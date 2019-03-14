@@ -66,7 +66,7 @@ public class ESRangeFilterCriteria implements ESCatalogFilterCriteria {
     public List<ElasticSearchQuery> toQuery() {
         List<ElasticSearchQuery> queries = new ArrayList<>();
         for (Map.Entry<String, ESRangeModel> entry : attributesRange.entrySet()) {
-            PriceRangeFilter priceRangeFilter = new PriceRangeFilter(entry.getKey() + "_attr.attributeValue");
+            PriceRangeFilter priceRangeFilter = new PriceRangeFilter(entry.getKey());
             priceRangeFilter.setRange((double) entry.getValue().min, (double) entry.getValue().max);
             queries.add(priceRangeFilter);
         }
