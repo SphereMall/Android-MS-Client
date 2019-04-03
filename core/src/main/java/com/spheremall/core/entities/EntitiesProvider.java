@@ -2,6 +2,7 @@ package com.spheremall.core.entities;
 
 import com.spheremall.core.entities.documents.Document;
 import com.spheremall.core.entities.documents.EntityAttributeValue;
+import com.spheremall.core.entities.price.PromotionPriceValues;
 import com.spheremall.core.entities.products.Attribute;
 import com.spheremall.core.entities.products.AttributeDisplayType;
 import com.spheremall.core.entities.products.AttributeGroup;
@@ -89,7 +90,7 @@ public class EntitiesProvider {
         availableEntities.put("channelEntities", ChannelEntity.class);
         availableEntities.put("entityAttributeValues", EntityAttributeValue.class);
         availableEntities.put("range", Range.class);
-
+        availableEntities.put("promotionPriceValues", PromotionPriceValues.class);
     }
 
     private static <K, V> K getKey(Map<K, V> map, V value) {
