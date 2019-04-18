@@ -1,11 +1,11 @@
-plugins {
-    id "org.sonarqube" version "2.6-rc1"
-}
+//plugins {
+//    id "org.sonarqube" version "2.6-rc1"
+//}
 
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.vanniktech.android.junit.jacoco'
-apply from: '../sonarqube.gradle'
+//apply plugin: 'com.vanniktech.android.junit.jacoco'
+//apply from: '../sonarqube.gradle'
 group = 'com.github.SphereMall'
 
 
@@ -43,20 +43,20 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
-    junitJacoco {
-        jacocoVersion = '0.8.0'
-        ignoreProjects = []
-        excludes
-        includeNoLocationClasses = false
-    }
+//    junitJacoco {
+//        jacocoVersion = '0.8.0'
+//        ignoreProjects = []
+//        excludes
+//        includeNoLocationClasses = false
+//    }
 
-    testOptions {
-        unitTests.returnDefaultValues = true
-    }
+//    testOptions {
+//        unitTests.returnDefaultValues = true
+//    }
 
     buildTypes {
         release {
-            testCoverageEnabled false
+//            testCoverageEnabled false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
