@@ -9,6 +9,8 @@ import com.spheremall.core.entities.users.Token;
 import com.spheremall.core.entities.users.User;
 import com.spheremall.core.exceptions.EntityNotFoundException;
 import com.spheremall.core.exceptions.SphereMallException;
+import com.spheremall.core.filters.FilterOperators;
+import com.spheremall.core.filters.Predicate;
 import com.spheremall.core.makers.AuthMaker;
 import com.spheremall.core.makers.ObjectMaker;
 import com.spheremall.core.resources.BaseResource;
@@ -52,13 +54,21 @@ public class AuthResourceImpl extends BaseResource<Token, AuthResource> implemen
             throw new EntityNotFoundException(responseMonada.getErrorResponse());
         }
         Token token = maker.makeSingle(responseMonada.getResponse()).data();
-        if (token == null || token.data.size() == 0 || token.data.get(0).token.isEmpty()
-                || token.data.get(0).model == null || token.data.get(0).model.id == null
-                || token.data.get(0).model.id.isEmpty()) {
+
+        if (token == null || token.data.size() == 0 || token.data.get(0).token == null || token.data.get(0).token.isEmpty()) {
             throw new EntityNotFoundException();
         }
+
         smClient.getPreferencesManager().setToken(token.data.get(0).token);
-        return smClient.users().get(Integer.valueOf(token.data.get(0).model.id)).data();
+
+        if (token.data.get(0).model == null || token.data.get(0).model.id == null || token.data.get(0).model.id.isEmpty()) {
+
+            return smClient.users()
+                    .filters(new Predicate("email", FilterOperators.EQUAL, email))
+                    .first().data();
+        } else {
+            return smClient.users().get(Integer.valueOf(token.data.get(0).model.id)).data();
+        }
     }
 
     @Override

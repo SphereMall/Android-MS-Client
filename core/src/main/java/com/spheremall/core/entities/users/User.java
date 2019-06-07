@@ -18,4 +18,19 @@ public class User extends Entity {
     public String surname;
     public String guid;
     public String avatar;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "active=" + active +
+                ", defaultAddressId=" + defaultAddressId +
+                ", basketId=" + basketId +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", surname='" + surname + '\'' +
+                ", guid='" + guid + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }
