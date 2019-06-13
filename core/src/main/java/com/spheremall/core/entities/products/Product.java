@@ -2,6 +2,7 @@ package com.spheremall.core.entities.products;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.spheremall.core.entities.Entity;
+import com.spheremall.core.entities.documents.EntityAttributeValue;
 import com.spheremall.core.entities.price.ProductPriceConfiguration;
 import com.spheremall.core.entities.shop.ProductsToPromotions;
 import com.spheremall.core.entities.shop.Promotion;
@@ -44,6 +45,9 @@ public class Product extends Entity implements Cloneable {
 
     @Relationship(value = "productAttributeValues", resolve = true, relType = RelType.RELATED)
     public List<ProductAttributeValue> productAttributeValues;
+
+    @Relationship(value = "entityAttributeValues", resolve = true, relType = RelType.RELATED)
+    public List<EntityAttributeValue> entityAttributeValues;
 
     @Relationship(value = "attributeValues", resolve = true, relType = RelType.RELATED)
     public List<AttributeValue> attributeValues;

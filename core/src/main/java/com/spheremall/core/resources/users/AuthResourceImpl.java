@@ -102,4 +102,8 @@ public class AuthResourceImpl extends BaseResource<Token, AuthResource> implemen
         }
         return maker.makeSingle(responseMonada.getResponse()).data();
     }
+
+    public SMClient getSMClient() {
+        return this.smClient;
+    }
 }

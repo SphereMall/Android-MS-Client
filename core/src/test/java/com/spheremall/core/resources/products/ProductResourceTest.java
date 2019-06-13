@@ -2,7 +2,6 @@ package com.spheremall.core.resources.products;
 
 import com.spheremall.core.entities.Response;
 import com.spheremall.core.entities.products.Product;
-import com.spheremall.core.entities.products.ProductVariantsContainer;
 import com.spheremall.core.exceptions.SphereMallException;
 import com.spheremall.core.filters.FilterOperators;
 import com.spheremall.core.filters.Predicate;
@@ -13,7 +12,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ProductResourceTest extends SetUpResourceTest {
@@ -81,5 +79,11 @@ public class ProductResourceTest extends SetUpResourceTest {
     public void testGetProductDetailImage() throws IOException, SphereMallException {
         Product product = client.products().detail(111);
         Assert.assertNotNull(product.mediaEntities);
+    }
+
+    @Test
+    public void testParseEntityAttributeValues() throws IOException, SphereMallException {
+        Product product = client.products().detail(1);
+        Assert.assertNotNull(product);
     }
 }

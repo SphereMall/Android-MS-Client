@@ -1,5 +1,6 @@
 package com.spheremall.core.resources.products;
 
+import com.spheremall.core.entities.documents.EntityAttributeValue;
 import com.spheremall.core.entities.price.PriceConfiguration;
 import com.spheremall.core.entities.products.Attribute;
 import com.spheremall.core.entities.products.AttributeValue;
@@ -56,10 +57,21 @@ public class ProductAttributesBuilder {
         try {
             Product item = product.clone();
             item.attributes = new ArrayList<>();
-            for (Attribute attribute : product.attributes) {
-                item.attributes.add(mapAttributeValues(product.attributeValues, attribute));
-
+            if (product.attributes != null) {
+                for (Attribute attribute : product.attributes) {
+                    item.attributes.add(mapAttributeValues(product.attributeValues, attribute));
+                }
+            } else {
+                for (EntityAttributeValue eav : product.entityAttributeValues) {
+                    if (eav.attributes != null && eav.attributes.size() > 0) {
+                        Attribute attribute = eav.attributes.get(0);
+                        attribute.attributeValues = new ArrayList<>();
+                        attribute.attributeValues.addAll(eav.attributeValues);
+                        item.attributes.add(attribute);
+                    }
+                }
             }
+
             return item;
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
