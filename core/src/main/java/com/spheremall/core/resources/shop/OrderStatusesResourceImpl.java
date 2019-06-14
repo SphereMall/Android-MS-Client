@@ -17,7 +17,7 @@ public class OrderStatusesResourceImpl extends BaseResource<OrderStatus, OrderSt
 
     @Override
     public String getURI() {
-        return "orderstatuses";
+        return "orderstatus";
     }
 
     @Override

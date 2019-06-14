@@ -249,8 +249,13 @@ public interface ServiceInjector {
         return Store.basket;
     }
 
+    interface ClearBasketListener{
+        void onCleared();
+    }
+
     default void clearBasket() {
         Store.basket = null;
+
     }
 
     default CurrenciesRateResource currenciesRate() {
